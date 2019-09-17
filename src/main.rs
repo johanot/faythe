@@ -10,16 +10,34 @@ use std::fs::File;
 use std::io::Read;
 use std::thread;
 
+use std::sync::mpsc::{Sender, Receiver};
+use std::sync::mpsc;
 
-
-
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize, Debug)]
 pub struct FaytheConfig {
     pub kubeconfig_path: String,
     pub secret_namespace: String,
     pub secret_hostlabel: String,
+    #[serde(default = "default_interval")]
+    pub monitor_interval: u64,
+    #[serde(default = "default_renewal_threshold")]
+    pub renewal_threshold: u16,
+    #[serde(default = "default_issue_grace")]
+    pub issue_grace: u64,
 }
 
+// millis (5 seconds)
+fn default_interval() -> u64 {
+    5 * 1000
+}
+
+// millis (1 hour)
+fn default_issue_grace() -> u64 {
+    60*60*60 * 1000
+}
+
+// days
+fn default_renewal_threshold() -> u16 { 30 }
 
 mod monitor;
 mod issuer;
@@ -59,12 +77,13 @@ fn main() -> Result<(), FaytheError> {
 }
 
 fn run(config: FaytheConfig) {
-    let monitor = thread::spawn(|| monitor::monitor_ingresses(config));
-    let issuer = thread::spawn(|| issuer::process_queue());
+    let (tx, rx): (Sender<kube::Secret>, Receiver<kube::Secret>) = mpsc::channel();
+    let monitor = thread::spawn(monitor::monitor_ingresses(config.clone(), tx));
+    let issuer = thread::spawn(issuer::process_queue(config.clone(), rx));
 
     // if thread-join fails, we might as well just panic
-    monitor.join();
-    issuer.join();
+    monitor.join().unwrap();
+    issuer.join().unwrap();
 }
 
 fn parse_config_file(file: &str) -> Result<FaytheConfig, FaytheError> {

@@ -8,17 +8,16 @@ use std::process::Command;
 use std::result::Result;
 use crate::FaytheConfig;
 
-use std::process::{Stdio};
 use std::collections::HashMap;
 
-
-
+#[derive(Debug, Clone)]
 pub struct Ingress {
     pub name: String,
     pub namespace: String,
     pub hosts: Vec<String>,
 }
 
+#[derive(Debug, Clone)]
 pub struct Secret {
     pub name: String,
     pub namespace: String,
@@ -98,7 +97,7 @@ fn vec(subject: &Value) -> Result<Vec<Value>, KubeError> {
         _ => Err(KubeError::Format)
     }
 }
-
+/*
 fn sr(subject: &Value) -> Result<&str, KubeError> {
     let a = subject.as_str();
     match a {
@@ -106,6 +105,7 @@ fn sr(subject: &Value) -> Result<&str, KubeError> {
         _ => Err(KubeError::Format)
     }
 }
+*/
 
 fn base64_decode(subject: &Value) -> Result<Vec<u8>, KubeError> {
     let s = match subject.as_str() {
