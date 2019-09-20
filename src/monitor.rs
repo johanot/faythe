@@ -34,7 +34,7 @@ impl ShouldRetry for Option<&Entry> {
     }
 }
 
-pub fn monitor_ingresses(config: FaytheConfig, tx: Sender<kube::Secret>) -> impl FnOnce() {
+pub fn monitor(config: FaytheConfig, tx: Sender<kube::Secret>) -> impl FnOnce() {
     move || {
         let mut process_queue = HashMap::new();
 

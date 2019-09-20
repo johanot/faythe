@@ -18,6 +18,9 @@ pub struct FaytheConfig {
     pub kubeconfig_path: String,
     pub secret_namespace: String,
     pub secret_hostlabel: String,
+    pub lets_encrypt_url: String,
+    pub auth_dns_server: String,
+    pub val_dns_server: String,
     #[serde(default = "default_interval")]
     pub monitor_interval: u64,
     #[serde(default = "default_renewal_threshold")]
@@ -78,8 +81,8 @@ fn main() -> Result<(), FaytheError> {
 
 fn run(config: FaytheConfig) {
     let (tx, rx): (Sender<kube::Secret>, Receiver<kube::Secret>) = mpsc::channel();
-    let monitor = thread::spawn(monitor::monitor_ingresses(config.clone(), tx));
-    let issuer = thread::spawn(issuer::process_queue(config.clone(), rx));
+    let monitor = thread::spawn(monitor::monitor(config.clone(), tx));
+    let issuer = thread::spawn(issuer::process(config.clone(), rx));
 
     // if thread-join fails, we might as well just panic
     monitor.join().unwrap();

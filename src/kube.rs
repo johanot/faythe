@@ -24,6 +24,7 @@ pub struct Secret {
     pub host: String,
     pub cert: Vec<u8>,
     key: Vec<u8>,
+    pub challenge: String,
 }
 
 custom_error!{ pub KubeError
@@ -31,7 +32,7 @@ custom_error!{ pub KubeError
     Deserialize{source: serde_json::Error} = "parse error",
     Exec{source: std::io::Error} = "exec error",
     Format = "format error",
-    Base64Decode{source: base64::DecodeError} = "base64 decode"
+    Base64Decode{source: base64::DecodeError} = "base64 decode",
 }
 
 pub fn get_secrets(config: &FaytheConfig) -> Result<HashMap<String, Secret>, KubeError> {
@@ -47,9 +48,10 @@ pub fn get_secrets(config: &FaytheConfig) -> Result<HashMap<String, Secret>, Kub
         let cert = base64_decode(&i["data"]["cert"])?;
         let host = &i["metadata"]["labels"][&config.secret_hostlabel];
         secrets.insert(host.to_string(), Secret{
-            name: i["metadata"]["name"].to_string(),
-            namespace: i["metadata"]["namespace"].to_string(),
-            host: host.to_string(),
+            name: sr(&i["metadata"]["name"])?,
+            namespace: sr(&i["metadata"]["namespace"])?,
+            host: sr(host)?,
+            challenge: String::new(),
             cert,
             key
         });
@@ -97,15 +99,14 @@ fn vec(subject: &Value) -> Result<Vec<Value>, KubeError> {
         _ => Err(KubeError::Format)
     }
 }
-/*
-fn sr(subject: &Value) -> Result<&str, KubeError> {
+
+fn sr(subject: &Value) -> Result<String, KubeError> {
     let a = subject.as_str();
     match a {
-        Some(a) => Ok(a),
+        Some(a) => Ok(String::from(a)),
         _ => Err(KubeError::Format)
     }
 }
-*/
 
 fn base64_decode(subject: &Value) -> Result<Vec<u8>, KubeError> {
     let s = match subject.as_str() {
