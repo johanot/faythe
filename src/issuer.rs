@@ -11,6 +11,7 @@ use crate::kube::Secret;
 use std::collections::VecDeque;
 
 extern crate trust_dns;
+extern crate trust_dns_resolver;
 use trust_dns::client::{Client, ClientConnection, ClientStreamHandle, SyncClient};
 use trust_dns::udp::UdpClientConnection;
 use std::net::Ipv4Addr;
@@ -20,6 +21,10 @@ use trust_dns::rr::{DNSClass, Name, RData, Record, RecordType};
 use std::error::Error;
 use self::trust_dns::error::ClientError;
 use x509_parser::objects::Nid::ChallengePassword;
+
+use trust_dns_resolver::Resolver;
+use trust_dns_resolver::config::*;
+use crate::issuer::ChallengeError::DNSClient;
 
 
 pub fn process(config: FaytheConfig, rx: Receiver<kube::Secret>) -> impl FnOnce() {
@@ -47,11 +52,21 @@ pub fn process(config: FaytheConfig, rx: Receiver<kube::Secret>) -> impl FnOnce(
     }
 }
 
-fn dns_client(server: &String) -> SyncClient<UdpClientConnection> {
-    let address = "172.16.1.16:53".parse().unwrap();
-    let conn = UdpClientConnection::new(address).unwrap();
+fn dns_client(server: &String) -> Result<SyncClient<UdpClientConnection>, ChallengeError> {
+    let resolver = match Resolver::from_system_conf() {
+        Ok(res) => Ok(res),
+        _ => Err(ChallengeError::DNSClient),
+    }?;
+    let response = resolver.lookup_ip(server)?;
 
-    SyncClient::new(conn)
+    let address = match response.iter().next() {
+        Some(a) => Ok(a),
+        None => Err(ChallengeError::DNSClient)
+    }?;
+    let parsed = format!("{}:53", address).parse()?;
+    let conn = UdpClientConnection::new(parsed).unwrap();
+
+    Ok(SyncClient::new(conn))
 }
 
 
@@ -60,46 +75,35 @@ fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<Secret>) -> Result<()
         Some(secret) => {
             match validate_challenge(&config, &secret) {
                 Ok(_) => issue_certificate(&secret),
-                Err(e) =>
-                    match e {
-                        ChallengeError::DNSWrongAnswer => {
-                            queue.push_back(secret);
+                Err(e) => match e {
+                    ChallengeError::DNSWrongAnswer => {
+                        queue.push_back(secret);
                             Ok(())
-                        }
-                    } else {
-                        Err(e)
+                        },
+                        _ => Err(e)
                     }
-                },
             }
-        }
+        },
         None => Ok(())
     }
 }
 
 fn validate_challenge(config: &FaytheConfig, secret: &Secret) -> Result<(), ChallengeError> {
-    println!("validate");
+    let auth_client = dns_client(&config.auth_dns_server)?;
+    let val_client = dns_client(&config.val_dns_server)?;
 
-    let auth_client = dns_client(&config.auth_dns_server);
-    let val_client = dns_client(&config.val_dns_server);
+    let name = Name::from_str(secret.host).unwrap();
 
-    let name = Name::from_str("dbc.dk").unwrap();
-
-    let response: DnsResponse = auth_client.query(&name, DNSClass::IN, RecordType::TXT)?;
-    has_txt_record(&response, &secret.challenge)
+    has_txt_record(&auth_client.query(&name, DNSClass::IN, RecordType::TXT)?, &secret.challenge)?;
+    has_txt_record(&val_client.query(&name, DNSClass::IN, RecordType::TXT)?, &secret.challenge)?;
+    Ok(())
 }
 
 fn has_txt_record(response: &DnsResponse, expected: &String) -> Result<(), ChallengeError>  {
     let answers: &[Record] = response.answers();
     if answers.len() < 1 { return Err(ChallengeError::DNSWrongAnswer); }
-    let content = match answers[0].rdata() {
-        &RData::TXT(ref content) => {
-            let v = Vec::from(content.txt_data()[0].clone());
-            String::from_utf8(v).unwrap_or(String::new())
-        },
-        _ => String::new()
-    };
 
-    match &content == expected {
+    match &answers[0].rdata().or_empty() == expected {
         true => Ok(()),
         false => Err(ChallengeError::DNSWrongAnswer)
     }
@@ -133,9 +137,42 @@ enum ChallengeError {
     AcmeClient,
     SetupChallenge,
     DNS,
+    DNSClient,
     DNSWrongAnswer,
 }
 
+trait OrEmpty {
+    fn or_empty(self) -> String;
+}
+
+impl OrEmpty for &trust_dns::rr::RData {
+    fn or_empty(self) -> String {
+        match self {
+            &RData::TXT(ref content) => {
+                let txt = content.txt_data();
+                if txt.len() > 0 {
+                    let v = Vec::from(txt[0].clone());
+                    String::from_utf8(v).unwrap_or(String::new())
+                } else {
+                    String::new()
+                }
+            }
+            _ => String::new()
+        }
+    }
+}
+
+impl std::convert::From<std::net::AddrParseError> for ChallengeError {
+    fn from(error: std::net::AddrParseError) -> ChallengeError {
+        ChallengeError::DNSClient
+    }
+}
+
+impl std::convert::From<trust_dns_resolver::error::ResolveError> for ChallengeError {
+    fn from(error: trust_dns_resolver::error::ResolveError) -> ChallengeError {
+        ChallengeError::DNSClient
+    }
+}
 
 impl std::convert::From<ClientError> for ChallengeError {
     fn from(error: ClientError) -> ChallengeError {
@@ -148,7 +185,6 @@ impl std::convert::From<acme_client::error::Error> for ChallengeError {
         ChallengeError::AcmeClient
     }
 }
-
 
 trait Challenger {
     fn ns_record(&self) -> String;

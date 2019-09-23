@@ -14,6 +14,7 @@ x509-parser = "0.6.0"
 base64 = "0.10.1"
 time = "0.1.42"
 trust-dns = { version = "0.17", default-features = false }
+trust-dns-resolver = "0.12.0"
 
 [dependencies.acme-client]
 version = "0.5"
