@@ -2,8 +2,10 @@
    "kubeconfig_path": "/home/jth/.kube/config",
    "secret_namespace": "shelob",
    "secret_hostlabel": "ingress.hostname",
-   "lets_encrypt_url": "https://acme-staging.api.letsencrypt.org/directory",
-   "auth_dns_server": "dns1.dbc.dk",
+   "lets_encrypt_url": "https://acme-staging-v02.api.letsencrypt.org/directory",
+   "lets_encrypt_email": "jth@dbc.dk",
+   "auth_dns_server": "ns.dbc.dk",
+   "auth_dns_zone": "k8s.dbc.dk",
+   "auth_dns_key": "k8s.dbc.dk.key",
    "val_dns_server": "ns1.gratisdns.dk"
 }
-

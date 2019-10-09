@@ -31,7 +31,7 @@ pub fn monitor(config: FaytheConfig, tx: Sender<kube::Secret>) -> impl FnOnce() 
         log::event("monitoring-started");
         loop {
             let _ = || -> Result<Box<dyn Any>, kube::KubeError> {
-                let ingresses = kube::get_ingresses()?;
+                let ingresses = kube::get_ingresses(&config.auth_dns_zone)?;
                 let secrets = kube::get_secrets(&config)?;
 
                 for i in &ingresses {

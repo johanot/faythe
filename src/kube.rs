@@ -55,7 +55,7 @@ pub fn get_secrets(config: &FaytheConfig) -> Result<HashMap<String, Secret>, Kub
         let key = base64_decode(&i["data"]["key"])?;
         let cert = base64_decode(&i["data"]["cert"])?;
         let host = &i["metadata"]["labels"][&config.secret_hostlabel];
-        secrets.insert(host.to_string(), Secret{
+        secrets.insert(sr(host)?, Secret{
             name: sr(&i["metadata"]["name"])?,
             namespace: sr(&i["metadata"]["namespace"])?,
             host: sr(host)?,
@@ -68,20 +68,21 @@ pub fn get_secrets(config: &FaytheConfig) -> Result<HashMap<String, Secret>, Kub
     Ok(secrets)
 }
 
-pub fn get_ingresses() -> Result<Vec<Ingress>, KubeError> {
+pub fn get_ingresses(host_suffix: &String) -> Result<Vec<Ingress>, KubeError> {
 
     let v = kubectl(&["get", "ingresses", "--all-namespaces"])?;
 
     let mut ingresses :Vec<Ingress> = Vec::new();
     for i in vec(&v["items"])? {
-
-        //TODO: Discard if no hostname is defined
-
         let rules = vec(&i["spec"]["rules"])?;
         ingresses.push(Ingress{
             name: sr(&i["metadata"]["name"])?,
             namespace: sr(&i["metadata"]["namespace"])?,
-            hosts: rules.iter().map(|r| r["host"].to_string()).collect(),
+            hosts: rules
+                    .iter()
+                    .map(|r| sr(&r["host"]).unwrap_or(String::new()))
+                    .filter(|h| h.ends_with(host_suffix))
+                    .collect(),
             touched: tm(i["metadata"]["annotations"].get(TOUCH_ANNOTATION_NAME)),
         });
     };
