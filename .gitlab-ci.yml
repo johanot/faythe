@@ -1,0 +1,3 @@
+build:
+  script:
+    - nix-shell --run 'cargo build --release --locked --color never'
