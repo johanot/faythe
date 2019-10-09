@@ -2,10 +2,12 @@
 extern crate serde;
 extern crate serde_json;
 extern crate base64;
+extern crate time;
 
 use serde_json::{Value};
 use std::process::Command;
 use std::result::Result;
+use std::option::Option;
 use crate::FaytheConfig;
 
 use std::collections::HashMap;
@@ -15,6 +17,7 @@ pub struct Ingress {
     pub name: String,
     pub namespace: String,
     pub hosts: Vec<String>,
+    pub touched: time::Tm,
 }
 
 #[derive(Debug, Clone)]
@@ -27,13 +30,18 @@ pub struct Secret {
     pub challenge: String,
 }
 
+//TODO: get rid of this macro, I thought is was smart, I was wrong
 custom_error!{ pub KubeError
     StringConvertion{source: std::string::FromUtf8Error} = "string error",
     Deserialize{source: serde_json::Error} = "parse error",
     Exec{source: std::io::Error} = "exec error",
     Format = "format error",
     Base64Decode{source: base64::DecodeError} = "base64 decode",
+    ParseError{source: time::ParseError} = "failed to parse timestamp"
 }
+
+const TIME_FORMAT: &str = "%Y-%m-%dT%H:%M:%S%z"; // 2019-10-09T11:50:22+0200
+const TOUCH_ANNOTATION_NAME: &str = "faythe.touched";
 
 pub fn get_secrets(config: &FaytheConfig) -> Result<HashMap<String, Secret>, KubeError> {
 
@@ -71,9 +79,10 @@ pub fn get_ingresses() -> Result<Vec<Ingress>, KubeError> {
 
         let rules = vec(&i["spec"]["rules"])?;
         ingresses.push(Ingress{
-            name: i["metadata"]["name"].to_string(),
-            namespace: i["metadata"]["namespace"].to_string(),
-            hosts: rules.iter().map(|r| r["host"].to_string()).collect()
+            name: sr(&i["metadata"]["name"])?,
+            namespace: sr(&i["metadata"]["namespace"])?,
+            hosts: rules.iter().map(|r| r["host"].to_string()).collect(),
+            touched: tm(i["metadata"]["annotations"].get(TOUCH_ANNOTATION_NAME)),
         });
     };
 
@@ -81,7 +90,6 @@ pub fn get_ingresses() -> Result<Vec<Ingress>, KubeError> {
 }
 
 fn kubectl(args: &[&str]) -> Result<Value, KubeError> {
-
     let cmd = Command::new("kubectl")
         .args(args)
         .arg("-o")
@@ -108,10 +116,63 @@ fn sr(subject: &Value) -> Result<String, KubeError> {
     }
 }
 
+fn tm(subject: Option<&Value>) -> time::Tm {
+    let a = subject.and_then(|s| s.as_str());
+    match a {
+        // assume "now" if there is something non-parsable in there
+        Some(a) => time::strptime(&a, self::TIME_FORMAT).unwrap_or(time::now_utc()),
+        _ => time::empty_tm()
+    }
+}
+
 fn base64_decode(subject: &Value) -> Result<Vec<u8>, KubeError> {
     let s = match subject.as_str() {
         Some(s) => Ok(s),
         _ => Err(KubeError::Format)
     }?;
     Ok(base64::decode(&s)?)
+}
+
+pub trait K8SAddressable {
+    fn name(&self) -> String;
+    fn namespace(&self) -> String;
+    fn object(&self) -> String;
+}
+
+impl K8SAddressable for Ingress {
+    fn name(&self) -> String {
+        self.name.clone()
+    }
+
+    fn namespace(&self) -> String {
+        self.namespace.clone()
+    }
+
+    fn object(&self) -> String {
+        String::from("ingress")
+    }
+}
+
+
+pub trait K8SObject {
+    fn touch(&self) -> Result<(), KubeError>;
+    fn annotate(&self, key: &String, value: &String) -> Result<(), KubeError>;
+}
+
+impl<T: K8SAddressable> K8SObject for T {
+    fn touch(&self) -> Result<(), KubeError> {
+         self.annotate(&TOUCH_ANNOTATION_NAME.to_string(),
+                       &time::strftime(TIME_FORMAT, &time::now_utc())?)
+    }
+
+    fn annotate(&self, key: &String, value: &String) -> Result<(), KubeError> {
+        kubectl(&[
+            "annotate",
+            "--overwrite",
+            "-n", self.namespace().as_str(),
+            self.object().as_str(),
+            self.name().as_str(),
+            format!("{}='{}'", key, value).as_str()  // la la no escape-args
+        ]).and(Ok(()))
+    }
 }
