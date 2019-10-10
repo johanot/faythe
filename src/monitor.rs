@@ -5,6 +5,7 @@ use std::thread;
 use std::time::Duration;
 
 use crate::{kube, FaytheConfig};
+use crate::kube::K8SObject;
 use crate::log;
 
 use std::io::Cursor;
@@ -12,32 +13,21 @@ use x509_parser::pem::Pem;
 use std::result::Result;
 use std::any::Any;
 
-use std::collections::HashMap;
 use std::sync::mpsc::Sender;
 
-struct Entry {
-    secret: kube::Secret,
-    time: time::Tm,
-}
 
 trait ShouldRetry {
     fn should_retry(&self, config: &FaytheConfig) -> bool;
 }
 
-impl ShouldRetry for Option<&Entry> {
+impl ShouldRetry for kube::Ingress {
     fn should_retry(&self, config: &FaytheConfig) -> bool {
-        let issue_time = match self {
-            Some(entry) => entry.time,
-            None => time::empty_tm()
-        };
-        time::now_utc() > issue_time + time::Duration::milliseconds(config.issue_grace as i64)
+        time::now_utc() > self.touched + time::Duration::milliseconds(config.issue_grace as i64)
     }
 }
 
 pub fn monitor(config: FaytheConfig, tx: Sender<kube::Secret>) -> impl FnOnce() {
     move || {
-        let mut process_queue = HashMap::new();
-
         log::event("monitoring-started");
         loop {
             let _ = || -> Result<Box<dyn Any>, kube::KubeError> {
@@ -45,17 +35,19 @@ pub fn monitor(config: FaytheConfig, tx: Sender<kube::Secret>) -> impl FnOnce() 
                 let secrets = kube::get_secrets(&config)?;
 
                 for i in &ingresses {
-                    for h in &i.hosts {
-                        let s = &secrets[h];
-                        if !is_valid(&config, s) {
-                            if process_queue.get(h).should_retry(&config) {
-                                &mut process_queue.insert(h.clone(), Entry{
-                                    secret: s.clone(),
-                                    time: time::now_utc()
-                                });
-                                println!("(re)-issuing: {}", h);
-                                tx.send(s.clone()).unwrap();
-                            }
+                    if i.should_retry(&config) {
+                        for h in &i.hosts {
+                            secrets.get(h).and_then(|s| {
+                                if !is_valid(&config, s) {
+                                    println!("(re)-issuing: {}", h);
+                                    match i.touch() {
+                                        Ok(_) => tx.send(s.clone()).unwrap(),
+                                        Err(e) => log::error("failed to annotate ingress, bailing out.", &e)
+                                    };
+
+                                }
+                                Some(s)
+                            });
                         }
                     }
                 }

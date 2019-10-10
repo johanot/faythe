@@ -92,7 +92,7 @@ fn validate_challenge(config: &FaytheConfig, secret: &Secret) -> Result<(), Chal
     let auth_client = dns_client(&config.auth_dns_server)?;
     let val_client = dns_client(&config.val_dns_server)?;
 
-    let name = Name::from_str(secret.host).unwrap();
+    let name = Name::from_str(&secret.host).unwrap();
 
     has_txt_record(&auth_client.query(&name, DNSClass::IN, RecordType::TXT)?, &secret.challenge)?;
     has_txt_record(&val_client.query(&name, DNSClass::IN, RecordType::TXT)?, &secret.challenge)?;
