@@ -5,7 +5,7 @@ use std::thread;
 use std::time::Duration;
 
 use crate::{kube, FaytheConfig};
-use crate::kube::K8SObject;
+use crate::kube::{K8SObject, Secret};
 use crate::log;
 
 use std::io::Cursor;
@@ -14,6 +14,8 @@ use std::result::Result;
 use std::any::Any;
 
 use std::sync::mpsc::Sender;
+use core::fmt::Debug;
+use acme_lib::persist::PersistKind::Certificate;
 
 
 trait ShouldRetry {
@@ -37,17 +39,18 @@ pub fn monitor(config: FaytheConfig, tx: Sender<kube::Secret>) -> impl FnOnce() 
                 for i in &ingresses {
                     if i.should_retry(&config) {
                         for h in &i.hosts {
-                            secrets.get(h).and_then(|s| {
-                                if !is_valid(&config, s) {
-                                    println!("(re)-issuing: {}", h);
-                                    match i.touch() {
-                                        Ok(_) => tx.send(s.clone()).unwrap(),
-                                        Err(e) => log::error("failed to annotate ingress, bailing out.", &e)
-                                    };
+                            let s = secrets.get(h)
+                                .and_then(|s| Some(s.clone()))
+                                .unwrap_or(kube::new_secret(&config, &h));
 
-                                }
-                                Some(s)
-                            });
+                            if !is_valid(&config, &s) {
+                                println!("(re)-issuing: {}", h);
+                                match i.touch() {
+                                    Ok(_) => tx.send(s).unwrap(),
+                                    Err(e) => log::error("failed to annotate ingress, bailing out.", &e)
+                                };
+
+                            }
                         }
                     }
                 }
@@ -63,11 +66,19 @@ pub fn monitor(config: FaytheConfig, tx: Sender<kube::Secret>) -> impl FnOnce() 
 }
 
 fn is_valid(config: &FaytheConfig, secret: &kube::Secret) -> bool {
-    let reader = Cursor::new(&secret.cert);
-    let (pem,_bytes_read) = Pem::read(reader).expect("Reading PEM failed");
-    let x509 = pem.parse_x509().expect("X.509: decoding DER failed");
-    let cert = x509.tbs_certificate;
+    // no cert, it's probably a first time issue
+    if secret.cert.len() == 0 {
+        //TODO: log::info perhaps?
+        return false
+    }
 
-    //TODO: check common name as well
-    cert.validity.not_after.to_utc() > time::now_utc() + time::Duration::days(config.renewal_threshold as i64)
+    let reader = Cursor::new(&secret.cert);
+    match Pem::read(reader) {
+        Ok((pem,_)) => match pem.parse_x509() {
+            //TODO: check common name as well
+            Ok(x509) => Ok(x509.tbs_certificate.validity.not_after.to_utc() > time::now_utc() + time::Duration::days(config.renewal_threshold as i64)),
+            Err(e) => { log::error_debug("failed to parse x509 fields", &e); Err(()) }
+        },
+        Err(e) => { log::error_debug("failed to read pem-blob", &e); Err(()) }
+    }.is_ok()
 }
