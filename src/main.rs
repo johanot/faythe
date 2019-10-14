@@ -19,8 +19,11 @@ pub struct FaytheConfig {
     pub secret_namespace: String,
     pub secret_hostlabel: String,
     pub lets_encrypt_url: String,
+    pub lets_encrypt_email: String,
     pub auth_dns_server: String,
+    pub auth_dns_key: String,
     pub val_dns_server: String,
+    pub auth_dns_zone: String,
     #[serde(default = "default_interval")]
     pub monitor_interval: u64,
     #[serde(default = "default_renewal_threshold")]
@@ -46,6 +49,7 @@ mod monitor;
 mod issuer;
 mod kube;
 mod log;
+mod nsupdate;
 
 custom_error!{ FaytheError
     StringConvertion{source: std::string::FromUtf8Error} = "string error",
@@ -82,7 +86,7 @@ fn main() -> Result<(), FaytheError> {
 fn run(config: FaytheConfig) {
     let (tx, rx): (Sender<kube::Secret>, Receiver<kube::Secret>) = mpsc::channel();
     let monitor = thread::spawn(monitor::monitor(config.clone(), tx));
-    let issuer = thread::spawn(issuer::process(config.clone(), rx));
+    let issuer = thread::spawn(move || { issuer::process(config.clone(), rx) });
 
     // if thread-join fails, we might as well just panic
     monitor.join().unwrap();

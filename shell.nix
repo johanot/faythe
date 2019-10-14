@@ -18,5 +18,7 @@ in
       openssl.dev
       zlib.dev
       latest.rustChannels.stable.rust
+      dnsutils  # runtime
+      kubectl   # runtime
     ];
   }
