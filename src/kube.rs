@@ -173,7 +173,7 @@ impl<T: K8SAddressable> K8SObject for T {
             "-n", self.namespace().as_str(),
             self.object().as_str(),
             self.name().as_str(),
-            format!("{}='{}'", key, value).as_str()  // la la no escape-args
+            format!("{}={}", key, value).as_str()  // la la no escape-args
         ]).and(Ok(()))
     }
 }
