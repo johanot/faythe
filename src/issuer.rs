@@ -6,7 +6,7 @@ use crate::{kube, FaytheConfig};
 use crate::log;
 
 use std::sync::mpsc::{Receiver,TryRecvError};
-use crate::kube::Secret;
+use crate::kube::{Secret, Persistable};
 use std::collections::VecDeque;
 
 extern crate trust_dns;
@@ -91,9 +91,10 @@ fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Resul
     match queue.pop_front() {
         Some(order) => {
             match validate_challenge(&config, &order) {
-                Ok(_) =>  (order.issue)(),
+                Ok(_) =>  (order.issue)(&config),
                 Err(e) => match e {
                     IssuerError::DNSWrongAnswer => {
+                        println!("Wrong DNS answer: {}", &order.host);
                         queue.push_back(order);
                             Ok(())
                         },
@@ -111,14 +112,21 @@ fn validate_challenge(config: &FaytheConfig, order: &IssueOrder) -> Result<(), I
 
     let name = Name::from_str(&format!("_acme-challenge.{}", &order.host)).unwrap();
 
-    has_txt_record(&auth_client.query(&name, DNSClass::IN, RecordType::TXT)?, &order.challenge)?;
+    println!("Validating: {}", &order.host);
+
+    //has_txt_record(&auth_client.query(&name, DNSClass::IN, RecordType::TXT)?, &order.challenge)?;
     has_txt_record(&val_client.query(&name, DNSClass::IN, RecordType::TXT)?, &order.challenge)?;
     Ok(())
 }
 
 fn has_txt_record(response: &DnsResponse, expected: &String) -> Result<(), IssuerError>  {
     let answers: &[Record] = response.answers();
-    if answers.len() < 1 { return Err(IssuerError::DNSWrongAnswer); }
+    if answers.len() < 1 {
+        println!("Empty response");
+        return Err(IssuerError::DNSWrongAnswer);
+    }
+
+    println!("Response: {}", &answers[0].rdata().or_empty());
 
     match &answers[0].rdata().or_empty() == expected {
         true => Ok(()),
@@ -143,28 +151,31 @@ fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOr
 
         //println!("please add this to dns: _acme-challenge.{} TXT {}", &secret.host, &secret.challenge);
         nsupdate::update_dns(&config, &secret)?;
+        let mut secret_ = secret.clone();
         Ok(IssueOrder{
-            host: secret.host.clone(),
-            challenge: secret.challenge.clone(),
-            issue: Box::new(move || -> Result<(), IssuerError> {
+            host: secret_.host.clone(),
+            challenge: secret_.challenge.clone(),
+            issue: Box::new(move |conf: &FaytheConfig| -> Result<(), IssuerError> {
+                println!("challenge propagated!");
                 challenge.validate(5000)?;
                 ord_new.refresh()?;
+                println!("challenge validated!");
+
+
                 let (pkey_pri, pkey_pub) = create_rsa_key(2048);
                 let ord_csr = match ord_new.confirm_validations() {
                     Some(csr) => Ok(csr),
                     None => Err(IssuerError::ChallengeRejected)
                 }?;
+
+                println!("issuing!");
                 let ord_cert =
                     ord_csr.finalize_pkey(pkey_pri, pkey_pub, 5000)?;
                 let cert = ord_cert.download_and_save_cert()?;
 
-                //TODO: Store in k8s api
-                println!(
-                    "{}{}{}",
-                    cert.private_key(),
-                    cert.certificate(),
-                    cert.valid_days_left()
-                );
+                secret_.cert = cert.certificate().as_bytes().to_vec();
+                secret_.key = cert.private_key().as_bytes().to_vec();
+                secret_.persist(&conf).unwrap();
 
                 Ok(())
             })
@@ -178,7 +189,7 @@ fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOr
 struct IssueOrder {
     host: String,
     challenge: String,
-    issue: Box<FnOnce() -> Result<(), IssuerError>>
+    issue: Box<FnOnce(&FaytheConfig) -> Result<(), IssuerError>>
 }
 
 pub enum IssuerError {

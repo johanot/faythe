@@ -18,7 +18,7 @@ pub enum DNSError {
 
 pub fn update_dns(config: &FaytheConfig, secret: &Secret) -> Result<(), DNSError> {
     let command = format!("server {}\n\
-                           update add _acme-challenge.{}. 360 TXT \"{}\"\n\
+                           update add _acme-challenge.{}. 120 TXT \"{}\"\n\
                            send\n",
                           &config.auth_dns_server,
                           &secret.host,
