@@ -43,6 +43,17 @@ custom_error!{ pub KubeError
 const TIME_FORMAT: &str = "%Y-%m-%dT%H:%M:%S%z"; // 2019-10-09T11:50:22+0200
 const TOUCH_ANNOTATION_NAME: &str = "faythe.touched";
 
+pub fn new_secret(config: &FaytheConfig, h: &String) -> Secret {
+    Secret {
+        namespace: config.secret_namespace.clone(),
+        name: h.clone(),
+        host: h.clone(),
+        challenge: String::new(),
+        cert: Vec::new(),
+        key: Vec::new(),
+    }
+}
+
 pub fn get_secrets(config: &FaytheConfig) -> Result<HashMap<String, Secret>, KubeError> {
 
     let v = kubectl(&["get", "secrets",
