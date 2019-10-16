@@ -114,8 +114,12 @@ fn validate_challenge(config: &FaytheConfig, order: &IssueOrder) -> Result<(), I
 
     println!("Validating: {}", &order.host);
 
-    //has_txt_record(&auth_client.query(&name, DNSClass::IN, RecordType::TXT)?, &order.challenge)?;
-    has_txt_record(&val_client.query(&name, DNSClass::IN, RecordType::TXT)?, &order.challenge)?;
+    has_txt_record(&auth_client.query(&name, DNSClass::IN, RecordType::TXT)?, &order.challenge)?;
+    //TODO: re-write dns validation checks to use exec("dig ..")
+    //below check doesn't work - with the current impl
+    //has_txt_record(&val_client.query(&name, DNSClass::IN, RecordType::TXT)?, &order.challenge)?;
+    //sleep instead for now :(
+    thread::sleep(Duration::from_millis(240000));
     Ok(())
 }
 
