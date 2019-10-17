@@ -5,7 +5,9 @@ extern crate base64;
 extern crate time;
 
 use serde_json::{Value};
-use std::process::Command;
+use serde_json::json;
+use std::process::{Command, Stdio};
+use std::io::Write;
 use std::result::Result;
 use std::option::Option;
 use crate::FaytheConfig;
@@ -26,7 +28,7 @@ pub struct Secret {
     pub namespace: String,
     pub host: String,
     pub cert: Vec<u8>,
-    key: Vec<u8>,
+    pub key: Vec<u8>,
     pub challenge: String,
 }
 
@@ -35,6 +37,7 @@ custom_error!{ pub KubeError
     StringConvertion{source: std::string::FromUtf8Error} = "string error",
     Deserialize{source: serde_json::Error} = "parse error",
     Exec{source: std::io::Error} = "exec error",
+    ExecApply = "exec error",
     Format = "format error",
     Base64Decode{source: base64::DecodeError} = "base64 decode",
     ParseError{source: time::ParseError} = "failed to parse timestamp"
@@ -112,6 +115,34 @@ fn kubectl(args: &[&str]) -> Result<Value, KubeError> {
     Ok(v?)
 }
 
+fn kubectl_apply(args: &[&str], doc: &Value) -> Result<(), KubeError> {
+    let mut cmd = Command::new("kubectl")
+        .arg("apply")
+        .args(args)
+        .arg("-f")
+        .arg("-")
+        .stdin(Stdio::piped())
+        .spawn()?;
+
+    {
+        let stdin = match cmd.stdin.as_mut() {
+            Some(s) => Ok(s),
+            None => Err(KubeError::ExecApply)
+        }?;
+        stdin.write_all(format!("{}", doc).as_bytes())?;
+    }
+
+    let status = cmd.wait()?;
+    match status.code() {
+        Some(code) => if code == 0 {
+            Ok(())
+        } else {
+            Err(KubeError::ExecApply)
+        },
+        None => Err(KubeError::ExecApply)
+    }
+}
+
 fn vec(subject: &Value) -> Result<Vec<Value>, KubeError> {
     let a = subject.as_array();
     match a {
@@ -143,6 +174,10 @@ fn base64_decode(subject: &Value) -> Result<Vec<u8>, KubeError> {
         _ => Err(KubeError::Format)
     }?;
     Ok(base64::decode(&s)?)
+}
+
+fn base64_encode(subject: &Vec<u8>) -> String {
+    base64::encode(&subject)
 }
 
 pub trait K8SAddressable {
@@ -186,5 +221,36 @@ impl<T: K8SAddressable> K8SObject for T {
             self.name().as_str(),
             format!("{}={}", key, value).as_str()  // la la no escape-args
         ]).and(Ok(()))
+    }
+}
+
+pub trait Persistable {
+    fn persist(&self, config: &FaytheConfig) -> Result<(), KubeError>;
+}
+
+impl Persistable for Secret {
+    fn persist(&self, config: &FaytheConfig) -> Result<(), KubeError> {
+
+        let doc = json!({
+            "apiVersion": "v1",
+            "kind": "Secret",
+            "metadata": {
+                "name": self.name,
+                "namespace": self.namespace,
+                "labels": {
+                    &config.secret_hostlabel: &self.host
+                }
+            },
+            "type": "Opaque",
+            "data": {
+                "cert": base64_encode(&self.cert),
+                "key": base64_encode(&self.key)
+            }
+        });
+
+        kubectl_apply(&[
+            "-n",
+            self.namespace.as_str()
+        ], &doc)
     }
 }
