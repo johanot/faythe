@@ -15,15 +15,34 @@ pub enum DNSError {
     EXITCODE(i32)
 }
 
-
-pub fn update_dns(config: &FaytheConfig, secret: &Secret) -> Result<(), DNSError> {
-    let command = format!("server {}\n\
-                           update add _acme-challenge.{}. 120 TXT \"{}\"\n\
+pub fn add(config: &FaytheConfig, secret: &Secret) -> Result<(), DNSError> {
+    let host = challenge_host(&secret);
+    let command = format!("server {server}\n\
+                           prereq nxdomain {host} TXT\n\
+                           update add {host} 120 TXT \"{challenge}\"\n\
                            send\n",
-                          &config.auth_dns_server,
-                          &secret.host,
-                          &secret.challenge);
+                          server=&config.auth_dns_server,
+                          host=&host,
+                          challenge=&secret.challenge);
 
+    update_dns(&command, &config, &secret)
+}
+
+pub fn delete(config: &FaytheConfig, secret: &Secret) -> Result<(), DNSError> {
+    let command = format!("server {server}\n\
+                           update delete {host} TXT\n\
+                           send\n",
+                          server=&config.auth_dns_server,
+                          host=challenge_host(&secret));
+
+    update_dns(&command, &config, &secret)
+}
+
+fn challenge_host(secret: &Secret) -> String {
+    format!("_acme-challenge.{}.", &secret.host)
+}
+
+fn update_dns(command: &String, config: &FaytheConfig, secret: &Secret) -> Result<(), DNSError> {
     let mut child = Command::new("nsupdate")
         .arg("-k")
         .arg(&config.auth_dns_key)
