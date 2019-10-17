@@ -140,8 +140,12 @@ fn has_txt_record(response: &DnsResponse, expected: &String) -> Result<(), Issue
 
 fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOrder, IssuerError> {
 
-    let persist = MemoryPersist::new();
+    // start by deleting any existing challenges here,
+    // because we don't want to bother Let's encrypt and their rate limits,
+    // in case we have trouble communicating with the NS-server or similar.
+    nsupdate::delete(&config, &secret)?;
 
+    let persist = MemoryPersist::new();
     let url = DirectoryUrl::Other(&config.lets_encrypt_url);
     let dir = Directory::from_url(persist, url)?;
 
@@ -154,7 +158,7 @@ fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOr
         secret.challenge = challenge.dns_proof();
 
         //println!("please add this to dns: _acme-challenge.{} TXT {}", &secret.host, &secret.challenge);
-        nsupdate::update_dns(&config, &secret)?;
+        nsupdate::add(&config, &secret)?;
         let mut secret_ = secret.clone();
         Ok(IssueOrder{
             host: secret_.host.clone(),
