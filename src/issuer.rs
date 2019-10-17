@@ -119,6 +119,8 @@ fn validate_challenge(config: &FaytheConfig, order: &IssueOrder) -> Result<(), I
     //below check doesn't work - with the current impl
     //has_txt_record(&val_client.query(&name, DNSClass::IN, RecordType::TXT)?, &order.challenge)?;
     //sleep instead for now :(
+    //240000 = 4 minutes of sleep, which seem to be a good compromise between ensuring DNS-propagation on one hand
+    //while still making sure that the Lets encrypt replay nonce doesn't become invalid. (nonce validity = 5 minutes)
     thread::sleep(Duration::from_millis(240000));
     Ok(())
 }
