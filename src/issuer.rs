@@ -21,7 +21,7 @@ use acme_lib::create_p384_key;
 use std::fs::File;
 use std::io::Read;
 
-use crate::nsupdate;
+use crate::dns;
 
 
 pub fn process(config: FaytheConfig, rx: Receiver<kube::Secret>) {
@@ -70,8 +70,8 @@ fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Resul
 fn validate_challenge(config: &FaytheConfig, order: &IssueOrder) -> Result<(), IssuerError> {
     println!("Validating: {}", &order.host);
 
-    nsupdate::query(&config.auth_dns_server, &order.host, &order.challenge)?;
-    nsupdate::query(&config.val_dns_server, &order.host, &order.challenge)?;
+    dns::query(&config.auth_dns_server, &order.host, &order.challenge)?;
+    dns::query(&config.val_dns_server, &order.host, &order.challenge)?;
     Ok(())
 }
 
@@ -80,7 +80,7 @@ fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOr
     // start by deleting any existing challenges here,
     // because we don't want to bother Let's encrypt and their rate limits,
     // in case we have trouble communicating with the NS-server or similar.
-    nsupdate::delete(&config, &secret)?;
+    dns::delete(&config, &secret)?;
 
     let persist = MemoryPersist::new();
     let url = DirectoryUrl::Other(&config.lets_encrypt_url);
@@ -95,7 +95,7 @@ fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOr
         secret.challenge = challenge.dns_proof();
 
         //println!("please add this to dns: _acme-challenge.{} TXT {}", &secret.host, &secret.challenge);
-        nsupdate::add(&config, &secret)?;
+        dns::add(&config, &secret)?;
         let mut secret_ = secret.clone();
         Ok(IssueOrder{
             host: secret_.host.clone(),
@@ -145,10 +145,10 @@ pub enum IssuerError {
     NoAuthorizationsForDomain
 }
 
-impl std::convert::From<nsupdate::DNSError> for IssuerError {
-    fn from(error: nsupdate::DNSError) -> IssuerError {
+impl std::convert::From<dns::DNSError> for IssuerError {
+    fn from(error: dns::DNSError) -> IssuerError {
         match error {
-            nsupdate::DNSError::WrongAnswer => IssuerError::DNSWrongAnswer,
+            dns::DNSError::WrongAnswer => IssuerError::DNSWrongAnswer,
             _ => IssuerError::DNS
         }
     }
