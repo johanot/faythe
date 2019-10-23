@@ -11,6 +11,7 @@ use std::io::Write;
 use std::result::Result;
 use std::option::Option;
 use crate::FaytheConfig;
+use crate::monitor::Rewritable;
 
 use std::collections::HashMap;
 
@@ -50,7 +51,7 @@ pub fn new_secret(config: &FaytheConfig, h: &String) -> Secret {
     Secret {
         namespace: config.secret_namespace.clone(),
         name: h.clone(),
-        host: h.clone(),
+        host: h.rewrite_host(&config),
         challenge: String::new(),
         cert: Vec::new(),
         key: Vec::new(),
@@ -69,10 +70,10 @@ pub fn get_secrets(config: &FaytheConfig) -> Result<HashMap<String, Secret>, Kub
         let key = base64_decode(&i["data"]["key"])?;
         let cert = base64_decode(&i["data"]["cert"])?;
         let host = &i["metadata"]["labels"][&config.secret_hostlabel];
-        secrets.insert(sr(host)?, Secret{
+        secrets.insert(sr(host)?.rewrite_host(&config), Secret{
             name: sr(&i["metadata"]["name"])?,
             namespace: sr(&i["metadata"]["namespace"])?,
-            host: sr(host)?,
+            host: sr(host)?.rewrite_host(&config),
             challenge: String::new(),
             cert,
             key
@@ -235,10 +236,10 @@ impl Persistable for Secret {
             "apiVersion": "v1",
             "kind": "Secret",
             "metadata": {
-                "name": self.name,
+                "name": self.name.rewrite_k8s(&config),
                 "namespace": self.namespace,
                 "labels": {
-                    &config.secret_hostlabel: &self.host
+                    &config.secret_hostlabel: &self.host.rewrite_k8s(&config)
                 }
             },
             "type": "Opaque",

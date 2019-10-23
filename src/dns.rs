@@ -9,6 +9,7 @@ use std::collections::HashMap;
 use std::io::Write;
 
 use std::convert::From;
+use crate::monitor::Rewritable;
 
 pub enum DNSError {
     EXEC,
@@ -18,13 +19,12 @@ pub enum DNSError {
 }
 
 pub fn add(config: &FaytheConfig, secret: &Secret) -> Result<(), DNSError> {
-    let host = challenge_host(&secret.host);
     let command = format!("server {server}\n\
                            prereq nxdomain {host} TXT\n\
                            update add {host} 120 TXT \"{challenge}\"\n\
                            send\n",
                           server=&config.auth_dns_server,
-                          host=&host,
+                          host=&challenge_host(&config, &secret.host),
                           challenge=&secret.challenge);
 
     update_dns(&command, &config, &secret)
@@ -35,18 +35,18 @@ pub fn delete(config: &FaytheConfig, secret: &Secret) -> Result<(), DNSError> {
                            update delete {host} TXT\n\
                            send\n",
                           server=&config.auth_dns_server,
-                          host=challenge_host(&secret.host));
+                          host=challenge_host(&config, &secret.host));
 
     update_dns(&command, &config, &secret)
 }
 
-pub fn query(server: &String, host: &String, challenge: &String) -> Result<(), DNSError> {
+pub fn query(config: &FaytheConfig, server: &String, host: &String, challenge: &String) -> Result<(), DNSError> {
     let cmd = Command::new("dig")
         .arg(format!("@{}", server))
         .arg("+short")
         .arg("-t")
         .arg("TXT")
-        .arg(challenge_host(&host))
+        .arg(challenge_host(&config, &host))
         .output()?;
 
     let output = String::from_utf8(cmd.stdout)?;
@@ -58,8 +58,8 @@ pub fn query(server: &String, host: &String, challenge: &String) -> Result<(), D
     }
 }
 
-fn challenge_host(host: &String) -> String {
-    format!("_acme-challenge.{}.", &host)
+fn challenge_host(config: &FaytheConfig, host: &String) -> String {
+    format!("_acme-challenge.{}.", &host.rewrite_dns(&config))
 }
 
 fn update_dns(command: &String, config: &FaytheConfig, secret: &Secret) -> Result<(), DNSError> {

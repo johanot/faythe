@@ -28,6 +28,37 @@ impl ShouldRetry for kube::Ingress {
     }
 }
 
+pub trait Rewritable {
+    fn rewrite_host(&self, config: &FaytheConfig) -> String;
+    fn rewrite_k8s(&self, config: &FaytheConfig) -> String;
+    fn rewrite_dns(&self, config: &FaytheConfig) -> String;
+    fn rewrite(&self, config: &FaytheConfig, prefix: &String) -> String;
+}
+
+impl Rewritable for String {
+    fn rewrite_host(&self, config: &FaytheConfig) -> String {
+        self.rewrite(&config, &"*.".to_string())
+    }
+    fn rewrite_k8s(&self, config: &FaytheConfig) -> String {
+        self.rewrite(&config, &format!("{}.", config.wildcard_cert_k8s_prefix))
+    }
+    fn rewrite_dns(&self, config: &FaytheConfig) -> String {
+        self.rewrite(&config, &String::new())
+    }
+    fn rewrite(&self, config: &FaytheConfig, prefix: &String) -> String {
+        let mut h = self.clone();
+        if config.issue_wildcard_certs {
+            let mut iter = h.split('.');
+            let first = iter.next();
+            if first.is_some() && first.unwrap() != prefix {
+                let parts: Vec<&str> = iter.collect();
+                h = format!("{prefix}{host}", prefix=prefix, host=parts.join("."))
+            }
+        }
+        h
+    }
+}
+
 pub fn monitor(config: FaytheConfig, tx: Sender<kube::Secret>) -> impl FnOnce() {
     move || {
         log::event("monitoring-started");
@@ -39,12 +70,12 @@ pub fn monitor(config: FaytheConfig, tx: Sender<kube::Secret>) -> impl FnOnce() 
                 for i in &ingresses {
                     if i.should_retry(&config) {
                         for h in &i.hosts {
-                            let s = secrets.get(h)
+                            let s = secrets.get(&h.rewrite_k8s(&config))
                                 .and_then(|s| Some(s.clone()))
                                 .unwrap_or(kube::new_secret(&config, &h));
 
                             if !is_valid(&config, &s) {
-                                println!("(re)-issuing: {}", h);
+                                println!("(re)-issuing: {}", &s.host);
                                 match i.touch() {
                                     Ok(_) => tx.send(s).unwrap(),
                                     Err(e) => log::error("failed to annotate ingress, bailing out.", &e)

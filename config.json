@@ -7,5 +7,6 @@
    "auth_dns_server": "ns.dbc.dk",
    "auth_dns_zone": "k8s.dbc.dk",
    "auth_dns_key": "k8s.dbc.dk.key",
-   "val_dns_server": "dns.google"
+   "val_dns_server": "dns.google",
+   "issue_wildcard_certs": false
 }
