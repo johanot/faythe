@@ -49,7 +49,7 @@ mod monitor;
 mod issuer;
 mod kube;
 mod log;
-mod nsupdate;
+mod dns;
 
 custom_error!{ FaytheError
     StringConvertion{source: std::string::FromUtf8Error} = "string error",
