@@ -30,6 +30,10 @@ pub struct FaytheConfig {
     pub renewal_threshold: u16,
     #[serde(default = "default_issue_grace")]
     pub issue_grace: u64,
+    #[serde(default = "default_issue_wildcard_certs")]
+    pub issue_wildcard_certs: bool,
+    #[serde(default = "default_wildcard_cert_k8s_prefix")]
+    pub wildcard_cert_k8s_prefix: String,
 }
 
 // millis (5 seconds)
@@ -44,6 +48,10 @@ fn default_issue_grace() -> u64 {
 
 // days
 fn default_renewal_threshold() -> u16 { 30 }
+
+fn default_issue_wildcard_certs() -> bool { false }
+
+fn default_wildcard_cert_k8s_prefix() -> String { "wild--card".to_string() }
 
 mod monitor;
 mod issuer;

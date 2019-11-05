@@ -22,6 +22,7 @@ use std::fs::File;
 use std::io::Read;
 
 use crate::dns;
+use crate::monitor::Rewritable;
 
 
 pub fn process(config: FaytheConfig, rx: Receiver<kube::Secret>) {
@@ -70,8 +71,8 @@ fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Resul
 fn validate_challenge(config: &FaytheConfig, order: &IssueOrder) -> Result<(), IssuerError> {
     println!("Validating: {}", &order.host);
 
-    dns::query(&config.auth_dns_server, &order.host, &order.challenge)?;
-    dns::query(&config.val_dns_server, &order.host, &order.challenge)?;
+    dns::query(&config, &config.auth_dns_server, &order.host.rewrite_dns(&config), &order.challenge)?;
+    dns::query(&config, &config.val_dns_server, &order.host.rewrite_dns(&config), &order.challenge)?;
     Ok(())
 }
 

@@ -28,6 +28,59 @@ impl ShouldRetry for kube::Ingress {
     }
 }
 
+pub trait Rewritable {
+    fn rewrite_host(&self, config: &FaytheConfig) -> String;
+    fn rewrite_k8s(&self, config: &FaytheConfig) -> String;
+    fn rewrite_dns(&self, config: &FaytheConfig) -> String;
+    fn rewrite(&self, config: &FaytheConfig, prefix: &String) -> String;
+}
+
+/*
+    Hostname rewrite occurs _only_ if wildcard certificates are to be issued.
+    If a certificate for "service.example.com" is wanted, Faythe should issue a cert for: "*.example.com".
+    The Rewritable Trait (implemented below) swaps out the first part of the hostname, meaning "service." for "service.example.com"
+    and replaces it with "something else". See detailed comments below.
+*/
+impl Rewritable for String {
+    /*
+        The certificate common name (CN) should contain "*.example.com"
+        The same goes for the k8s secret label value, i.e.
+        ingress.hostname = "*.example.com".
+    */
+    fn rewrite_host(&self, config: &FaytheConfig) -> String {
+        self.rewrite(&config, &"*.".to_string())
+    }
+    /*
+        Kubernetes object names must be DNS-compatible and thus cannot contain asterisks (*).
+        config.wildcard_cert_k8s_prefix decides what to prefix k8s object names, the default being: "wild--card"
+        a wildcard cert for example.com would then be named: "wild--card.example.com" in k8s.
+    */
+    fn rewrite_k8s(&self, config: &FaytheConfig) -> String {
+        self.rewrite(&config, &format!("{}.", config.wildcard_cert_k8s_prefix))
+    }
+    /*
+        Normally the DNS-record for challenges would be named: _acme-challenge.<domain>, e.g.
+        "_acme-challenge.service.example.com".
+        For wildcard certs, the challenge has to be placed one level up in the DNS-zone, i.e.
+        _acme-challenge.example.com, hence "rewrite_dns" inserts a blank host-prefix.
+    */
+    fn rewrite_dns(&self, config: &FaytheConfig) -> String {
+        self.rewrite(&config, &String::new())
+    }
+    fn rewrite(&self, config: &FaytheConfig, prefix: &String) -> String {
+        let mut h = self.clone();
+        if config.issue_wildcard_certs {
+            let mut iter = h.split('.');
+            let first = iter.next();
+            if first.is_some() && first.unwrap() != prefix {
+                let parts: Vec<&str> = iter.collect();
+                h = format!("{prefix}{host}", prefix=prefix, host=parts.join("."))
+            }
+        }
+        h
+    }
+}
+
 pub fn monitor(config: FaytheConfig, tx: Sender<kube::Secret>) -> impl FnOnce() {
     move || {
         log::event("monitoring-started");
@@ -39,12 +92,12 @@ pub fn monitor(config: FaytheConfig, tx: Sender<kube::Secret>) -> impl FnOnce() 
                 for i in &ingresses {
                     if i.should_retry(&config) {
                         for h in &i.hosts {
-                            let s = secrets.get(h)
+                            let s = secrets.get(&h.rewrite_k8s(&config))
                                 .and_then(|s| Some(s.clone()))
                                 .unwrap_or(kube::new_secret(&config, &h));
 
                             if !is_valid(&config, &s) {
-                                println!("(re)-issuing: {}", h);
+                                println!("(re)-issuing: {}", &s.host);
                                 match i.touch() {
                                     Ok(_) => tx.send(s).unwrap(),
                                     Err(e) => log::error("failed to annotate ingress, bailing out.", &e)

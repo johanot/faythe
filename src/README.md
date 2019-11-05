@@ -42,6 +42,11 @@ default: 30
 not to spam Let's Encrypt with repeated requests. See: https://letsencrypt.org/docs/rate-limits/
 default: 3600000 (1 hour)
 
+**issue_wildcard_certs** Whether to issue wildcard certificates. (true/false)
+default: false
+
+**wildcard_cert_k8s_prefix** The name prefix to use for wildcard certificates in Kubernetes, e.g. (prefix).wildcardexample.com.
+default: "wild--card"
 
 ## Design
 
