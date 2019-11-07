@@ -19,6 +19,7 @@ pub struct FaytheConfig {
     pub secret_namespace: String,
     pub secret_hostlabel: String,
     pub lets_encrypt_url: String,
+    pub lets_encrypt_proxy: Option<String>,
     pub lets_encrypt_email: String,
     pub auth_dns_server: String,
     pub auth_dns_key: String,
