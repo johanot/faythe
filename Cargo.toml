@@ -13,4 +13,4 @@ custom_error = "1.7.1"
 x509-parser = "0.6.0"
 base64 = "0.10.1"
 time = "0.1.42"
-acme-lib = "0.5.2"
+acme-lib = { git = 'https://github.com/DBCDK/acme-lib', branch = 'v0.5.2-reqwest' }

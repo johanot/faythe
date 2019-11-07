@@ -3,6 +3,7 @@
    "secret_namespace": "shelob",
    "secret_hostlabel": "ingress.hostname",
    "lets_encrypt_url": "https://acme-staging-v02.api.letsencrypt.org/directory",
+   "lets_encrypt_proxy": "http://dmzproxy.dbc.dk:3128",
    "lets_encrypt_email": "jth@dbc.dk",
    "auth_dns_server": "ns.dbc.dk",
    "auth_dns_zone": "k8s.dbc.dk",

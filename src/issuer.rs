@@ -14,7 +14,7 @@ use std::str::FromStr;
 use std::error::Error;
 use x509_parser::objects::Nid::ChallengePassword;
 
-use acme_lib::{Directory, DirectoryUrl, create_rsa_key};
+use acme_lib::{ClientConfig, Directory, DirectoryUrl, create_rsa_key};
 use acme_lib::persist::{FilePersist, MemoryPersist};
 use acme_lib::create_p384_key;
 
@@ -23,7 +23,6 @@ use std::io::Read;
 
 use crate::dns;
 use crate::monitor::Rewritable;
-
 
 pub fn process(config: FaytheConfig, rx: Receiver<kube::Secret>) {
     log::event("processing-started");
@@ -71,8 +70,8 @@ fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Resul
 fn validate_challenge(config: &FaytheConfig, order: &IssueOrder) -> Result<(), IssuerError> {
     println!("Validating: {}", &order.host);
 
-    dns::query(&config, &config.auth_dns_server, &order.host.rewrite_dns(&config), &order.challenge)?;
-    dns::query(&config, &config.val_dns_server, &order.host.rewrite_dns(&config), &order.challenge)?;
+    dns::query(&config, &config.auth_dns_server, &order.host, &order.challenge)?;
+    dns::query(&config, &config.val_dns_server, &order.host, &order.challenge)?;
     Ok(())
 }
 
@@ -85,7 +84,12 @@ fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOr
 
     let persist = MemoryPersist::new();
     let url = DirectoryUrl::Other(&config.lets_encrypt_url);
-    let dir = Directory::from_url(persist, url)?;
+
+    let cc = match &config.lets_encrypt_proxy {
+        Some(proxy) => ClientConfig::with_proxy(proxy.clone()),
+        None => ClientConfig::default()
+    };
+    let dir = Directory::from_url_with_config(persist, url, &cc)?;
 
     let acc = dir.account(&config.lets_encrypt_email)?;
     let mut ord_new = acc.new_order(&secret.host, &[])?;
