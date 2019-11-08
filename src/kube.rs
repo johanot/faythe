@@ -70,7 +70,7 @@ pub fn get_secrets(config: &FaytheConfig) -> Result<HashMap<String, Secret>, Kub
         let key = base64_decode(&i["data"]["key"])?;
         let cert = base64_decode(&i["data"]["cert"])?;
         let host = &i["metadata"]["labels"][&config.secret_hostlabel];
-        secrets.insert(sr(host)?.rewrite_host(&config), Secret{
+        secrets.insert(sr(host)?, Secret{
             name: sr(&i["metadata"]["name"])?,
             namespace: sr(&i["metadata"]["namespace"])?,
             host: sr(host)?.rewrite_host(&config),
