@@ -23,7 +23,7 @@ pub struct FaytheConfig {
     pub lets_encrypt_email: String,
     pub auth_dns_server: String,
     pub auth_dns_key: String,
-    pub val_dns_server: String,
+    pub val_dns_servers: Vec<String>,
     pub auth_dns_zone: String,
     #[serde(default = "default_interval")]
     pub monitor_interval: u64,
