@@ -55,7 +55,7 @@ fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Resul
                 Ok(_) =>  (order.issue)(&config),
                 Err(e) => match e {
                     IssuerError::DNSWrongAnswer => {
-                        println!("Wrong DNS answer: {}", &order.host);
+                        log::info("Wrong DNS answer", (&order.host).into());
                         // if now is less than 5 minutes since LE challenge request, put the order back on the queue for processing,
                         // otherwise: give up. 5 minutes is the apparent max validity for LE replay nonces anyway.
                         if time::now_utc() < order.challenge_time + time::Duration::minutes(5) {
@@ -74,7 +74,7 @@ fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Resul
 }
 
 fn validate_challenge(config: &FaytheConfig, order: &IssueOrder) -> Result<(), IssuerError> {
-    println!("Validating: {}", &order.host);
+    log::info("Validating", (&order.host).into());
 
     dns::query(&config, &config.auth_dns_server, &order.host, &order.challenge)?;
     for d in &config.val_dns_servers {
@@ -115,11 +115,10 @@ fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOr
             challenge: secret_.challenge.clone(),
             challenge_time: time::now_utc(),
             issue: Box::new(move |conf: &FaytheConfig| -> Result<(), IssuerError> {
-                println!("challenge propagated!");
+                log::info("challenge propagated", (&secret_.host).into());
                 challenge.validate(5000)?;
                 ord_new.refresh()?;
-                println!("challenge validated!");
-
+                log::info("challenge validated", (&secret_.host).into());
 
                 let (pkey_pri, pkey_pub) = create_rsa_key(2048);
                 let ord_csr = match ord_new.confirm_validations() {
@@ -127,7 +126,6 @@ fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOr
                     None => Err(IssuerError::ChallengeRejected)
                 }?;
 
-                println!("issuing!");
                 let ord_cert =
                     ord_csr.finalize_pkey(pkey_pri, pkey_pub, 5000)?;
                 let cert = ord_cert.download_and_save_cert()?;

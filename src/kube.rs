@@ -14,6 +14,8 @@ use crate::FaytheConfig;
 use crate::monitor::Rewritable;
 
 use std::collections::HashMap;
+use self::serde::{Serialize, Serializer};
+use std::error::Error;
 
 #[derive(Debug, Clone)]
 pub struct Ingress {
@@ -42,6 +44,13 @@ custom_error!{ pub KubeError
     Format = "format error",
     Base64Decode{source: base64::DecodeError} = "base64 decode",
     ParseError{source: time::ParseError} = "failed to parse timestamp"
+}
+
+impl Serialize for KubeError {
+    fn serialize<S>(&self, serializer: S) -> Result<<S as Serializer>::Ok, <S as Serializer>::Error> where
+        S: Serializer {
+        serializer.serialize_str(self.description())
+    }
 }
 
 const TIME_FORMAT: &str = "%Y-%m-%dT%H:%M:%S%z"; // 2019-10-09T11:50:22+0200
