@@ -56,9 +56,15 @@ fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Resul
                 Err(e) => match e {
                     IssuerError::DNSWrongAnswer => {
                         println!("Wrong DNS answer: {}", &order.host);
-                        queue.push_back(order);
-                            Ok(())
-                        },
+                        // if now is less than 5 minutes since LE challenge request, put the order back on the queue for processing,
+                        // otherwise: give up. 5 minutes is the apparent max validity for LE replay nonces anyway.
+                        if time::now_utc() < order.challenge_time + time::Duration::minutes(5) {
+                            queue.push_back(order);
+                        } else {
+                            log::event(&format!("giving up validating dns challenge for host: {}", &order.host));
+                        }
+                        Ok(())
+                    },
                         _ => Err(e)
                     }
             }
@@ -107,6 +113,7 @@ fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOr
         Ok(IssueOrder{
             host: secret_.host.clone(),
             challenge: secret_.challenge.clone(),
+            challenge_time: time::now_utc(),
             issue: Box::new(move |conf: &FaytheConfig| -> Result<(), IssuerError> {
                 println!("challenge propagated!");
                 challenge.validate(5000)?;
@@ -141,7 +148,8 @@ fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOr
 struct IssueOrder {
     host: String,
     challenge: String,
-    issue: Box<FnOnce(&FaytheConfig) -> Result<(), IssuerError>>
+    challenge_time: time::Tm,
+    issue: Box<FnOnce(&FaytheConfig) -> Result<(), IssuerError>>,
 }
 
 pub enum IssuerError {
