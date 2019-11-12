@@ -29,7 +29,7 @@ will silently ignore `myingress.badexample.com`.
 
 **auth_dns_key** Path to an nsupdate compatible private key to use for authing DDNS-requests at `auth_dns_server`.  
 
-**val_dns_server** Secondary DNS-server to use for validating that new DNS-records have propagated correctly.
+**val_dns_servers** List of external DNS-servers to use for validating that new DNS-records have propagated correctly.
 Should preferably be set to a server which is further away (net topology-wise) than `auth_dns_server`.
 
 **monitor_interval** The interval (in milliseconds) between each re-sync of data from the Kubernetes API. 

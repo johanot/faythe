@@ -71,7 +71,9 @@ fn validate_challenge(config: &FaytheConfig, order: &IssueOrder) -> Result<(), I
     println!("Validating: {}", &order.host);
 
     dns::query(&config, &config.auth_dns_server, &order.host, &order.challenge)?;
-    dns::query(&config, &config.val_dns_server, &order.host, &order.challenge)?;
+    for d in &config.val_dns_servers {
+        dns::query(&config, &d, &order.host, &order.challenge)?;
+    }
     Ok(())
 }
 
