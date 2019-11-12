@@ -42,9 +42,9 @@ fn default_interval() -> u64 {
     5 * 1000
 }
 
-// millis (1 hour)
+// millis (8 hours)
 fn default_issue_grace() -> u64 {
-    60*60*1000
+    60*60*8000
 }
 
 // days

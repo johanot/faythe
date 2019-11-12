@@ -40,7 +40,7 @@ default: 30
 
 **issue_grace** The grace period (in milliseconds) that must pass between each attempt to issue a certificate for the same domain. In order
 not to spam Let's Encrypt with repeated requests. See: https://letsencrypt.org/docs/rate-limits/
-default: 3600000 (1 hour)
+default: 28800000 (8 hours)
 
 **issue_wildcard_certs** Whether to issue wildcard certificates. (true/false)
 default: false
