@@ -110,7 +110,6 @@ pub fn monitor(config: FaytheConfig, tx: Sender<kube::Secret>) -> impl FnOnce() 
                 }
                 Ok(Box::new(ingresses))
             }().or_else(|res: kube::KubeError| -> Result<Box<dyn Any>, kube::KubeError> {
-                log::error("failed to talk to kube", (&res).into());
                 Err(res)
             });
 

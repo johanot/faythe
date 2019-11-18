@@ -54,6 +54,7 @@ fn default_issue_wildcard_certs() -> bool { false }
 
 fn default_wildcard_cert_k8s_prefix() -> String { "wild--card".to_string() }
 
+mod exec;
 mod monitor;
 mod issuer;
 mod kube;

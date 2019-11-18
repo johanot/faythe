@@ -5,6 +5,7 @@ use serde_json::json;
 use core::fmt::Debug;
 use serde::ser::{Serialize, SerializeStruct, Serializer};
 use std::default::Default;
+use crate::exec::ExecErrorInfo;
 
 #[derive(Serialize, Debug)]
 pub enum LogLevel {
@@ -22,7 +23,7 @@ struct LogEntry<'se, T> where T: Serialize {
 
 #[derive(Serialize)]
 pub struct LogData<T> where T: Serialize {
-    data: Option<T>
+    pub data: Option<T>
 }
 
 impl <'se, T>std::convert::From<&'se T> for LogData<String> where T: Debug {
