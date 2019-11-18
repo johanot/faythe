@@ -9,20 +9,10 @@ use std::sync::mpsc::{Receiver,TryRecvError};
 use crate::kube::{Secret, Persistable};
 use std::collections::VecDeque;
 
-use std::net::Ipv4Addr;
-use std::str::FromStr;
-use std::error::Error;
-use x509_parser::objects::Nid::ChallengePassword;
-
 use acme_lib::{ClientConfig, Directory, DirectoryUrl, create_rsa_key};
-use acme_lib::persist::{FilePersist, MemoryPersist};
-use acme_lib::create_p384_key;
-
-use std::fs::File;
-use std::io::Read;
+use acme_lib::persist::MemoryPersist;
 
 use crate::dns;
-use crate::monitor::Rewritable;
 
 pub fn process(config: FaytheConfig, rx: Receiver<kube::Secret>) {
     log::event("processing-started");
@@ -34,7 +24,7 @@ pub fn process(config: FaytheConfig, rx: Receiver<kube::Secret>) {
             Ok(mut secret) => {
                 match setup_challenge(&config, &mut secret) {
                     Ok(order) => queue.push_back(order),
-                    Err(err) => log::event(&("failed to setup challenge for host: ".to_owned() + &secret.host))
+                    Err(_) => log::event(&("failed to setup challenge for host: ".to_owned() + &secret.host))
                 };
             },
             Err(TryRecvError::Disconnected) => panic!("channel disconnected"),
@@ -55,7 +45,7 @@ fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Resul
                 Ok(_) =>  (order.issue)(&config),
                 Err(e) => match e {
                     IssuerError::DNSWrongAnswer => {
-                        println!("Wrong DNS answer: {}", &order.host);
+                        log::info("Wrong DNS answer", &order.host);
                         // if now is less than 5 minutes since LE challenge request, put the order back on the queue for processing,
                         // otherwise: give up. 5 minutes is the apparent max validity for LE replay nonces anyway.
                         if time::now_utc() < order.challenge_time + time::Duration::minutes(5) {
@@ -74,7 +64,7 @@ fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Resul
 }
 
 fn validate_challenge(config: &FaytheConfig, order: &IssueOrder) -> Result<(), IssuerError> {
-    println!("Validating: {}", &order.host);
+    log::info("Validating", &order.host);
 
     dns::query(&config, &config.auth_dns_server, &order.host, &order.challenge)?;
     for d in &config.val_dns_servers {
@@ -115,11 +105,10 @@ fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOr
             challenge: secret_.challenge.clone(),
             challenge_time: time::now_utc(),
             issue: Box::new(move |conf: &FaytheConfig| -> Result<(), IssuerError> {
-                println!("challenge propagated!");
+                log::info("challenge propagated", &secret_.host);
                 challenge.validate(5000)?;
                 ord_new.refresh()?;
-                println!("challenge validated!");
-
+                log::info("challenge validated", &secret_.host);
 
                 let (pkey_pri, pkey_pub) = create_rsa_key(2048);
                 let ord_csr = match ord_new.confirm_validations() {
@@ -127,7 +116,6 @@ fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOr
                     None => Err(IssuerError::ChallengeRejected)
                 }?;
 
-                println!("issuing!");
                 let ord_cert =
                     ord_csr.finalize_pkey(pkey_pri, pkey_pub, 5000)?;
                 let cert = ord_cert.download_and_save_cert()?;
@@ -149,7 +137,7 @@ struct IssueOrder {
     host: String,
     challenge: String,
     challenge_time: time::Tm,
-    issue: Box<FnOnce(&FaytheConfig) -> Result<(), IssuerError>>,
+    issue: Box<dyn FnOnce(&FaytheConfig) -> Result<(), IssuerError>>,
 }
 
 pub enum IssuerError {
@@ -170,7 +158,7 @@ impl std::convert::From<dns::DNSError> for IssuerError {
 }
 
 impl std::convert::From<acme_lib::Error> for IssuerError {
-    fn from(error: acme_lib::Error) -> IssuerError {
+    fn from(_: acme_lib::Error) -> IssuerError {
         IssuerError::AcmeClient
     }
 }

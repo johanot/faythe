@@ -7,13 +7,16 @@ extern crate time;
 use serde_json::{Value};
 use serde_json::json;
 use std::process::{Command, Stdio};
-use std::io::Write;
 use std::result::Result;
 use std::option::Option;
-use crate::FaytheConfig;
+use crate::{FaytheConfig, exec};
 use crate::monitor::Rewritable;
 
 use std::collections::HashMap;
+
+use crate::exec::{SpawnOk, OpenStdin, Wait, ExecErrorInfo};
+use crate::log;
+use self::base64::DecodeError;
 
 #[derive(Debug, Clone)]
 pub struct Ingress {
@@ -31,17 +34,6 @@ pub struct Secret {
     pub cert: Vec<u8>,
     pub key: Vec<u8>,
     pub challenge: String,
-}
-
-//TODO: get rid of this macro, I thought is was smart, I was wrong
-custom_error!{ pub KubeError
-    StringConvertion{source: std::string::FromUtf8Error} = "string error",
-    Deserialize{source: serde_json::Error} = "parse error",
-    Exec{source: std::io::Error} = "exec error",
-    ExecApply = "exec error",
-    Format = "format error",
-    Base64Decode{source: base64::DecodeError} = "base64 decode",
-    ParseError{source: time::ParseError} = "failed to parse timestamp"
 }
 
 const TIME_FORMAT: &str = "%Y-%m-%dT%H:%M:%S%z"; // 2019-10-09T11:50:22+0200
@@ -106,42 +98,29 @@ pub fn get_ingresses(host_suffix: &String) -> Result<Vec<Ingress>, KubeError> {
 }
 
 fn kubectl(args: &[&str]) -> Result<Value, KubeError> {
-    let cmd = Command::new("kubectl")
-        .args(args)
+    let mut cmd = Command::new("kubectl");
+    let mut child = cmd.args(args)
         .arg("-o")
         .arg("json")
-        .output()?;
+        .spawn_ok()?;
 
-    let v = serde_json::from_str(&String::from_utf8(cmd.stdout)?);
-    Ok(v?)
+    Ok(child.output_json()?)
 }
 
-fn kubectl_apply(args: &[&str], doc: &Value) -> Result<(), KubeError> {
-    let mut cmd = Command::new("kubectl")
-        .arg("apply")
+fn kubectl_apply(args: &[&str], doc: &Value) -> Result<(), ExecErrorInfo> {
+    let mut cmd = Command::new("kubectl");
+    let mut child = cmd.arg("apply")
         .args(args)
         .arg("-f")
         .arg("-")
         .stdin(Stdio::piped())
-        .spawn()?;
+        .spawn_ok()?;
 
     {
-        let stdin = match cmd.stdin.as_mut() {
-            Some(s) => Ok(s),
-            None => Err(KubeError::ExecApply)
-        }?;
-        stdin.write_all(format!("{}", doc).as_bytes())?;
+        child.stdin_write(&format!("{}", doc))?;
     }
 
-    let status = cmd.wait()?;
-    match status.code() {
-        Some(code) => if code == 0 {
-            Ok(())
-        } else {
-            Err(KubeError::ExecApply)
-        },
-        None => Err(KubeError::ExecApply)
-    }
+    child.wait()
 }
 
 fn vec(subject: &Value) -> Result<Vec<Value>, KubeError> {
@@ -249,9 +228,35 @@ impl Persistable for Secret {
             }
         });
 
-        kubectl_apply(&[
+        Ok(kubectl_apply(&[
             "-n",
             self.namespace.as_str()
-        ], &doc)
+        ], &doc)?)
+    }
+}
+
+#[derive(Debug)]
+pub enum KubeError {
+    Exec,
+    Format
+}
+
+impl std::convert::From<exec::ExecErrorInfo> for KubeError {
+    fn from(err: ExecErrorInfo) -> Self {
+        log::error("Failed to exec kubectl command", (&err).to_log_data());
+        KubeError::Exec
+    }
+}
+
+impl std::convert::From<base64::DecodeError> for KubeError {
+    fn from(err: DecodeError) -> Self {
+        log::error("Failed to base64 decode secrets", &err);
+        KubeError::Format
+    }
+}
+impl std::convert::From<time::ParseError> for KubeError {
+    fn from(err: time::ParseError) -> Self {
+        log::error("Failed to parse timestamp", &err);
+        KubeError::Format
     }
 }
