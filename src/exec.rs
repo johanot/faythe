@@ -1,5 +1,4 @@
 use std::process::{Command, Child, Output};
-use crate::log::LogLevel::ERROR;
 use serde_json::Value;
 use std::error::Error;
 use serde::export::fmt::Debug;

@@ -9,20 +9,10 @@ use std::sync::mpsc::{Receiver,TryRecvError};
 use crate::kube::{Secret, Persistable};
 use std::collections::VecDeque;
 
-use std::net::Ipv4Addr;
-use std::str::FromStr;
-use std::error::Error;
-use x509_parser::objects::Nid::ChallengePassword;
-
 use acme_lib::{ClientConfig, Directory, DirectoryUrl, create_rsa_key};
-use acme_lib::persist::{FilePersist, MemoryPersist};
-use acme_lib::create_p384_key;
-
-use std::fs::File;
-use std::io::Read;
+use acme_lib::persist::MemoryPersist;
 
 use crate::dns;
-use crate::monitor::Rewritable;
 
 pub fn process(config: FaytheConfig, rx: Receiver<kube::Secret>) {
     log::event("processing-started");
@@ -34,7 +24,7 @@ pub fn process(config: FaytheConfig, rx: Receiver<kube::Secret>) {
             Ok(mut secret) => {
                 match setup_challenge(&config, &mut secret) {
                     Ok(order) => queue.push_back(order),
-                    Err(err) => log::event(&("failed to setup challenge for host: ".to_owned() + &secret.host))
+                    Err(_) => log::event(&("failed to setup challenge for host: ".to_owned() + &secret.host))
                 };
             },
             Err(TryRecvError::Disconnected) => panic!("channel disconnected"),
@@ -147,7 +137,7 @@ struct IssueOrder {
     host: String,
     challenge: String,
     challenge_time: time::Tm,
-    issue: Box<FnOnce(&FaytheConfig) -> Result<(), IssuerError>>,
+    issue: Box<dyn FnOnce(&FaytheConfig) -> Result<(), IssuerError>>,
 }
 
 pub enum IssuerError {
@@ -168,7 +158,7 @@ impl std::convert::From<dns::DNSError> for IssuerError {
 }
 
 impl std::convert::From<acme_lib::Error> for IssuerError {
-    fn from(error: acme_lib::Error) -> IssuerError {
+    fn from(_: acme_lib::Error) -> IssuerError {
         IssuerError::AcmeClient
     }
 }

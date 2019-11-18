@@ -7,15 +7,12 @@ extern crate time;
 use serde_json::{Value};
 use serde_json::json;
 use std::process::{Command, Stdio};
-use std::io::Write;
 use std::result::Result;
 use std::option::Option;
 use crate::{FaytheConfig, exec};
 use crate::monitor::Rewritable;
 
 use std::collections::HashMap;
-use self::serde::{Serialize, Serializer};
-use std::error::Error;
 
 use crate::exec::{SpawnOk, OpenStdin, Wait, ExecErrorInfo};
 use crate::log;

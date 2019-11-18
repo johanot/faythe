@@ -1,11 +1,8 @@
 
 extern crate time;
 
-use serde_json::json;
 use core::fmt::Debug;
 use serde::ser::{Serialize, SerializeStruct, Serializer};
-use std::default::Default;
-use crate::exec::ExecErrorInfo;
 
 #[derive(Serialize, Debug)]
 pub enum LogLevel {

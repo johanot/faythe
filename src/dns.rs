@@ -1,12 +1,8 @@
 
-use std::process::{ExitStatus, Command, Stdio};
+use std::process::{Command, Stdio};
 use std::result::Result;
 use crate::FaytheConfig;
 use crate::kube::Secret;
-
-use std::collections::HashMap;
-
-use std::io::Write;
 
 use std::convert::From;
 use crate::monitor::Rewritable;
@@ -65,7 +61,7 @@ fn challenge_host(config: &FaytheConfig, host: &String) -> String {
     format!("_acme-challenge.{}.", &host.rewrite_dns(&config))
 }
 
-fn update_dns(command: &String, config: &FaytheConfig, secret: &Secret) -> Result<(), DNSError> {
+fn update_dns(command: &String, config: &FaytheConfig, _: &Secret) -> Result<(), DNSError> {
     let mut cmd = Command::new("nsupdate");
     let mut child = cmd.arg("-k")
         .arg(&config.auth_dns_key)
@@ -80,13 +76,13 @@ fn update_dns(command: &String, config: &FaytheConfig, secret: &Secret) -> Resul
 
 
 impl From<std::io::Error> for DNSError {
-    fn from(error: std::io::Error) -> DNSError {
+    fn from(_: std::io::Error) -> DNSError {
         DNSError::Exec
     }
 }
 
 impl From<std::string::FromUtf8Error> for DNSError {
-    fn from(error: std::string::FromUtf8Error) -> DNSError {
+    fn from(_: std::string::FromUtf8Error) -> DNSError {
         DNSError::OutputFormat
     }
 }

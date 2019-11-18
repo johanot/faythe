@@ -5,7 +5,7 @@ use std::thread;
 use std::time::Duration;
 
 use crate::{kube, FaytheConfig};
-use crate::kube::{K8SObject, Secret};
+use crate::kube::K8SObject;
 use crate::log;
 
 use std::io::Cursor;
@@ -14,8 +14,6 @@ use std::result::Result;
 use std::any::Any;
 
 use std::sync::mpsc::Sender;
-use core::fmt::Debug;
-use acme_lib::persist::PersistKind::Certificate;
 
 
 trait ShouldRetry {
