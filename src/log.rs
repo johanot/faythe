@@ -55,7 +55,7 @@ impl <T>Serialize for LogEntry<'_, T> where T: Serialize {
         s.serialize_field("level", &self.level)?;
         s.serialize_field("message", &self.message)?;
         if self.data.data.is_some() {
-            s.serialize_field("data", &self.data)?;
+            s.serialize_field("data", &self.data.data)?;
         }
         s.end()
     }

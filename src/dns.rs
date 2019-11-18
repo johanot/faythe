@@ -11,9 +11,11 @@ use std::io::Write;
 use std::convert::From;
 use crate::monitor::Rewritable;
 
+use crate::exec::{SpawnOk, OpenStdin, Wait, ExecErrorInfo};
+use crate::log;
+
 pub enum DNSError {
-    EXEC,
-    EXITCODE(i32),
+    Exec,
     OutputFormat,
     WrongAnswer
 }
@@ -41,15 +43,16 @@ pub fn delete(config: &FaytheConfig, secret: &Secret) -> Result<(), DNSError> {
 }
 
 pub fn query(config: &FaytheConfig, server: &String, host: &String, challenge: &String) -> Result<(), DNSError> {
-    let cmd = Command::new("dig")
-        .arg(format!("@{}", server))
+    let mut cmd = Command::new("dig");
+    let mut child = cmd.arg(format!("@{}", server))
         .arg("+short")
         .arg("-t")
         .arg("TXT")
         .arg(challenge_host(&config, &host))
-        .output()?;
+        .spawn_ok()?;
 
-    let output = String::from_utf8(cmd.stdout)?;
+    let out = child.wait_for_output()?;
+    let output = String::from_utf8(out.stdout)?;
 
     let trim_chars: &[_] = &['"', '\n'];
     match &output.trim_matches(trim_chars) == challenge {
@@ -63,34 +66,22 @@ fn challenge_host(config: &FaytheConfig, host: &String) -> String {
 }
 
 fn update_dns(command: &String, config: &FaytheConfig, secret: &Secret) -> Result<(), DNSError> {
-    let mut child = Command::new("nsupdate")
-        .arg("-k")
+    let mut cmd = Command::new("nsupdate");
+    let mut child = cmd.arg("-k")
         .arg(&config.auth_dns_key)
         .stdin(Stdio::piped())
-        .spawn()?;
+        .spawn_ok()?;
     {
-        let stdin = match child.stdin.as_mut() {
-            Some(s) => Ok(s),
-            None => Err(DNSError::EXEC)
-        }?;
-        stdin.write_all(command.as_bytes())?;
+        child.stdin_write(command)?;
     }
 
-    let status = child.wait()?;
-    match status.code() {
-        Some(code) => if code == 0 {
-            Ok(())
-        } else {
-            Err(DNSError::EXITCODE(code))
-        },
-        None => Err(DNSError::EXEC)
-    }
+    Ok(child.wait()?)
 }
 
 
 impl From<std::io::Error> for DNSError {
     fn from(error: std::io::Error) -> DNSError {
-        DNSError::EXEC
+        DNSError::Exec
     }
 }
 
@@ -99,3 +90,11 @@ impl From<std::string::FromUtf8Error> for DNSError {
         DNSError::OutputFormat
     }
 }
+
+impl std::convert::From<ExecErrorInfo> for DNSError {
+    fn from(err: ExecErrorInfo) -> Self {
+        log::error("Failed to exec dns command", (&err).to_log_data());
+        DNSError::Exec
+    }
+}
+
