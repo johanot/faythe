@@ -97,11 +97,11 @@ pub fn monitor(config: FaytheConfig, tx: Sender<kube::Secret>) -> impl FnOnce() 
                                 .unwrap_or(kube::new_secret(&config, &h));
 
                             if !is_valid(&config, &s) {
-                                log::info("(re-)issuing", (&s.host).into());
+                                log::info("(re-)issuing", &s.host);
 
                                 match i.touch() {
                                     Ok(_) => tx.send(s).unwrap(),
-                                    Err(e) => log::error("failed to annotate ingress, bailing out.", (&e).into())
+                                    Err(e) => log::error("failed to annotate ingress, bailing out.", &e)
                                 };
 
                             }
@@ -130,8 +130,8 @@ fn is_valid(config: &FaytheConfig, secret: &kube::Secret) -> bool {
         Ok((pem,_)) => match pem.parse_x509() {
             //TODO: check common name as well
             Ok(x509) => Ok(x509.tbs_certificate.validity.not_after.to_utc() > time::now_utc() + time::Duration::days(config.renewal_threshold as i64)),
-            Err(e) => { log::error("failed to parse x509 fields", (&e).into()); Err(()) }
+            Err(e) => { log::error("failed to parse x509 fields", &e); Err(()) }
         },
-        Err(e) => { log::error("failed to read pem-blob", (&e).into()); Err(()) }
+        Err(e) => { log::error("failed to read pem-blob", &e); Err(()) }
     }.is_ok()
 }

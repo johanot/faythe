@@ -55,7 +55,7 @@ fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Resul
                 Ok(_) =>  (order.issue)(&config),
                 Err(e) => match e {
                     IssuerError::DNSWrongAnswer => {
-                        log::info("Wrong DNS answer", (&order.host).into());
+                        log::info("Wrong DNS answer", &order.host);
                         // if now is less than 5 minutes since LE challenge request, put the order back on the queue for processing,
                         // otherwise: give up. 5 minutes is the apparent max validity for LE replay nonces anyway.
                         if time::now_utc() < order.challenge_time + time::Duration::minutes(5) {
@@ -74,7 +74,7 @@ fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Resul
 }
 
 fn validate_challenge(config: &FaytheConfig, order: &IssueOrder) -> Result<(), IssuerError> {
-    log::info("Validating", (&order.host).into());
+    log::info("Validating", &order.host);
 
     dns::query(&config, &config.auth_dns_server, &order.host, &order.challenge)?;
     for d in &config.val_dns_servers {
@@ -115,10 +115,10 @@ fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOr
             challenge: secret_.challenge.clone(),
             challenge_time: time::now_utc(),
             issue: Box::new(move |conf: &FaytheConfig| -> Result<(), IssuerError> {
-                log::info("challenge propagated", (&secret_.host).into());
+                log::info("challenge propagated", &secret_.host);
                 challenge.validate(5000)?;
                 ord_new.refresh()?;
-                log::info("challenge validated", (&secret_.host).into());
+                log::info("challenge validated", &secret_.host);
 
                 let (pkey_pri, pkey_pub) = create_rsa_key(2048);
                 let ord_csr = match ord_new.confirm_validations() {

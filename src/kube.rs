@@ -253,13 +253,13 @@ impl std::convert::From<exec::ExecErrorInfo> for KubeError {
 
 impl std::convert::From<base64::DecodeError> for KubeError {
     fn from(err: DecodeError) -> Self {
-        log::error("Failed to base64 decode secrets", (&err).into());
+        log::error("Failed to base64 decode secrets", &err);
         KubeError::Format
     }
 }
 impl std::convert::From<time::ParseError> for KubeError {
     fn from(err: time::ParseError) -> Self {
-        log::error("Failed to parse timestamp", (&err).into());
+        log::error("Failed to parse timestamp", &err);
         KubeError::Format
     }
 }

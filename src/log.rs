@@ -73,10 +73,10 @@ pub fn event(msg: &str) {
     log(LogLevel::INFO, msg, LogData::none());
 }
 
-pub fn info<T>(msg: &str, data: LogData<T>) where T: Serialize {
-    log(LogLevel::INFO, msg, data);
+pub fn info<T, S>(msg: &str, data: T) where S: Serialize, T: Into<LogData<S>> {
+    log(LogLevel::INFO, msg, data.into());
 }
 
-pub fn error<T>(msg: &str, err: LogData<T>) where T: Serialize {
-    log(LogLevel::ERROR, msg, err);
+pub fn error<T, S>(msg: &str, err: T) where S: Serialize, T: Into<LogData<S>> {
+    log(LogLevel::ERROR, msg, err.into());
 }
