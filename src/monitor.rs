@@ -90,7 +90,7 @@ pub fn monitor(config: FaytheConfig, tx: Sender<kube::Secret>) -> impl FnOnce() 
                 for i in &ingresses {
                     if i.should_retry(&config) {
                         for h in &i.hosts {
-                            let s = secrets.get(&h.rewrite_host(&config))
+                            let s = secrets.get(&h.rewrite_k8s(&config))
                                 .and_then(|s| Some(s.clone()))
                                 .unwrap_or(kube::new_secret(&config, &h));
 
