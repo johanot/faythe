@@ -131,5 +131,5 @@ fn is_valid(config: &FaytheConfig, secret: &kube::Secret) -> bool {
             Err(e) => { log::error("failed to parse x509 fields", &e); Err(()) }
         },
         Err(e) => { log::error("failed to read pem-blob", &e); Err(()) }
-    }.is_ok()
+    }.unwrap_or(false)
 }
