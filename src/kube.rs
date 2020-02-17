@@ -10,13 +10,14 @@ use std::process::{Command, Stdio};
 use std::result::Result;
 use std::option::Option;
 use crate::{FaytheConfig, exec};
-use crate::monitor::Rewritable;
 
 use std::collections::HashMap;
 
 use crate::exec::{SpawnOk, OpenStdin, Wait, ExecErrorInfo};
 use crate::log;
 use self::base64::DecodeError;
+use crate::common::{is_valid, Cert, KubernetesPersistSpec, DNSName, IssueSource, ValidityVerifier};
+use acme_lib::Certificate;
 
 #[derive(Debug, Clone)]
 pub struct Ingress {
@@ -30,25 +31,11 @@ pub struct Ingress {
 pub struct Secret {
     pub name: String,
     pub namespace: String,
-    pub host: String,
-    pub cert: Vec<u8>,
+    pub cert: Cert,
     pub key: Vec<u8>,
-    pub challenge: String,
 }
 
 const TIME_FORMAT: &str = "%Y-%m-%dT%H:%M:%S%z"; // 2019-10-09T11:50:22+0200
-const TOUCH_ANNOTATION_NAME: &str = "faythe.touched";
-
-pub fn new_secret(config: &FaytheConfig, h: &String) -> Secret {
-    Secret {
-        namespace: config.secret_namespace.clone(),
-        name: h.clone(),
-        host: h.rewrite_host(&config),
-        challenge: String::new(),
-        cert: Vec::new(),
-        key: Vec::new(),
-    }
-}
 
 pub fn get_secrets(config: &FaytheConfig) -> Result<HashMap<String, Secret>, KubeError> {
 
@@ -65,8 +52,6 @@ pub fn get_secrets(config: &FaytheConfig) -> Result<HashMap<String, Secret>, Kub
         secrets.insert(sr(host)?, Secret{
             name: sr(&i["metadata"]["name"])?,
             namespace: sr(&i["metadata"]["namespace"])?,
-            host: sr(host)?.rewrite_host(&config),
-            challenge: String::new(),
             cert,
             key
         });
@@ -75,22 +60,24 @@ pub fn get_secrets(config: &FaytheConfig) -> Result<HashMap<String, Secret>, Kub
     Ok(secrets)
 }
 
-pub fn get_ingresses(host_suffix: &String) -> Result<Vec<Ingress>, KubeError> {
-
+pub fn get_ingresses(config: &FaytheConfig) -> Result<Vec<Ingress>, KubeError> {
     let v = kubectl(&["get", "ingresses", "--all-namespaces"])?;
 
     let mut ingresses :Vec<Ingress> = Vec::new();
     for i in vec(&v["items"])? {
         let rules = vec(&i["spec"]["rules"])?;
+        let touched = match &config.k8s_touch_annotation {
+            Some(a) => tm(i["metadata"]["annotations"].get(&a)),
+            None => time::empty_tm()
+        };
         ingresses.push(Ingress{
             name: sr(&i["metadata"]["name"])?,
             namespace: sr(&i["metadata"]["namespace"])?,
             hosts: rules
                     .iter()
                     .map(|r| sr(&r["host"]).unwrap_or(String::new()))
-                    .filter(|h| h.ends_with(host_suffix))
                     .collect(),
-            touched: tm(i["metadata"]["annotations"].get(TOUCH_ANNOTATION_NAME)),
+            touched
         });
     };
 
@@ -182,14 +169,17 @@ impl K8SAddressable for Ingress {
 
 
 pub trait K8SObject {
-    fn touch(&self) -> Result<(), KubeError>;
+    fn touch(&self, config: &FaytheConfig) -> Result<(), KubeError>;
     fn annotate(&self, key: &String, value: &String) -> Result<(), KubeError>;
 }
 
 impl<T: K8SAddressable> K8SObject for T {
-    fn touch(&self) -> Result<(), KubeError> {
-         self.annotate(&TOUCH_ANNOTATION_NAME.to_string(),
-                       &time::strftime(TIME_FORMAT, &time::now_utc())?)
+    fn touch(&self, config: &FaytheConfig) -> Result<(), KubeError> {
+        match &config.k8s_touch_annotation {
+            Some(a) => self.annotate(&a,
+                                     &time::strftime(TIME_FORMAT, &time::now_utc())?),
+            None => Ok(())
+        }
     }
 
     fn annotate(&self, key: &String, value: &String) -> Result<(), KubeError> {
@@ -204,34 +194,57 @@ impl<T: K8SAddressable> K8SObject for T {
     }
 }
 
-pub trait Persistable {
-    fn persist(&self, config: &FaytheConfig) -> Result<(), KubeError>;
-}
+pub fn persist_secret(persist_spec: &KubernetesPersistSpec, cert: &Certificate) -> Result<(), KubeError> {
 
-impl Persistable for Secret {
-    fn persist(&self, config: &FaytheConfig) -> Result<(), KubeError> {
-
-        let doc = json!({
+    let doc = json!({
             "apiVersion": "v1",
             "kind": "Secret",
             "metadata": {
-                "name": self.name.rewrite_k8s(&config),
-                "namespace": self.namespace,
+                "name": &persist_spec.name,
+                "namespace": &persist_spec.namespace,
                 "labels": {
-                    &config.secret_hostlabel: &self.host.rewrite_k8s(&config)
+                    &persist_spec.host_label_key: &persist_spec.host_label_value
                 }
             },
             "type": "Opaque",
             "data": {
-                "cert": base64_encode(&self.cert),
-                "key": base64_encode(&self.key)
+                "cert": base64_encode(&cert.certificate().as_bytes().to_vec()),
+                "key": base64_encode(&cert.private_key().as_bytes().to_vec())
             }
         });
 
-        Ok(kubectl_apply(&[
-            "-n",
-            self.namespace.as_str()
-        ], &doc)?)
+    Ok(kubectl_apply(&[
+        "-n",
+        persist_spec.namespace.as_str()
+    ], &doc)?)
+}
+
+impl ValidityVerifier for Secret {
+    fn is_valid(&self, config: &FaytheConfig) -> bool {
+        is_valid(&config, &self.cert).is_ok()
+    }
+}
+
+impl IssueSource for Ingress {
+    fn get_raw_cn(&self) -> String {
+        // for now, we only support a single hostname in ingress resources
+        self.hosts[0].clone()
+    }
+
+    fn get_raw_sans(&self) -> Vec<String> {
+        unimplemented!()
+    }
+}
+
+impl DNSName {
+    pub fn to_kube_secret_name(&self, config: &FaytheConfig) -> String {
+        if self.is_wildcard {
+            format!("{prefix}.{host}",
+                    prefix=config.wildcard_cert_k8s_prefix,
+                    host=self.name)
+        } else {
+            self.name.clone()
+        }
     }
 }
 

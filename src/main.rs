@@ -1,7 +1,7 @@
 
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate custom_error;
-
+#[macro_use] extern crate lazy_static;
 
 extern crate clap;
 
@@ -12,6 +12,8 @@ use std::thread;
 
 use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc;
+
+use crate::common::CertSpec;
 
 #[derive(Clone, Deserialize, Debug)]
 pub struct FaytheConfig {
@@ -35,6 +37,8 @@ pub struct FaytheConfig {
     pub issue_wildcard_certs: bool,
     #[serde(default = "default_wildcard_cert_k8s_prefix")]
     pub wildcard_cert_k8s_prefix: String,
+    #[serde(default = "default_k8s_touch_annotation")]
+    pub k8s_touch_annotation: Option<String>,
 }
 
 // millis (5 seconds)
@@ -54,6 +58,9 @@ fn default_issue_wildcard_certs() -> bool { false }
 
 fn default_wildcard_cert_k8s_prefix() -> String { "wild--card".to_string() }
 
+fn default_k8s_touch_annotation() -> Option<String> { Some("faythe.touched".to_string()) }
+
+mod common;
 mod exec;
 mod monitor;
 mod issuer;
@@ -94,7 +101,7 @@ fn main() -> Result<(), FaytheError> {
 }
 
 fn run(config: FaytheConfig) {
-    let (tx, rx): (Sender<kube::Secret>, Receiver<kube::Secret>) = mpsc::channel();
+    let (tx, rx): (Sender<CertSpec>, Receiver<CertSpec>) = mpsc::channel();
     let monitor = thread::spawn(monitor::monitor(config.clone(), tx));
     let issuer = thread::spawn(move || { issuer::process(config.clone(), rx) });
 

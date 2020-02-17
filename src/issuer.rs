@@ -2,29 +2,28 @@
 use std::thread;
 use std::time::Duration;
 
-use crate::{kube, FaytheConfig};
+use crate::{dns, FaytheConfig};
 use crate::log;
 
 use std::sync::mpsc::{Receiver,TryRecvError};
-use crate::kube::{Secret, Persistable};
 use std::collections::VecDeque;
 
 use acme_lib::{ClientConfig, Directory, DirectoryUrl, create_rsa_key};
 use acme_lib::persist::MemoryPersist;
 
-use crate::dns;
+use crate::common::{CertSpec, Persistable, PersistError, DNSName};
 
-pub fn process(config: FaytheConfig, rx: Receiver<kube::Secret>) {
+pub fn process(config: FaytheConfig, rx: Receiver<CertSpec>) {
     log::event("processing-started");
 
     let mut queue: VecDeque<IssueOrder> = VecDeque::new();
     loop {
         let res = rx.try_recv();
         match res {
-            Ok(mut secret) => {
-                match setup_challenge(&config, &mut secret) {
+            Ok(cert_spec) => {
+                match setup_challenge(&config, &cert_spec) {
                     Ok(order) => queue.push_back(order),
-                    Err(_) => log::event(&("failed to setup challenge for host: ".to_owned() + &secret.host))
+                    Err(_) => log::event(format!("failed to setup challenge for host: {host}", host=cert_spec.cn).as_str())
                 };
             },
             Err(TryRecvError::Disconnected) => panic!("channel disconnected"),
@@ -42,7 +41,7 @@ fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Resul
     match queue.pop_front() {
         Some(order) => {
             match validate_challenge(&config, &order) {
-                Ok(_) =>  (order.issue)(&config),
+                Ok(_) =>  (order.issue)(),
                 Err(e) => match e {
                     IssuerError::DNSWrongAnswer => {
                         log::info("Wrong DNS answer", &order.host);
@@ -66,19 +65,19 @@ fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Resul
 fn validate_challenge(config: &FaytheConfig, order: &IssueOrder) -> Result<(), IssuerError> {
     log::info("Validating", &order.host);
 
-    dns::query(&config, &config.auth_dns_server, &order.host, &order.challenge)?;
+    dns::query(&config.auth_dns_server, &order.host, &order.proof)?;
     for d in &config.val_dns_servers {
-        dns::query(&config, &d, &order.host, &order.challenge)?;
+        dns::query( &d, &order.host, &order.proof)?;
     }
     Ok(())
 }
 
-fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOrder, IssuerError> {
+fn setup_challenge(config: &FaytheConfig, spec: &CertSpec) -> Result<IssueOrder, IssuerError> {
 
     // start by deleting any existing challenges here,
     // because we don't want to bother Let's encrypt and their rate limits,
     // in case we have trouble communicating with the NS-server or similar.
-    dns::delete(&config, &secret)?;
+    dns::delete(&config, &spec)?;
 
     let persist = MemoryPersist::new();
     let url = DirectoryUrl::Other(&config.lets_encrypt_url);
@@ -90,25 +89,25 @@ fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOr
     let dir = Directory::from_url_with_config(persist, url, &cc)?;
 
     let acc = dir.account(&config.lets_encrypt_email)?;
-    let mut ord_new = acc.new_order(&secret.host, &[])?;
+    let mut ord_new = spec.to_acme_order(&acc)?;
 
     let auths = ord_new.authorizations()?;
     if auths.len() > 0 {
-        let challenge = auths[0].dns_challenge();
-        secret.challenge = challenge.dns_proof();
+        let challenge = auths[0].dns_challenge(); //TODO: sans
+        let proof = challenge.dns_proof();
 
         //println!("please add this to dns: _acme-challenge.{} TXT {}", &secret.host, &secret.challenge);
-        dns::add(&config, &secret)?;
-        let mut secret_ = secret.clone();
+        dns::add(&config, &spec, &proof)?;
+        let spec_ = spec.clone();
         Ok(IssueOrder{
-            host: secret_.host.clone(),
-            challenge: secret_.challenge.clone(),
+            host: spec.cn.clone(),
+            proof: proof.clone(),
             challenge_time: time::now_utc(),
-            issue: Box::new(move |conf: &FaytheConfig| -> Result<(), IssuerError> {
-                log::info("challenge propagated", &secret_.host);
+            issue: Box::new(move || -> Result<(), IssuerError> {
+                log::info("challenge propagated", &spec_.cn);
                 challenge.validate(5000)?;
                 ord_new.refresh()?;
-                log::info("challenge validated", &secret_.host);
+                log::info("challenge validated", &spec_.cn);
 
                 let (pkey_pri, pkey_pub) = create_rsa_key(2048);
                 let ord_csr = match ord_new.confirm_validations() {
@@ -120,11 +119,7 @@ fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOr
                     ord_csr.finalize_pkey(pkey_pri, pkey_pub, 5000)?;
                 let cert = ord_cert.download_and_save_cert()?;
 
-                secret_.cert = cert.certificate().as_bytes().to_vec();
-                secret_.key = cert.private_key().as_bytes().to_vec();
-                secret_.persist(&conf).unwrap();
-
-                Ok(())
+                Ok(spec_.persist(cert)?)
             })
         })
     } else {
@@ -134,10 +129,10 @@ fn setup_challenge(config: &FaytheConfig, secret: &mut Secret) -> Result<IssueOr
 
 
 struct IssueOrder {
-    host: String,
-    challenge: String,
+    host: DNSName,
+    proof: String,
     challenge_time: time::Tm,
-    issue: Box<dyn FnOnce(&FaytheConfig) -> Result<(), IssuerError>>,
+    issue: Box<dyn FnOnce() -> Result<(), IssuerError>>,
 }
 
 pub enum IssuerError {
@@ -145,7 +140,8 @@ pub enum IssuerError {
     AcmeClient,
     DNS,
     DNSWrongAnswer,
-    NoAuthorizationsForDomain
+    NoAuthorizationsForDomain,
+    PersistError
 }
 
 impl std::convert::From<dns::DNSError> for IssuerError {
@@ -157,19 +153,14 @@ impl std::convert::From<dns::DNSError> for IssuerError {
     }
 }
 
-impl std::convert::From<acme_lib::Error> for IssuerError {
-    fn from(_: acme_lib::Error) -> IssuerError {
-        IssuerError::AcmeClient
+impl std::convert::From<PersistError> for IssuerError {
+    fn from(_: PersistError) -> IssuerError {
+        IssuerError::PersistError
     }
 }
 
-
-trait Challenger {
-    fn ns_record(&self) -> String;
-}
-
-impl Challenger for Secret {
-    fn ns_record(&self) -> String {
-        String::from("_acme-challenge.") + &self.host
+impl std::convert::From<acme_lib::Error> for IssuerError {
+    fn from(_: acme_lib::Error) -> IssuerError {
+        IssuerError::AcmeClient
     }
 }
