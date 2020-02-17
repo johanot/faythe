@@ -13,7 +13,7 @@ use acme_lib::persist::MemoryPersist;
 
 use crate::common::{CertSpec, Persistable, PersistError, DNSName};
 
-pub fn process(config: FaytheConfig, rx: Receiver<CertSpec>) {
+pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
     log::event("processing-started");
 
     let mut queue: VecDeque<IssueOrder> = VecDeque::new();
@@ -21,7 +21,7 @@ pub fn process(config: FaytheConfig, rx: Receiver<CertSpec>) {
         let res = rx.try_recv();
         match res {
             Ok(cert_spec) => {
-                match setup_challenge(&config, &cert_spec) {
+                match setup_challenge(&faythe_config, &cert_spec) {
                     Ok(order) => queue.push_back(order),
                     Err(_) => log::event(format!("failed to setup challenge for host: {host}", host=cert_spec.cn).as_str())
                 };
@@ -30,7 +30,7 @@ pub fn process(config: FaytheConfig, rx: Receiver<CertSpec>) {
             Err(_) => {}
         }
 
-        if check_queue(&config, &mut queue).is_err() {
+        if check_queue(&faythe_config, &mut queue).is_err() {
             log::event("check queue err");
         }
         thread::sleep(Duration::from_millis(5000));

@@ -4,9 +4,9 @@ extern crate time;
 use std::thread;
 use std::time::Duration;
 
-use crate::{kube, FaytheConfig};
-use crate::kube::{K8SObject, Ingress, Secret};
+use crate::{kube};
 use crate::log;
+use crate::config::ConfigContainer;
 
 use std::result::Result;
 use std::any::Any;
@@ -15,48 +15,42 @@ use std::sync::mpsc::Sender;
 
 use crate::common::{CertSpec};
 use std::collections::HashMap;
-use crate::common::{CertSpecable, IssueSource, ValidityVerifier};
+use crate::common::{CertSpecable, ValidityVerifier};
 
-trait ShouldRetry {
-    fn should_retry(&self, config: &FaytheConfig) -> bool;
-}
-
-impl ShouldRetry for kube::Ingress {
-    fn should_retry(&self, config: &FaytheConfig) -> bool {
-        time::now_utc() > self.touched + time::Duration::milliseconds(config.issue_grace as i64)
-    }
-}
-
-pub fn monitor(config: FaytheConfig, tx: Sender<CertSpec>) -> impl FnOnce() {
+pub fn monitor_k8s(config: ConfigContainer, tx: Sender<CertSpec>) -> impl FnOnce() {
     move || {
-        log::event("monitoring-started");
+        log::event("k8s monitoring-started");
+        let monitor_config = config.get_kube_monitor_config().unwrap();
         loop {
             let _ = || -> Result<Box<dyn Any>, kube::KubeError> {
-                let ingresses = kube::get_ingresses(&config)?;
-                let secrets = kube::get_secrets(&config)?;
+                let ingresses = kube::get_ingresses(&monitor_config)?;
+                let secrets = kube::get_secrets(&monitor_config)?;
 
                 inspect(&config, &tx, &ingresses, secrets);
-                Ok(Box::new(ingresses))
+                Ok(Box::new(()))
             }().or_else(|res: kube::KubeError| -> Result<Box<dyn Any>, kube::KubeError> {
                 Err(res)
             });
 
-            thread::sleep(Duration::from_millis(config.monitor_interval));
+            thread::sleep(Duration::from_millis(config.faythe_config.monitor_interval));
         }
     }
 }
 
-fn inspect(config: &FaytheConfig, tx: &Sender<CertSpec>, ingresses: &Vec<Ingress>, secrets: HashMap<String, Secret>) {
-    for i in ingresses {
-        if i.should_retry(&config) {
-            let maybe_spec = match secrets.get(&i.get_raw_cn()) {
-                Some(s) => i.to_cert_spec(&config, s.is_valid(&config)),
-                None => i.to_cert_spec(&config, true)
+fn inspect<CS, VV>(config: &ConfigContainer, tx: &Sender<CertSpec>, objects: &Vec<CS>, certs: HashMap<String, VV>)
+    where CS: CertSpecable, VV: ValidityVerifier {
+
+    let faythe_config = &config.faythe_config;
+    for o in objects {
+        if o.should_retry(&faythe_config) {
+            let maybe_spec = match certs.get(&o.get_raw_cn()) {
+                Some(cert) => o.to_cert_spec(&config, cert.is_valid(&faythe_config)),
+                None => o.to_cert_spec(&config, true)
             };
 
             match maybe_spec {
                 Ok(cert_spec) => {
-                    match i.touch(&config) {
+                    match o.touch(&config) {
                         Ok(_) => {
                             log::info("touched", &cert_spec.cn); //TODO: improve logging
                             if cert_spec.needs_issuing {
@@ -64,7 +58,7 @@ fn inspect(config: &FaytheConfig, tx: &Sender<CertSpec>, ingresses: &Vec<Ingress
                                 tx.send(cert_spec).unwrap()
                             }
                         },
-                        Err(e) => log::error("failed to annotate ingress, bailing out.", &e)
+                        Err(e) => log::error("failed to touch ingress, bailing out.", &e)
                     };
                 },
                 Err(e) => log::error("certspec invalid", &e)
@@ -80,7 +74,7 @@ mod tests {
     use crate::common;
     use crate::mpsc;
     use crate::mpsc::{Sender, Receiver};
-    use std::prelude::v1::Vec;
+    use crate::kube::Ingress;
 
     fn create_channel() -> (Sender<CertSpec>, Receiver<CertSpec>) {
         mpsc::channel()
@@ -91,7 +85,7 @@ mod tests {
             name: "test".to_string(),
             namespace: "test".to_string(),
             touched: time::empty_tm(),
-            hosts: [host.clone()].to_vec()
+            hosts: [host.clone()].to_vec(),
         }].to_vec()
     }
 
@@ -102,9 +96,9 @@ mod tests {
         let config = common::create_test_config(false);
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host);
-        let secrets = HashMap::new();
+        let secrets: HashMap<String, kube::Secret> = HashMap::new();
         let thread = thread::spawn(move || {
-            inspect(&config, &tx, &ingresses, secrets)
+            inspect(&config,&tx, &ingresses, secrets)
         });
 
         let spec = rx.recv().unwrap();
@@ -119,9 +113,9 @@ mod tests {
         let config = common::create_test_config(true);
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host);
-        let secrets = HashMap::new();
+        let secrets: HashMap<String, kube::Secret> = HashMap::new();
         let thread = thread::spawn(move || {
-            inspect(&config, &tx, &ingresses, secrets)
+            inspect(&config,&tx, &ingresses, secrets)
         });
 
         let spec = rx.recv().unwrap();
@@ -136,7 +130,7 @@ mod tests {
         let config = common::create_test_config(false);
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host);
-        let secrets = HashMap::new();
+        let secrets: HashMap<String, kube::Secret> = HashMap::new();
         let thread = thread::spawn(move || {
             inspect(&config, &tx, &ingresses, secrets)
         });
@@ -152,7 +146,7 @@ mod tests {
         let config = common::create_test_config(false);
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host);
-        let secrets = HashMap::new();
+        let secrets: HashMap<String, kube::Secret> = HashMap::new();
         let thread = thread::spawn(move || {
             inspect(&config, &tx, &ingresses, secrets)
         });

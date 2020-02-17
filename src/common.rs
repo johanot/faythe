@@ -5,7 +5,7 @@ use acme_lib::order::NewOrder;
 use acme_lib::{Account, Certificate};
 use regex::Regex;
 use std::io::Cursor;
-use crate::FaytheConfig;
+use crate::config::{FaytheConfig, ConfigContainer};
 use crate::log;
 use x509_parser::pem::Pem;
 use serde::export::Formatter;
@@ -188,16 +188,10 @@ pub trait ValidityVerifier {
 }
 
 pub trait CertSpecable: IssueSource {
-    fn to_cert_spec(&self, config: &FaytheConfig, needs_issuing: bool) -> Result<CertSpec, SpecError>;
-}
-
-pub trait IssueSource {
-    fn get_raw_cn(&self) -> String;
-    fn get_raw_sans(&self) -> Vec<String>;
-}
-
-impl<T: IssueSource> CertSpecable for T {
-    fn to_cert_spec(&self, config: &FaytheConfig, needs_issuing: bool) -> Result<CertSpec, SpecError> {
+    fn to_cert_spec(&self, config: &ConfigContainer, needs_issuing: bool) -> Result<CertSpec, SpecError>;
+    fn touch(&self, config: &ConfigContainer) -> Result<(), TouchError>;
+    fn should_retry(&self, config: &FaytheConfig) -> bool;
+    fn prerequisites(&self, config: &FaytheConfig) -> Result<DNSName, SpecError>  {
         let dns_name_ = DNSName::try_from(&self.get_raw_cn())?;
         if dns_name_.is_wildcard {
             return Err(SpecError::WildcardHostnameNotAllowed)
@@ -206,23 +200,16 @@ impl<T: IssueSource> CertSpecable for T {
             return Err(SpecError::NonAuthoritativeDomain)
         }
 
-        let dns_name = match config.issue_wildcard_certs {
+        Ok(match config.issue_wildcard_certs {
             true => dns_name_.to_wildcard()?,
             false => dns_name_
-        };
-
-        Ok(CertSpec {
-            cn: dns_name.clone(),
-            sans: Vec::new(), // for now, no certs in Kubernetes Secrets
-            persist_spec: PersistSpec::KUBERNETES(KubernetesPersistSpec {
-                name: dns_name.to_kube_secret_name(&config),
-                namespace: config.secret_namespace.clone(),
-                host_label_key: config.secret_hostlabel.clone(),
-                host_label_value: dns_name.to_kube_secret_name(&config),
-            }),
-            needs_issuing
         })
     }
+}
+
+pub trait IssueSource {
+    fn get_raw_cn(&self) -> String;
+    fn get_raw_sans(&self) -> Vec<String>;
 }
 
 #[derive(Debug, Clone)]
@@ -232,12 +219,23 @@ pub enum SpecError {
     WildcardHostnameNotAllowed
 }
 
+#[derive(Debug, Clone)]
+pub enum TouchError {
+    Failed,
+}
+
 #[cfg(test)]
-pub fn create_test_config(issue_wildcard_certs: bool) -> FaytheConfig {
-    FaytheConfig{
-        kubeconfig_path: String::new(),
+pub fn create_test_config(issue_wildcard_certs: bool) -> ConfigContainer {
+    use crate::config::{KubeMonitorConfig, MonitorConfig};
+
+    let kube_monitor_config = KubeMonitorConfig {
         secret_namespace: String::new(),
         secret_hostlabel: String::new(),
+        touch_annotation: None,
+        wildcard_cert_prefix: String::from("wild---card")
+    };
+    let faythe_config = FaytheConfig{
+        kube_monitor_configs: [kube_monitor_config.clone()].to_vec(),
         lets_encrypt_url: String::new(),
         lets_encrypt_proxy: None,
         lets_encrypt_email: String::new(),
@@ -249,7 +247,10 @@ pub fn create_test_config(issue_wildcard_certs: bool) -> FaytheConfig {
         renewal_threshold: 0,
         issue_grace: 0,
         issue_wildcard_certs,
-        wildcard_cert_k8s_prefix: String::new(),
-        k8s_touch_annotation: None
+    };
+
+    ConfigContainer{
+        faythe_config,
+        monitor_config: MonitorConfig::Kube(kube_monitor_config)
     }
 }
