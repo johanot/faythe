@@ -50,7 +50,8 @@ fn run(config: &FaytheConfig) {
             faythe_config: config.clone(),
             monitor_config: MonitorConfig::Kube(c.to_owned())
         };
-        threads.push(thread::spawn(monitor::monitor_k8s(container,tx.clone())));
+        let tx_ = tx.clone();
+        threads.push(thread::spawn(move || { monitor::monitor_k8s(container,tx_) }));
     }
     let config_ = config.clone();
     threads.push(thread::spawn(move || { issuer::process(config_, rx) }));

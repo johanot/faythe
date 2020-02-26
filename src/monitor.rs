@@ -9,31 +9,25 @@ use crate::log;
 use crate::config::ConfigContainer;
 
 use std::result::Result;
-use std::any::Any;
 
 use std::sync::mpsc::Sender;
 
 use crate::common::{CertSpec};
 use std::collections::HashMap;
 use crate::common::{CertSpecable, ValidityVerifier};
+use crate::kube::KubeError;
 
-pub fn monitor_k8s(config: ConfigContainer, tx: Sender<CertSpec>) -> impl FnOnce() {
-    move || {
-        log::event("k8s monitoring-started");
-        let monitor_config = config.get_kube_monitor_config().unwrap();
-        loop {
-            let _ = || -> Result<Box<dyn Any>, kube::KubeError> {
-                let ingresses = kube::get_ingresses(&monitor_config)?;
-                let secrets = kube::get_secrets(&monitor_config)?;
-
-                inspect(&config, &tx, &ingresses, secrets);
-                Ok(Box::new(()))
-            }().or_else(|res: kube::KubeError| -> Result<Box<dyn Any>, kube::KubeError> {
-                Err(res)
-            });
-
-            thread::sleep(Duration::from_millis(config.faythe_config.monitor_interval));
-        }
+pub fn monitor_k8s(config: ConfigContainer, tx: Sender<CertSpec>) {
+    log::event("k8s monitoring-started");
+    let monitor_config = config.get_kube_monitor_config().unwrap();
+    loop {
+        let _ = || -> Result<(), KubeError> {
+            let ingresses = kube::get_ingresses(&monitor_config)?;
+            let secrets = kube::get_secrets(&monitor_config)?;
+            inspect(&config, &tx, &ingresses, secrets);
+            Ok(())
+        }();
+        thread::sleep(Duration::from_millis(config.faythe_config.monitor_interval));
     }
 }
 
