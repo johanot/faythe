@@ -186,7 +186,7 @@ impl<T: K8SAddressable> K8SObject for T {
     }
 }
 
-pub fn persist_secret(persist_spec: &KubernetesPersistSpec, cert: &Certificate) -> Result<(), KubeError> {
+pub fn persist(persist_spec: &KubernetesPersistSpec, cert: &Certificate) -> Result<(), KubeError> {
 
     let doc = json!({
             "apiVersion": "v1",
@@ -233,6 +233,7 @@ impl CertSpecable for Ingress {
         let faythe_config = &config.faythe_config;
         let monitor_config = match &config.monitor_config {
             MonitorConfig::Kube(c) => Ok(c),
+            _ => Err(SpecError::InvalidConfig)
         }?;
         let dns_name = CertSpecable::prerequisites(self, &faythe_config)?;
         Ok(CertSpec {
@@ -257,8 +258,8 @@ impl CertSpecable for Ingress {
         }
     }
 
-    fn should_retry(&self, config: &FaytheConfig) -> bool {
-        time::now_utc() > self.touched + time::Duration::milliseconds(config.issue_grace as i64)
+    fn should_retry(&self, config: &ConfigContainer) -> bool {
+        time::now_utc() > self.touched + time::Duration::milliseconds(config.faythe_config.issue_grace as i64)
     }
 }
 

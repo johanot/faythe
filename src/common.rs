@@ -12,6 +12,9 @@ use serde::export::Formatter;
 use crate::kube;
 use crate::kube::KubeError;
 use std::convert::TryFrom;
+use crate::file;
+use crate::file::FileError;
+use std::path::PathBuf;
 
 #[derive(Debug, Clone)]
 pub struct CertSpec {
@@ -111,14 +114,14 @@ pub struct KubernetesPersistSpec {
 
 #[derive(Debug, Clone)]
 pub struct FilePersistSpec {
-    pub private_key_path: String,
-    pub public_key_path: String
+    pub private_key_path: PathBuf,
+    pub public_key_path: PathBuf
 }
 
 #[derive(Debug, Clone)]
 pub enum PersistSpec {
     KUBERNETES(KubernetesPersistSpec),
-    //FILE(FilePersistSpec)
+    FILE(FilePersistSpec),
     #[allow(dead_code)]
     DONTPERSIST
 }
@@ -127,7 +130,10 @@ impl Persistable for CertSpec {
     fn persist(&self, cert: Certificate) -> Result<(), PersistError> {
         match &self.persist_spec {
             PersistSpec::KUBERNETES(spec) => {
-                Ok(kube::persist_secret(&spec, &cert)?)
+                Ok(kube::persist(&spec, &cert)?)
+            }
+            PersistSpec::FILE(spec) => {
+                Ok(file::persist(&spec, &cert)?)
             }
             //PersistSpec::FILE(_spec) => { unimplemented!() },
             PersistSpec::DONTPERSIST => { Ok(()) }
@@ -173,7 +179,8 @@ pub fn is_valid(config: &FaytheConfig, cert: &Cert) -> Result<(), CertError> {
 }
 
 pub enum PersistError {
-    Kube(KubeError)
+    Kube(KubeError),
+    File(FileError)
 }
 
 pub enum CertError {
@@ -190,7 +197,7 @@ pub trait ValidityVerifier {
 pub trait CertSpecable: IssueSource {
     fn to_cert_spec(&self, config: &ConfigContainer, needs_issuing: bool) -> Result<CertSpec, SpecError>;
     fn touch(&self, config: &ConfigContainer) -> Result<(), TouchError>;
-    fn should_retry(&self, config: &FaytheConfig) -> bool;
+    fn should_retry(&self, config: &ConfigContainer) -> bool;
     fn prerequisites(&self, config: &FaytheConfig) -> Result<DNSName, SpecError>  {
         let dns_name_ = DNSName::try_from(&self.get_raw_cn())?;
         if dns_name_.is_wildcard {
@@ -210,18 +217,36 @@ pub trait CertSpecable: IssueSource {
 pub trait IssueSource {
     fn get_raw_cn(&self) -> String;
     fn get_raw_sans(&self) -> Vec<String>;
+    fn get_cn(&self) -> Result<DNSName, SpecError> {
+        DNSName::try_from(&self.get_raw_cn())
+    }
+    fn get_sans(&self) -> Result<Vec<DNSName>, SpecError> {
+        let mut out = Vec::new();
+        for s in &self.get_raw_sans() {
+            out.push(DNSName::try_from(s)?)
+        }
+        Ok(out)
+    }
 }
 
 #[derive(Debug, Clone)]
 pub enum SpecError {
     InvalidHostname,
     NonAuthoritativeDomain,
-    WildcardHostnameNotAllowed
+    WildcardHostnameNotAllowed,
+    InvalidConfig
 }
 
 #[derive(Debug, Clone)]
 pub enum TouchError {
+    RecentlyTouched,
     Failed,
+}
+
+impl std::convert::From<SpecError> for TouchError {
+    fn from(_: SpecError) -> Self {
+        TouchError::Failed
+    }
 }
 
 #[cfg(test)]
@@ -235,7 +260,8 @@ pub fn create_test_config(issue_wildcard_certs: bool) -> ConfigContainer {
         wildcard_cert_prefix: String::from("wild---card")
     };
     let faythe_config = FaytheConfig{
-        kube_monitor_configs: [kube_monitor_config.clone()].to_vec(),
+        kube_monitor_configs: vec![kube_monitor_config.clone()],
+        file_monitor_configs: vec![],
         lets_encrypt_url: String::new(),
         lets_encrypt_proxy: None,
         lets_encrypt_email: String::new(),

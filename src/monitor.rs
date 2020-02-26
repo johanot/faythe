@@ -5,6 +5,7 @@ use std::thread;
 use std::time::Duration;
 
 use crate::{kube};
+use crate::{file};
 use crate::log;
 use crate::config::ConfigContainer;
 
@@ -16,6 +17,8 @@ use crate::common::{CertSpec};
 use std::collections::HashMap;
 use crate::common::{CertSpecable, ValidityVerifier};
 use crate::kube::KubeError;
+use std::prelude::v1::Vec;
+use crate::file::FileError;
 
 pub fn monitor_k8s(config: ConfigContainer, tx: Sender<CertSpec>) {
     log::event("k8s monitoring-started");
@@ -31,12 +34,25 @@ pub fn monitor_k8s(config: ConfigContainer, tx: Sender<CertSpec>) {
     }
 }
 
+pub fn monitor_files(config: ConfigContainer, tx: Sender<CertSpec>) {
+    log::event("file monitoring-started");
+    let monitor_config = config.get_file_monitor_config().unwrap();
+    loop {
+        let _ = || -> Result<(), FileError> {
+            let certs = file::read_certs(&monitor_config)?;
+            inspect(&config, &tx, &monitor_config.specs, certs);
+            Ok(())
+        }();
+        thread::sleep(Duration::from_millis(config.faythe_config.monitor_interval));
+    }
+}
+
 fn inspect<CS, VV>(config: &ConfigContainer, tx: &Sender<CertSpec>, objects: &Vec<CS>, certs: HashMap<String, VV>)
     where CS: CertSpecable, VV: ValidityVerifier {
 
     let faythe_config = &config.faythe_config;
     for o in objects {
-        if o.should_retry(&faythe_config) {
+        if o.should_retry(&config) {
             let maybe_spec = match certs.get(&o.get_raw_cn()) {
                 Some(cert) => o.to_cert_spec(&config, cert.is_valid(&faythe_config)),
                 None => o.to_cert_spec(&config, true)
@@ -52,7 +68,7 @@ fn inspect<CS, VV>(config: &ConfigContainer, tx: &Sender<CertSpec>, objects: &Ve
                                 tx.send(cert_spec).unwrap()
                             }
                         },
-                        Err(e) => log::error("failed to touch ingress, bailing out.", &e)
+                        Err(e) => log::error("failed to touch object, bailing out.", &e)
                     };
                 },
                 Err(e) => log::error("certspec invalid", &e)

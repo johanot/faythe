@@ -2,10 +2,12 @@
 
 use std::fs::File;
 use std::io::Read;
+use std::prelude::v1::Vec;
+use crate::file::FileSpec;
+use crate::common::SpecError;
 
 #[derive(Clone, Deserialize, Debug)]
 pub struct FaytheConfig {
-    pub kube_monitor_configs: Vec<KubeMonitorConfig>,
     pub lets_encrypt_url: String,
     pub lets_encrypt_proxy: Option<String>,
     pub lets_encrypt_email: String,
@@ -21,6 +23,10 @@ pub struct FaytheConfig {
     pub issue_grace: u64,
     #[serde(default = "default_issue_wildcard_certs")]
     pub issue_wildcard_certs: bool,
+    #[serde(default)]
+    pub kube_monitor_configs: Vec<KubeMonitorConfig>,
+    #[serde(default)]
+    pub file_monitor_configs: Vec<FileMonitorConfig>,
 }
 
 #[derive(Clone, Deserialize, Debug)]
@@ -33,8 +39,16 @@ pub struct KubeMonitorConfig {
     pub touch_annotation: Option<String>
 }
 
+#[derive(Clone, Deserialize, Debug)]
+pub struct FileMonitorConfig {
+    pub directory: String,
+    pub specs: Vec<FileSpec>,
+    pub prune: bool
+}
+
 pub enum MonitorConfig {
-    Kube(KubeMonitorConfig)
+    Kube(KubeMonitorConfig),
+    File(FileMonitorConfig)
 }
 
 pub struct ConfigContainer {
@@ -43,10 +57,17 @@ pub struct ConfigContainer {
 }
 
 impl ConfigContainer {
-    pub fn get_kube_monitor_config(&self) -> Result<&KubeMonitorConfig, ()> {
+    pub fn get_kube_monitor_config(&self) -> Result<&KubeMonitorConfig, SpecError> {
         Ok(match &self.monitor_config {
-            MonitorConfig::Kube(c) => c,
-        })
+            MonitorConfig::Kube(c) => Ok(c),
+            _ => Err(SpecError::InvalidConfig)
+        }?)
+    }
+    pub fn get_file_monitor_config(&self) -> Result<&FileMonitorConfig, SpecError> {
+        Ok(match &self.monitor_config {
+            MonitorConfig::File(c) => Ok(c),
+            _ => Err(SpecError::InvalidConfig)
+        }?)
     }
 }
 

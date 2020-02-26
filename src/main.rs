@@ -18,6 +18,7 @@ mod exec;
 mod monitor;
 mod issuer;
 mod kube;
+mod file;
 mod log;
 mod dns;
 
@@ -53,8 +54,20 @@ fn run(config: &FaytheConfig) {
         let tx_ = tx.clone();
         threads.push(thread::spawn(move || { monitor::monitor_k8s(container,tx_) }));
     }
+    for c in &config.file_monitor_configs {
+        let container = ConfigContainer{
+            faythe_config: config.clone(),
+            monitor_config: MonitorConfig::File(c.to_owned())
+        };
+        let tx_ = tx.clone();
+        threads.push(thread::spawn(move || { monitor::monitor_files(container,tx_) }));
+    }
     let config_ = config.clone();
     threads.push(thread::spawn(move || { issuer::process(config_, rx) }));
+
+    if threads.len() < 2 {
+        panic!("No monitors started! Did you forget to add monitor configuration to the config file?")
+    }
 
     for t in threads {
         t.join().unwrap();
