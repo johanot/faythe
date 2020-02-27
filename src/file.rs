@@ -147,6 +147,8 @@ pub fn persist(spec: &FilePersistSpec, cert: &Certificate) -> Result<(), Persist
     let priv_buf = cert.private_key().as_bytes();
     pub_file.write_all(pub_buf)?;
     priv_file.write_all(priv_buf)?;
+    let mut priv_permissions = priv_file.metadata()?.permissions();
+    priv_permissions.set_mode(0o600); // rw-------
     Ok(())
 }
 
