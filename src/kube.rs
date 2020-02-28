@@ -9,14 +9,15 @@ use serde_json::json;
 use std::process::{Command, Stdio};
 use std::result::Result;
 use std::option::Option;
-use crate::{FaytheConfig, exec};
+use crate::exec;
+use crate::config::{FaytheConfig, KubeMonitorConfig, MonitorConfig, ConfigContainer};
 
 use std::collections::HashMap;
 
 use crate::exec::{SpawnOk, OpenStdin, Wait, ExecErrorInfo};
 use crate::log;
 use self::base64::DecodeError;
-use crate::common::{is_valid, Cert, KubernetesPersistSpec, DNSName, IssueSource, ValidityVerifier};
+use crate::common::{is_valid, Cert, KubernetesPersistSpec, DNSName, IssueSource, ValidityVerifier, CertSpecable, CertSpec, SpecError, PersistSpec, TouchError};
 use acme_lib::Certificate;
 
 #[derive(Debug, Clone)]
@@ -37,7 +38,7 @@ pub struct Secret {
 
 const TIME_FORMAT: &str = "%Y-%m-%dT%H:%M:%S%z"; // 2019-10-09T11:50:22+0200
 
-pub fn get_secrets(config: &FaytheConfig) -> Result<HashMap<String, Secret>, KubeError> {
+pub fn get_secrets(config: &KubeMonitorConfig) -> Result<HashMap<String, Secret>, KubeError> {
 
     let v = kubectl(&["get", "secrets",
         "-l", config.secret_hostlabel.as_str(),
@@ -60,13 +61,13 @@ pub fn get_secrets(config: &FaytheConfig) -> Result<HashMap<String, Secret>, Kub
     Ok(secrets)
 }
 
-pub fn get_ingresses(config: &FaytheConfig) -> Result<Vec<Ingress>, KubeError> {
+pub fn get_ingresses(config: &KubeMonitorConfig) -> Result<Vec<Ingress>, KubeError> {
     let v = kubectl(&["get", "ingresses", "--all-namespaces"])?;
 
     let mut ingresses :Vec<Ingress> = Vec::new();
     for i in vec(&v["items"])? {
         let rules = vec(&i["spec"]["rules"])?;
-        let touched = match &config.k8s_touch_annotation {
+        let touched = match &config.touch_annotation {
             Some(a) => tm(i["metadata"]["annotations"].get(&a)),
             None => time::empty_tm()
         };
@@ -77,7 +78,7 @@ pub fn get_ingresses(config: &FaytheConfig) -> Result<Vec<Ingress>, KubeError> {
                     .iter()
                     .map(|r| sr(&r["host"]).unwrap_or(String::new()))
                     .collect(),
-            touched
+            touched,
         });
     };
 
@@ -169,19 +170,10 @@ impl K8SAddressable for Ingress {
 
 
 pub trait K8SObject {
-    fn touch(&self, config: &FaytheConfig) -> Result<(), KubeError>;
     fn annotate(&self, key: &String, value: &String) -> Result<(), KubeError>;
 }
 
 impl<T: K8SAddressable> K8SObject for T {
-    fn touch(&self, config: &FaytheConfig) -> Result<(), KubeError> {
-        match &config.k8s_touch_annotation {
-            Some(a) => self.annotate(&a,
-                                     &time::strftime(TIME_FORMAT, &time::now_utc())?),
-            None => Ok(())
-        }
-    }
-
     fn annotate(&self, key: &String, value: &String) -> Result<(), KubeError> {
         kubectl(&[
             "annotate",
@@ -194,7 +186,7 @@ impl<T: K8SAddressable> K8SObject for T {
     }
 }
 
-pub fn persist_secret(persist_spec: &KubernetesPersistSpec, cert: &Certificate) -> Result<(), KubeError> {
+pub fn persist(persist_spec: &KubernetesPersistSpec, cert: &Certificate) -> Result<(), KubeError> {
 
     let doc = json!({
             "apiVersion": "v1",
@@ -236,11 +228,46 @@ impl IssueSource for Ingress {
     }
 }
 
+impl CertSpecable for Ingress {
+    fn to_cert_spec(&self, config: &ConfigContainer, needs_issuing: bool) -> Result<CertSpec, SpecError> {
+        let faythe_config = &config.faythe_config;
+        let monitor_config = match &config.monitor_config {
+            MonitorConfig::Kube(c) => Ok(c),
+            _ => Err(SpecError::InvalidConfig)
+        }?;
+        let dns_name = CertSpecable::prerequisites(self, &faythe_config)?;
+        Ok(CertSpec {
+            cn: dns_name.clone(),
+            sans: Vec::new(), // for now, no certs in Kubernetes Secrets
+            persist_spec: PersistSpec::KUBERNETES(KubernetesPersistSpec {
+                name: dns_name.to_kube_secret_name(&monitor_config),
+                namespace: monitor_config.secret_namespace.clone(),
+                host_label_key: monitor_config.secret_hostlabel.clone(),
+                host_label_value: dns_name.to_kube_secret_name(&monitor_config),
+            }),
+            needs_issuing
+        })
+    }
+
+    fn touch(&self, config: &ConfigContainer) -> Result<(), TouchError> {
+        let monitor_config = config.get_kube_monitor_config()?;
+        match &monitor_config.touch_annotation {
+            Some(a) => Ok(self.annotate(&a,
+                                     &time::strftime(TIME_FORMAT, &time::now_utc())?)?),
+            None => Ok(())
+        }
+    }
+
+    fn should_retry(&self, config: &ConfigContainer) -> bool {
+        time::now_utc() > self.touched + time::Duration::milliseconds(config.faythe_config.issue_grace as i64)
+    }
+}
+
 impl DNSName {
-    pub fn to_kube_secret_name(&self, config: &FaytheConfig) -> String {
+    pub fn to_kube_secret_name(&self, config: &KubeMonitorConfig) -> String {
         if self.is_wildcard {
             format!("{prefix}.{host}",
-                    prefix=config.wildcard_cert_k8s_prefix,
+                    prefix=config.wildcard_cert_prefix,
                     host=self.name)
         } else {
             self.name.clone()
@@ -271,5 +298,23 @@ impl std::convert::From<time::ParseError> for KubeError {
     fn from(err: time::ParseError) -> Self {
         log::error("Failed to parse timestamp", &err);
         KubeError::Format
+    }
+}
+
+impl std::convert::From<time::ParseError> for TouchError {
+    fn from(_err: time::ParseError) -> Self {
+        TouchError::Failed
+    }
+}
+
+impl std::convert::From<KubeError> for TouchError {
+    fn from(_err: KubeError) -> Self {
+        TouchError::Failed
+    }
+}
+
+impl std::convert::From<()> for TouchError {
+    fn from(_err: ()) -> Self {
+        TouchError::Failed
     }
 }

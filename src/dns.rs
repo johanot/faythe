@@ -123,7 +123,7 @@ mod tests {
         let spec = create_cert_spec(&String::from("moo.unit.test"));
         let proof = String::from("abcdef1234");
 
-        assert_eq!(add_cmd(&config, &spec, &proof),
+        assert_eq!(add_cmd(&config.faythe_config, &spec, &proof),
                    "server ns.unit.test\nprereq nxdomain _acme-challenge.moo.unit.test. TXT\nupdate add _acme-challenge.moo.unit.test. 120 TXT \"abcdef1234\"\nsend\n")
     }
 
@@ -133,7 +133,7 @@ mod tests {
         let spec = create_cert_spec(&String::from("*.unit.test"));
         let proof = String::from("abcdef1234");
 
-        assert_eq!(add_cmd(&config, &spec, &proof),
+        assert_eq!(add_cmd(&config.faythe_config, &spec, &proof),
                    "server ns.unit.test\nprereq nxdomain _acme-challenge.unit.test. TXT\nupdate add _acme-challenge.unit.test. 120 TXT \"abcdef1234\"\nsend\n")
     }
 
@@ -141,7 +141,7 @@ mod tests {
     fn test_delete_normal() {
         let config = common::create_test_config(false);
         let spec = create_cert_spec(&String::from("moo.unit.test"));
-        assert_eq!(delete_cmd(&config, &spec),
+        assert_eq!(delete_cmd(&config.faythe_config, &spec),
                    "server ns.unit.test\nupdate delete _acme-challenge.moo.unit.test. TXT\nsend\n")
     }
 
@@ -150,7 +150,7 @@ mod tests {
         let config = common::create_test_config(false);
         let spec = create_cert_spec(&String::from("*.unit.test"));
 
-        assert_eq!(delete_cmd(&config, &spec),
+        assert_eq!(delete_cmd(&config.faythe_config, &spec),
                    "server ns.unit.test\nupdate delete _acme-challenge.unit.test. TXT\nsend\n")
     }
 }
