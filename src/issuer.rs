@@ -2,7 +2,7 @@
 use std::thread;
 use std::time::Duration;
 
-use crate::{dns, FaytheConfig};
+use crate::{dns, FaytheConfig, common};
 use crate::log;
 
 use std::sync::mpsc::{Receiver,TryRecvError};
@@ -12,6 +12,11 @@ use acme_lib::{ClientConfig, Directory, DirectoryUrl, create_rsa_key};
 use acme_lib::persist::MemoryPersist;
 
 use crate::common::{CertSpec, Persistable, PersistError, DNSName};
+use acme_lib::order::{Auth, NewOrder};
+use std::prelude::v1::Vec;
+
+use serde_json::json;
+use std::convert::TryFrom;
 
 pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
     log::event("processing-started");
@@ -39,18 +44,26 @@ pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
 
 fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Result<(), IssuerError> {
     match queue.pop_front() {
-        Some(order) => {
+        Some(mut order) => {
             match validate_challenge(&config, &order) {
-                Ok(_) =>  (order.issue)(),
+                Ok(_) => {
+                    order.inner.refresh()?;
+                    if order.inner.is_validated() {
+                        order.issue()?;
+                    } else {
+                        queue.push_back(order);
+                    }
+                    Ok(())
+                },
                 Err(e) => match e {
-                    IssuerError::DNSWrongAnswer => {
-                        log::info("Wrong DNS answer", &order.host);
+                    IssuerError::DNSWrongAnswer(domain) => {
+                        log::info("Wrong DNS answer", &domain);
                         // if now is less than 5 minutes since LE challenge request, put the order back on the queue for processing,
                         // otherwise: give up. 5 minutes is the apparent max validity for LE replay nonces anyway.
                         if time::now_utc() < order.challenge_time + time::Duration::minutes(5) {
                             queue.push_back(order);
                         } else {
-                            log::event(&format!("giving up validating dns challenge for host: {}", &order.host));
+                            log::info("giving up validating dns challenge for spec", &order.spec);
                         }
                         Ok(())
                     },
@@ -63,11 +76,20 @@ fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Resul
 }
 
 fn validate_challenge(config: &FaytheConfig, order: &IssueOrder) -> Result<(), IssuerError> {
-    log::info("Validating", &order.host);
 
-    dns::query(&config.auth_dns_server, &order.host, &order.proof)?;
-    for d in &config.val_dns_servers {
-        dns::query( &d, &order.host, &order.proof)?;
+    for a in &order.authorizations {
+        let domain = DNSName::try_from(&String::from(a.domain_name()))?;
+        let challenge = a.dns_challenge();
+        let proof = challenge.dns_proof();
+        let log_data = json!({ "domain": &domain, "proof": &proof });
+
+        log::info("Validating internally", &log_data);
+        dns::query(&config.auth_dns_server, &domain, &proof)?;
+        for d in &config.val_dns_servers {
+            dns::query( &d, &domain, &proof)?;
+        }
+        log::info("Asking LE to validate", &log_data);
+        challenge.validate(5000)?;
     }
     Ok(())
 }
@@ -89,65 +111,64 @@ fn setup_challenge(config: &FaytheConfig, spec: &CertSpec) -> Result<IssueOrder,
     let dir = Directory::from_url_with_config(persist, url, &cc)?;
 
     let acc = dir.account(&config.lets_encrypt_email)?;
-    let mut ord_new = spec.to_acme_order(&acc)?;
+    let ord_new = spec.to_acme_order(&acc)?;
+    let authorizations = ord_new.authorizations()?;
 
-    let auths = ord_new.authorizations()?;
-    if auths.len() > 0 {
-        let challenge = auths[0].dns_challenge(); //TODO: sans
-        let proof = challenge.dns_proof();
+    for a in &authorizations {
+        // LE may require validation for only a subset of requested domains
+        if a.need_challenge() {
+            let challenge = a.dns_challenge();
+            let domain = DNSName::try_from(&String::from(a.domain_name()))?;
+            dns::add(&config, &domain, &challenge.dns_proof())?;
+        }
+    }
 
-        //println!("please add this to dns: _acme-challenge.{} TXT {}", &secret.host, &secret.challenge);
-        dns::add(&config, &spec, &proof)?;
-        let spec_ = spec.clone();
-        Ok(IssueOrder{
-            host: spec.cn.clone(),
-            proof: proof.clone(),
-            challenge_time: time::now_utc(),
-            issue: Box::new(move || -> Result<(), IssuerError> {
-                log::info("challenge propagated", &spec_.cn);
-                challenge.validate(5000)?;
-                ord_new.refresh()?;
-                log::info("challenge validated", &spec_.cn);
+    Ok(IssueOrder{
+        spec: spec.clone(),
+        authorizations,
+        inner: ord_new,
+        challenge_time: time::now_utc(),
+    })
+}
 
-                let (pkey_pri, pkey_pub) = create_rsa_key(2048);
-                let ord_csr = match ord_new.confirm_validations() {
-                    Some(csr) => Ok(csr),
-                    None => Err(IssuerError::ChallengeRejected)
-                }?;
+struct IssueOrder {
+    spec: CertSpec,
+    inner: NewOrder<MemoryPersist>,
+    authorizations: Vec<Auth<MemoryPersist>>,
+    challenge_time: time::Tm,
+}
 
-                let ord_cert =
-                    ord_csr.finalize_pkey(pkey_pri, pkey_pub, 5000)?;
-                let cert = ord_cert.download_and_save_cert()?;
+impl IssueOrder {
+    fn issue(&self) -> Result<(), IssuerError> {
+        log::info("Issuing", &self.spec);
 
-                Ok(spec_.persist(cert)?)
-            })
-        })
-    } else {
-        Err(IssuerError::NoAuthorizationsForDomain)
+        let (pkey_pri, pkey_pub) = create_rsa_key(2048);
+        let ord_csr = match self.inner.confirm_validations() {
+            Some(csr) => Ok(csr),
+            None => Err(IssuerError::ChallengeRejected)
+        }?;
+
+        let ord_cert =
+            ord_csr.finalize_pkey(pkey_pri, pkey_pub, 5000)?;
+        let cert = ord_cert.download_and_save_cert()?;
+
+        Ok(self.spec.persist(cert)?)
     }
 }
 
-
-struct IssueOrder {
-    host: DNSName,
-    proof: String,
-    challenge_time: time::Tm,
-    issue: Box<dyn FnOnce() -> Result<(), IssuerError>>,
-}
-
 pub enum IssuerError {
+    ConfigurationError,
     ChallengeRejected,
     AcmeClient,
     DNS,
-    DNSWrongAnswer,
-    NoAuthorizationsForDomain,
+    DNSWrongAnswer(String),
     PersistError
 }
 
 impl std::convert::From<dns::DNSError> for IssuerError {
     fn from(error: dns::DNSError) -> IssuerError {
         match error {
-            dns::DNSError::WrongAnswer => IssuerError::DNSWrongAnswer,
+            dns::DNSError::WrongAnswer(domain) => IssuerError::DNSWrongAnswer(domain),
             _ => IssuerError::DNS
         }
     }
@@ -162,5 +183,11 @@ impl std::convert::From<PersistError> for IssuerError {
 impl std::convert::From<acme_lib::Error> for IssuerError {
     fn from(_: acme_lib::Error) -> IssuerError {
         IssuerError::AcmeClient
+    }
+}
+
+impl std::convert::From<common::SpecError> for IssuerError {
+    fn from(_: common::SpecError) -> IssuerError {
+        IssuerError::ConfigurationError
     }
 }

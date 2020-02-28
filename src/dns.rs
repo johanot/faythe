@@ -12,44 +12,50 @@ use crate::common::{CertSpec, DNSName};
 pub enum DNSError {
     Exec,
     OutputFormat,
-    WrongAnswer
+    WrongAnswer(String)
 }
 
-pub fn add(config: &FaytheConfig, spec: &CertSpec, proof: &String) -> Result<(), DNSError> {
-    let command = add_cmd(&config, &spec, &proof);
+pub fn add(config: &FaytheConfig, name: &DNSName, proof: &String) -> Result<(), DNSError> {
+    let command = add_cmd(&config, &name, &proof);
     update_dns(&command, &config)
 }
 
-fn add_cmd(config: &FaytheConfig, spec: &CertSpec, proof: &String) -> String {
+fn add_cmd(config: &FaytheConfig, name: &DNSName, proof: &String) -> String {
     format!("server {server}\n\
              prereq nxdomain {host} TXT\n\
              update add {host} 120 TXT \"{proof}\"\n\
              send\n",
             server=&config.auth_dns_server,
-            host=&challenge_host(&spec.cn), //TODO: sans not supported so far
+            host=&challenge_host(&name),
             proof=&proof)
 }
 
 pub fn delete(config: &FaytheConfig, spec: &CertSpec) -> Result<(), DNSError> {
-    let command = delete_cmd(&config, &spec);
-    update_dns(&command, &config)
+    let command = delete_cmd(&config, &spec.cn);
+    update_dns(&command, &config)?;
+    for s in &spec.sans {
+        let command = delete_cmd(&config, &s);
+        update_dns(&command, &config)?
+    }
+    Ok(())
 }
 
-fn delete_cmd(config: &FaytheConfig, spec: &CertSpec) -> String {
+fn delete_cmd(config: &FaytheConfig, name: &DNSName) -> String {
     format!("server {server}\n\
              update delete {host} TXT\n\
              send\n",
             server=&config.auth_dns_server,
-            host=challenge_host(&spec.cn)) //TODO: sans not supported so far
+            host=challenge_host(&name))
 }
 
 pub fn query(server: &String, host: &DNSName, proof: &String) -> Result<(), DNSError> {
     let mut cmd = Command::new("dig");
+    let c_host = challenge_host(host);
     let mut child = cmd.arg(format!("@{}", server))
         .arg("+short")
         .arg("-t")
         .arg("TXT")
-        .arg(challenge_host(host))
+        .arg(&c_host)
         .spawn_ok()?;
 
     let out = child.wait_for_output()?;
@@ -58,7 +64,7 @@ pub fn query(server: &String, host: &DNSName, proof: &String) -> Result<(), DNSE
     let trim_chars: &[_] = &['"', '\n'];
     match &output.trim_matches(trim_chars) == proof {
         true => Ok(()),
-        false => Err(DNSError::WrongAnswer)
+        false => Err(DNSError::WrongAnswer(c_host))
     }
 }
 
@@ -123,7 +129,7 @@ mod tests {
         let spec = create_cert_spec(&String::from("moo.unit.test"));
         let proof = String::from("abcdef1234");
 
-        assert_eq!(add_cmd(&config.faythe_config, &spec, &proof),
+        assert_eq!(add_cmd(&config.faythe_config, &spec.cn, &proof),
                    "server ns.unit.test\nprereq nxdomain _acme-challenge.moo.unit.test. TXT\nupdate add _acme-challenge.moo.unit.test. 120 TXT \"abcdef1234\"\nsend\n")
     }
 
@@ -133,7 +139,7 @@ mod tests {
         let spec = create_cert_spec(&String::from("*.unit.test"));
         let proof = String::from("abcdef1234");
 
-        assert_eq!(add_cmd(&config.faythe_config, &spec, &proof),
+        assert_eq!(add_cmd(&config.faythe_config, &spec.cn, &proof),
                    "server ns.unit.test\nprereq nxdomain _acme-challenge.unit.test. TXT\nupdate add _acme-challenge.unit.test. 120 TXT \"abcdef1234\"\nsend\n")
     }
 
@@ -141,7 +147,7 @@ mod tests {
     fn test_delete_normal() {
         let config = common::create_test_config(false);
         let spec = create_cert_spec(&String::from("moo.unit.test"));
-        assert_eq!(delete_cmd(&config.faythe_config, &spec),
+        assert_eq!(delete_cmd(&config.faythe_config, &spec.cn),
                    "server ns.unit.test\nupdate delete _acme-challenge.moo.unit.test. TXT\nsend\n")
     }
 
@@ -150,7 +156,7 @@ mod tests {
         let config = common::create_test_config(false);
         let spec = create_cert_spec(&String::from("*.unit.test"));
 
-        assert_eq!(delete_cmd(&config.faythe_config, &spec),
+        assert_eq!(delete_cmd(&config.faythe_config, &spec.cn),
                    "server ns.unit.test\nupdate delete _acme-challenge.unit.test. TXT\nsend\n")
     }
 }

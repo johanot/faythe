@@ -24,7 +24,7 @@ pub struct CertSpec {
     pub needs_issuing: bool
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Serialize, Clone)]
 pub struct DNSName {
     pub name: String,
     pub is_wildcard: bool
@@ -95,8 +95,13 @@ impl std::fmt::Display for DNSName {
 }
 
 impl CertSpec {
-    pub fn to_acme_order<P>(&self, acc: &Account<P>) -> Result<NewOrder<P>, acme_lib::Error> where P: Persist {
-        acc.new_order(&self.cn.to_domain_string().as_str(), &[])
+    pub fn to_acme_order<'l, P>(&self, acc: &Account<P>) -> Result<NewOrder<P>, acme_lib::Error> where P: Persist {
+        let mut sans: Vec<String> = Vec::new();
+        for s in &self.sans {
+            sans.push(s.to_domain_string());
+        }
+        let sans_: Vec<&str> = sans.iter().map(|s| s.as_str()).collect();
+        acc.new_order(&self.cn.to_domain_string().as_str(), sans_.as_slice())
     }
 }
 

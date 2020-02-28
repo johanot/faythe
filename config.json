@@ -8,7 +8,11 @@
      "prune": false,
      "specs": [{
        "name": "jth-test",
-       "cn": "jth-test.pzz.dk"
+       "cn": "jth-test.pzz.dk",
+       "sans": [
+         "san1.jth-test.pzz.dk",
+	 "san2.jth-testfun-pzz.dk"
+       ]
      }]
    }],
    "lets_encrypt_url": "https://acme-staging-v02.api.letsencrypt.org/directory",
