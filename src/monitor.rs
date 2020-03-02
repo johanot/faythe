@@ -54,7 +54,7 @@ fn inspect<CS, VV>(config: &ConfigContainer, tx: &Sender<CertSpec>, objects: &Ve
     for o in objects {
         if o.should_retry(&config) {
             let maybe_spec = match certs.get(&o.get_raw_cn()) {
-                Some(cert) => o.to_cert_spec(&config, cert.is_valid(&faythe_config)),
+                Some(cert) => o.to_cert_spec(&config, !cert.is_valid(&faythe_config)),
                 None => o.to_cert_spec(&config, true)
             };
 
