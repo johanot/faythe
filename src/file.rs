@@ -99,8 +99,7 @@ impl CertSpecable for FileSpec {
     fn touch(&self, config: &ConfigContainer) -> Result<(), TouchError> {
         let names = default_file_names(&self);
         let file_path = absolute_path(config.get_file_monitor_config()?, &names.meta);
-        let mut file = OpenOptions::new().append(true).create(true).open(file_path)?;
-        file.flush()?;
+        let mut _file = OpenOptions::new().truncate(true).write(true).create(true).open(file_path)?;
         Ok(())
     }
 
