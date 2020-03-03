@@ -1,13 +1,12 @@
 extern crate regex;
+extern crate openssl;
 
 use acme_lib::persist::Persist;
 use acme_lib::order::NewOrder;
 use acme_lib::{Account, Certificate};
 use regex::Regex;
-use std::io::Cursor;
 use crate::config::{FaytheConfig, ConfigContainer};
 use crate::log;
-use x509_parser::pem::Pem;
 use serde::export::Formatter;
 use crate::kube;
 use crate::kube::KubeError;
@@ -15,6 +14,9 @@ use std::convert::TryFrom;
 use crate::file;
 use crate::file::FileError;
 use std::path::PathBuf;
+use self::openssl::x509::{X509, X509NameEntryRef};
+use self::openssl::nid::Nid;
+use self::openssl::asn1::Asn1TimeRef;
 
 #[derive(Debug, Clone)]
 pub struct CertSpec {
@@ -152,47 +154,102 @@ impl std::convert::From<KubeError> for PersistError {
     }
 }
 
-pub type Cert = Vec<u8>;
+#[derive(Debug, Clone)]
+pub struct Cert {
+    pub cn: String,
+    pub sans: Vec<String>,
+    pub valid_from: time::Tm, // always utc
+    pub valid_to: time::Tm // always utc
+}
 
-pub fn is_valid(config: &FaytheConfig, cert: &Cert) -> Result<(), CertError> {
-    // no cert, it's probably a first time issue
-    if cert.len() == 0 {
-        //TODO: log::info perhaps?
-        return Err(CertError::Empty)
-    }
+impl Cert {
+    pub fn parse(pem_bytes: &Vec<u8>) -> Result<Cert, CertState> {
+        if pem_bytes.len() == 0 {
+            return Err(CertState::Empty)
+        }
 
-    let reader = Cursor::new(&cert);
-    match Pem::read(reader) {
-        Ok((pem, _)) => match pem.parse_x509() {
+        match X509::from_pem(&pem_bytes) {
             Ok(x509) => {
-                if x509.tbs_certificate.validity.not_after.to_utc() > time::now_utc() + time::Duration::days(config.renewal_threshold as i64) {
-                    Ok(())
-                } else {
-                    Err(CertError::Expired)
-                }
-            }
+                Ok(Cert {
+                    cn: Self::get_cn(&x509)?,
+                    sans: Self::get_sans(&x509),
+                    valid_from: Self::get_timestamp(&x509.not_before())?,
+                    valid_to: Self::get_timestamp(&x509.not_after())?
+                })
+            },
             Err(e) => {
-                log::error("failed to parse x509 fields", &e);
-                Err(CertError::Parse)
+                log::error("failed to parse pem-blob", &e);
+                Err(CertState::ParseError)
             }
-        },
-        Err(e) => {
-            log::error("failed to read pem-blob", &e);
-            Err(CertError::Parse)
         }
     }
+
+    fn get_cn(x509: &X509) -> Result<String, CertState> {
+        match x509.subject_name().entries_by_nid(Nid::COMMONNAME).next() {
+            Some(cn) => Ok(Self::get_string(cn)?),
+            None => Err(CertState::ParseError)
+        }
+    }
+
+    fn get_sans(x509: &X509) -> Vec<String> {
+        let mut out: Vec<String> = Vec::new();
+        if x509.subject_alt_names().is_some() {
+            for n in x509.subject_alt_names().unwrap() {
+                let dns_name = n.dnsname();
+                if dns_name.is_some() { // ip sans etc. are not supported currently
+                    out.push(String::from(dns_name.unwrap()))
+                }
+            }
+        }
+        out
+    }
+
+    fn get_string(name_ref: &X509NameEntryRef) -> Result<String, CertState> {
+        match name_ref.data().as_utf8() {
+            Ok(s) => Ok(s.to_string()),
+            _ => Err(CertState::ParseError)
+        }
+    }
+
+    // #cryhard rust openssl lib doesn't allow for a plain convertion from ASN-time to time::Tm or any
+    // other rustlang time type. :( So... We to_string the ASNTime and re-parse it and hope for the best
+    fn get_timestamp(time_ref: &Asn1TimeRef) -> Result<time::Tm, time::ParseError> {
+        const IN_FORMAT: &str = "%b %e %H:%M:%S %Y %Z"; // May 31 15:21:16 2020 GMT
+        time::strptime(&format!("{}", &time_ref), IN_FORMAT)
+    }
+
+    pub fn state(&self, config: &FaytheConfig) -> CertState {
+        let now = time::now_utc();
+        match self.valid_to {
+            to if now > to => CertState::Expired,
+            to if now + time::Duration::days(config.renewal_threshold as i64) > to => CertState::ExpiresSoon,
+            _ if now < self.valid_from => CertState::NotYetValid,
+            to if now >= self.valid_from && now <= to => CertState::Valid,
+            _ => CertState::Unknown,
+        }
+    }
+
+    pub fn is_valid(&self, config: &FaytheConfig) -> bool {
+        self.state(&config) == CertState::Valid
+    }
 }
+
+
 
 pub enum PersistError {
     Kube(KubeError),
     File(FileError)
 }
 
-pub enum CertError {
+#[derive(Debug, Clone, PartialEq)]
+pub enum CertState {
     Empty,
-    Parse,
+    ParseError,
     Expired,
-    //MismatchingSpec //TODO: check common + sans names as well
+    ExpiresSoon,
+    NotYetValid,
+    Valid,
+    Unknown,
 }
 
 pub trait ValidityVerifier {
@@ -251,6 +308,12 @@ pub enum TouchError {
 impl std::convert::From<SpecError> for TouchError {
     fn from(_: SpecError) -> Self {
         TouchError::Failed
+    }
+}
+
+impl std::convert::From<time::ParseError> for CertState {
+    fn from(_: time::ParseError) -> Self {
+        CertState::ParseError
     }
 }
 
