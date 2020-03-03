@@ -338,7 +338,7 @@ pub fn create_test_config(issue_wildcard_certs: bool) -> ConfigContainer {
         val_dns_servers: Vec::new(),
         auth_dns_zone: String::from("unit.test"),
         monitor_interval: 0,
-        renewal_threshold: 0,
+        renewal_threshold: 30,
         issue_grace: 0,
         issue_wildcard_certs,
     };
