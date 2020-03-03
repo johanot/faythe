@@ -348,3 +348,46 @@ pub fn create_test_config(issue_wildcard_certs: bool) -> ConfigContainer {
         monitor_config: MonitorConfig::Kube(kube_monitor_config)
     }
 }
+
+#[cfg(test)]
+const TIME_FORMAT: &str = "%Y-%m-%dT%H:%M:%S%z"; // 2019-10-09T11:50:22+0200
+
+#[test]
+fn test_valid_pem() {
+    let bytes = include_bytes!("../test/longlived.pem");
+    let cert = Cert::parse(&bytes.to_vec()).unwrap();
+
+    assert_eq!(cert.cn, "cn.longlived");
+    assert_eq!(cert.sans, vec!["san1.longlived", "san2.longlived"]);
+
+    /*
+        Not Before: Mar  3 12:09:22 2020 GMT
+        Not After : Feb 24 12:09:22 2050 GMT
+    */
+    assert_eq!(cert.valid_from, time::strptime("2020-03-03T12:09:22+0000", TIME_FORMAT).unwrap());
+    assert_eq!(cert.valid_to, time::strptime("2050-02-24T12:09:22+0000", TIME_FORMAT).unwrap());
+
+    let config = create_test_config(false).faythe_config;
+    assert_eq!(cert.state(&config), CertState::Valid);
+    assert!(cert.is_valid(&config));
+}
+
+#[test]
+fn test_expired_pem() {
+    let bytes = include_bytes!("../test/expired.pem");
+    let cert = Cert::parse(&bytes.to_vec()).unwrap();
+
+    assert_eq!(cert.cn, "cn.expired");
+    assert_eq!(cert.sans, vec!["san1.expired", "san2.expired"]);
+
+    /*
+        Not Before: Mar  3 13:18:46 2020 GMT
+        Not After : Mar  4 13:18:46 2020 GMT
+    */
+    assert_eq!(cert.valid_from, time::strptime("2020-03-03T13:18:46+0000", TIME_FORMAT).unwrap());
+    assert_eq!(cert.valid_to, time::strptime("2020-03-04T13:18:46+0000", TIME_FORMAT).unwrap());
+
+    let config = create_test_config(false).faythe_config;
+    assert!(cert.state(&config) == CertState::ExpiresSoon || cert.state(&config) == CertState::Expired);
+    assert!(!cert.is_valid(&config));
+}
