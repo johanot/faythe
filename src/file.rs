@@ -3,7 +3,6 @@ extern crate time;
 use crate::config::{FileMonitorConfig, FaytheConfig, ConfigContainer};
 use std::collections::HashMap;
 use crate::common::{ValidityVerifier, CertSpecable, CertSpec, SpecError, PersistSpec, TouchError, IssueSource, FilePersistSpec, Cert, PersistError};
-use crate::common;
 use std::fs::{File, OpenOptions};
 use std::path::{Path, PathBuf};
 use acme_lib::Certificate;
@@ -11,14 +10,21 @@ use std::io::Write;
 use std::io::Read;
 use std::time::SystemTime;
 use std::os::unix::fs::PermissionsExt;
+use crate::log;
 
 pub fn read_certs(config: &FileMonitorConfig) -> Result<HashMap<String, FileCert>, FileError> {
     let mut certs = HashMap::new();
     for s in &config.specs {
         let names = default_file_names(&s);
-        certs.insert(s.name.clone(), FileCert{
-            cert: read_file(absolute_path(&config, &names.cert).as_path()).unwrap_or(vec![])
-        });
+        let raw = read_file(absolute_path(&config, &names.cert).as_path()).unwrap_or(vec![]);
+        let cert = Cert::parse(&raw);
+        if cert.is_ok() {
+            certs.insert(s.name.clone(), FileCert{
+                cert: cert.unwrap()
+            });
+        } else {
+            log::info("dropping secret due to invalid cert", &names.cert);
+        }
     }
     Ok(certs)
 }
@@ -55,7 +61,7 @@ pub struct FileCert {
 
 impl ValidityVerifier for FileCert {
     fn is_valid(&self, config: &FaytheConfig) -> bool {
-        common::is_valid(config, &self.cert).is_ok()
+        self.cert.is_valid(&config)
     }
 }
 
@@ -99,8 +105,7 @@ impl CertSpecable for FileSpec {
     fn touch(&self, config: &ConfigContainer) -> Result<(), TouchError> {
         let names = default_file_names(&self);
         let file_path = absolute_path(config.get_file_monitor_config()?, &names.meta);
-        let mut file = OpenOptions::new().append(true).create(true).open(file_path)?;
-        file.flush()?;
+        let mut _file = OpenOptions::new().truncate(true).write(true).create(true).open(file_path)?;
         Ok(())
     }
 

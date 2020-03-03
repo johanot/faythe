@@ -54,7 +54,7 @@ fn inspect<CS, VV>(config: &ConfigContainer, tx: &Sender<CertSpec>, objects: &Ve
     for o in objects {
         if o.should_retry(&config) {
             let maybe_spec = match certs.get(&o.get_raw_cn()) {
-                Some(cert) => o.to_cert_spec(&config, cert.is_valid(&faythe_config)),
+                Some(cert) => o.to_cert_spec(&config, !cert.is_valid(&faythe_config)),
                 None => o.to_cert_spec(&config, true)
             };
 
@@ -84,7 +84,9 @@ mod tests {
     use crate::common;
     use crate::mpsc;
     use crate::mpsc::{Sender, Receiver};
-    use crate::kube::Ingress;
+    use crate::kube::{Ingress, Secret};
+    use crate::common::Cert;
+    use std::ops::Add;
 
     fn create_channel() -> (Sender<CertSpec>, Receiver<CertSpec>) {
         mpsc::channel()
@@ -97,6 +99,20 @@ mod tests {
             touched: time::empty_tm(),
             hosts: [host.clone()].to_vec(),
         }].to_vec()
+    }
+
+    fn create_secret(host: &String, valid_days: i64) -> Secret {
+        Secret{
+            name: String::from("test"),
+            namespace: String::from("test"),
+            cert: Cert{
+                cn: host.clone(),
+                sans: vec![],
+                valid_from: time::now_utc(),
+                valid_to: time::now_utc().add(time::Duration::days(valid_days))
+            },
+            key: vec![]
+        }
     }
 
     #[test]
@@ -162,6 +178,43 @@ mod tests {
         });
 
         assert!(rx.recv().is_err()); // faythe must know an authoritative ns server for the domain in question
+        thread.join().unwrap();
+    }
+
+    #[test]
+    fn test_normal_renewal() {
+        let host = String::from("renewal1.subdivision.unit.test");
+
+        let config = common::create_test_config(false);
+        let (tx, rx) = create_channel();
+        let ingresses = create_ingress(&host);
+        let mut secrets: HashMap<String, kube::Secret> = HashMap::new();
+        secrets.insert(host.clone(), create_secret(&host, 20));
+
+        let thread = thread::spawn(move || {
+            inspect(&config,&tx, &ingresses, secrets)
+        });
+
+        let spec = rx.recv().unwrap();
+        assert_eq!(spec.cn.to_domain_string(), host);
+        thread.join().unwrap();
+    }
+
+    #[test]
+    fn test_not_yet_time_for_renewal() {
+        let host = String::from("renewal2.subdivision.unit.test");
+
+        let config = common::create_test_config(false);
+        let (tx, rx) = create_channel();
+        let ingresses = create_ingress(&host);
+        let mut secrets: HashMap<String, kube::Secret> = HashMap::new();
+        secrets.insert(host.clone(), create_secret(&host, 40));
+
+        let thread = thread::spawn(move || {
+            inspect(&config,&tx, &ingresses, secrets)
+        });
+
+        assert!(rx.recv().is_err()); // there should be nothing to issue
         thread.join().unwrap();
     }
 }

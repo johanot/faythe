@@ -17,7 +17,7 @@ use std::collections::HashMap;
 use crate::exec::{SpawnOk, OpenStdin, Wait, ExecErrorInfo};
 use crate::log;
 use self::base64::DecodeError;
-use crate::common::{is_valid, Cert, KubernetesPersistSpec, DNSName, IssueSource, ValidityVerifier, CertSpecable, CertSpec, SpecError, PersistSpec, TouchError};
+use crate::common::{Cert, KubernetesPersistSpec, DNSName, IssueSource, ValidityVerifier, CertSpecable, CertSpec, SpecError, PersistSpec, TouchError};
 use acme_lib::Certificate;
 
 #[derive(Debug, Clone)]
@@ -47,15 +47,21 @@ pub fn get_secrets(config: &KubeMonitorConfig) -> Result<HashMap<String, Secret>
 
     let mut secrets = HashMap::new();
     for i in vec(&v["items"])? {
-        let key = base64_decode(&i["data"]["key"])?;
-        let cert = base64_decode(&i["data"]["cert"])?;
-        let host = &i["metadata"]["labels"][&config.secret_hostlabel];
-        secrets.insert(sr(host)?, Secret{
-            name: sr(&i["metadata"]["name"])?,
-            namespace: sr(&i["metadata"]["namespace"])?,
-            cert,
-            key
-        });
+        let key_raw = base64_decode(&i["data"]["key"])?;
+        let cert_raw = base64_decode(&i["data"]["cert"])?;
+        let cert = Cert::parse(&cert_raw);
+        let name = sr(&i["metadata"]["name"])?;
+        if cert.is_ok() {
+            let host = &i["metadata"]["labels"][&config.secret_hostlabel];
+            secrets.insert(sr(host)?, Secret{
+                name,
+                namespace: sr(&i["metadata"]["namespace"])?,
+                cert: cert.unwrap(),
+                key: key_raw
+            });
+        } else {
+            log::info("dropping secret due to invalid cert", &name);
+        }
     };
 
     Ok(secrets)
@@ -213,7 +219,7 @@ pub fn persist(persist_spec: &KubernetesPersistSpec, cert: &Certificate) -> Resu
 
 impl ValidityVerifier for Secret {
     fn is_valid(&self, config: &FaytheConfig) -> bool {
-        is_valid(&config, &self.cert).is_ok()
+        self.cert.is_valid(&config)
     }
 }
 
