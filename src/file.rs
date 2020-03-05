@@ -1,7 +1,7 @@
 extern crate time;
 
 use crate::config::{FileMonitorConfig, FaytheConfig, ConfigContainer};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use crate::common::{ValidityVerifier, CertSpecable, CertSpec, SpecError, PersistSpec, TouchError, IssueSource, FilePersistSpec, Cert, PersistError};
 use std::fs::{File, OpenOptions};
 use std::path::{Path, PathBuf};
@@ -11,11 +11,14 @@ use std::io::Read;
 use std::time::SystemTime;
 use std::os::unix::fs::PermissionsExt;
 use crate::log;
+use std::fs;
 
 pub fn read_certs(config: &FileMonitorConfig) -> Result<HashMap<String, FileCert>, FileError> {
     let mut certs = HashMap::new();
+    let mut wanted_files = HashSet::new();
     for s in &config.specs {
         let names = default_file_names(&s);
+        names.insert_into(&mut wanted_files);
         let raw = read_file(absolute_path(&config, &names.cert).as_path()).unwrap_or(vec![]);
         let cert = Cert::parse(&raw);
         if cert.is_ok() {
@@ -26,7 +29,42 @@ pub fn read_certs(config: &FileMonitorConfig) -> Result<HashMap<String, FileCert
             log::info("dropping secret due to invalid cert", &names.cert);
         }
     }
+    maybe_prune(&config, &wanted_files);
     Ok(certs)
+}
+
+fn maybe_prune(config: &FileMonitorConfig, wanted_files: &HashSet<String>) {
+    if config.prune {
+        match fs::read_dir(&config.directory) {
+            Ok(dir) => {
+                for entry_ in dir {
+                    let file_name = match &entry_ {
+                        Ok(e) => String::from(e.file_name().to_str().unwrap_or("")),
+                        _ => String::new()
+                    };
+                    match || -> Result<Option<()>, std::io::Error> {
+                        let entry = entry_?;
+                        match entry.file_type() {
+                            Ok(ft) => {
+                                if ft.is_file() && !wanted_files.contains(&file_name) {
+                                    fs::remove_file(&entry.path())?;
+                                    Ok(Some(()))
+                                } else {
+                                    Ok(None)
+                                }
+                            },
+                            Err(e) => Err(e)
+                        }
+                    }() {
+                        Ok(Some(_)) => log::info("pruned file", &file_name),
+                        Ok(None) => {},
+                        Err(e) => log::error("failed to prune file", &format!("{:?}", &e))
+                    }
+                }
+            },
+            Err(e) => { log::error(&format!("failed to read dir: {}", &config.directory), &format!("{:?}", &e)); }
+        }
+    }
 }
 
 fn default_file_names(spec: &FileSpec) -> FileNames {
@@ -139,6 +177,14 @@ struct FileNames {
     cert: String,
     key: String,
     meta: String
+}
+
+impl FileNames {
+    fn insert_into(&self, set: &mut HashSet<String>) {
+        set.insert(self.cert.clone());
+        set.insert(self.key.clone());
+        set.insert(self.meta.clone());
+    }
 }
 
 pub enum FileError {
