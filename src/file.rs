@@ -88,7 +88,7 @@ fn default_file_names(spec: &FileSpec) -> FileNames {
 fn read_file(path: &Path) -> Result<Vec<u8>, FileError> {
     let mut data: Vec<u8> = Vec::new();
     let mut file = File::open(path)?;
-    file.read(&mut data)?;
+    file.read_to_end(&mut data)?;
     Ok(data)
 }
 
