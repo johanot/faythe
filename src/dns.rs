@@ -116,10 +116,10 @@ mod tests {
     fn create_cert_spec(cn: &String) -> CertSpec {
         let dns_name = DNSName::try_from(cn).unwrap();
         CertSpec{
+            name: String::from("test"),
             cn: dns_name,
             sans: Vec::new(),
             persist_spec: DONTPERSIST,
-            needs_issuing: false
         }
     }
 
