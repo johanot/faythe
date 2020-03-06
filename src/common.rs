@@ -220,13 +220,15 @@ impl Cert {
 
     pub fn state(&self, config: &FaytheConfig) -> CertState {
         let now = time::now_utc();
-        match self.valid_to {
+        let state = match self.valid_to {
             to if now > to => CertState::Expired,
             to if now + time::Duration::days(config.renewal_threshold as i64) > to => CertState::ExpiresSoon,
             _ if now < self.valid_from => CertState::NotYetValid,
             to if now >= self.valid_from && now <= to => CertState::Valid,
             _ => CertState::Unknown,
-        }
+        };
+        log::info(&format!("State for cert: {}", &self.cn), &state);
+        state
     }
 
     pub fn is_valid(&self, config: &FaytheConfig) -> bool {
