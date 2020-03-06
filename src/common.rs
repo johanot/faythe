@@ -227,7 +227,7 @@ impl Cert {
             to if now >= self.valid_from && now <= to => CertState::Valid,
             _ => CertState::Unknown,
         };
-        log::info(&format!("State for cert: {}", &self.get_cn()), &state);
+        log::info(&format!("State for cert: {}", &self.cn), &state);
         state
     }
 
