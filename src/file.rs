@@ -19,7 +19,7 @@ pub fn read_certs(config: &FileMonitorConfig) -> Result<HashMap<CertName, FileCe
     for s in &config.specs {
         let names = default_file_names(&s);
         names.insert_into(&mut wanted_files);
-        let raw = read_file(absolute_path(&config, &names.cert).as_path()).unwrap_or(vec![]);
+        let raw = read_file(absolute_file_path(&config, &names, &names.cert).as_path()).unwrap_or(vec![]);
         let cert = Cert::parse(&raw);
         if cert.is_ok() {
             certs.insert(s.name.clone(), FileCert{
@@ -68,6 +68,10 @@ fn maybe_prune(config: &FileMonitorConfig, wanted_files: &HashSet<String>) {
 }
 
 fn default_file_names(spec: &FileSpec) -> FileNames {
+    let sub_directory = match &spec.sub_directory {
+        Some(n) => Some(n.clone()),
+        None => Some(format!("{name}",name=spec.name))
+    };
     let cert = match &spec.cert_file_name {
         Some(n) => Some(n.clone()),
         None => Some(format!("{name}.pem",name=spec.name))
@@ -79,6 +83,7 @@ fn default_file_names(spec: &FileSpec) -> FileNames {
     let meta = format!("{name}.faythe",name=cert);
 
     FileNames {
+        sub_directory, // will always be Some(sub_dir), currently sub directory persistent can't be disabled
         cert,
         key,
         meta
@@ -110,6 +115,8 @@ pub struct FileSpec {
     #[serde(default)]
     pub sans: Vec<String>,
     #[serde(default)]
+    pub sub_directory: Option<String>,
+    #[serde(default)]
     pub cert_file_name: Option<String>,
     #[serde(default)]
     pub key_file_name: Option<String>,
@@ -134,15 +141,20 @@ impl CertSpecable for FileSpec {
             cn,
             sans: self.get_sans()?,
             persist_spec: PersistSpec::FILE(FilePersistSpec{
-                private_key_path: absolute_path(&monitor_config, &names.key),
-                public_key_path: absolute_path(&monitor_config,&names.cert),
+                private_key_path: absolute_file_path(&monitor_config, &names, &names.key),
+                public_key_path: absolute_file_path(&monitor_config, &names, &names.cert),
             }),
         })
     }
 
     fn touch(&self, config: &ConfigContainer) -> Result<(), TouchError> {
+        let monitor_config = config.get_file_monitor_config()?;
         let names = default_file_names(&self);
-        let file_path = absolute_path(config.get_file_monitor_config()?, &names.meta);
+        let sub_dir = absolute_dir_path(&monitor_config, names.sub_directory.as_ref());
+        if names.sub_directory.is_some() && !sub_dir.exists() {
+            fs::create_dir(sub_dir)?
+        }
+        let file_path = absolute_file_path(&monitor_config, &names, &names.meta);
         let mut _file = OpenOptions::new().truncate(true).write(true).create(true).open(file_path)?;
         Ok(())
     }
@@ -153,7 +165,7 @@ impl CertSpecable for FileSpec {
         match || -> Result<(), TouchError> {
             let monitor_config = config.get_file_monitor_config()?;
             let names = default_file_names(&self);
-            let file = File::open(absolute_path(&monitor_config, &names.meta))?;
+            let file = File::open(absolute_file_path(&monitor_config, &names, &names.meta))?;
             let metadata = file.metadata()?;
             let modified = metadata.modified()?;
             let diff: Duration = SystemTime::now().duration_since(modified)?;
@@ -168,12 +180,20 @@ impl CertSpecable for FileSpec {
     }
 }
 
-fn absolute_path(config: &FileMonitorConfig, name: &String) -> PathBuf {
-    Path::new(&config.directory).join(&name)
+fn absolute_dir_path(config: &FileMonitorConfig, dir: Option<&String>) -> PathBuf {
+    match dir {
+        Some(dir) => Path::new(&config.directory).join(&dir),
+        None => Path::new(&config.directory).to_path_buf()
+    }
+}
+
+fn absolute_file_path(config: &FileMonitorConfig, names: &FileNames, file: &String) -> PathBuf {
+    absolute_dir_path(&config, names.sub_directory.as_ref()).join(&file)
 }
 
 #[derive(Clone, Debug)]
 struct FileNames {
+    sub_directory: Option<String>,
     cert: String,
     key: String,
     meta: String
