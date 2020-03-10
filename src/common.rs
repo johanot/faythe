@@ -18,12 +18,14 @@ use self::openssl::x509::{X509, X509NameEntryRef};
 use self::openssl::nid::Nid;
 use self::openssl::asn1::Asn1TimeRef;
 
+pub type CertName = String;
+
 #[derive(Debug, Clone)]
 pub struct CertSpec {
+    pub name: CertName,
     pub cn: DNSName,
     pub sans: Vec<DNSName>,
     pub persist_spec: PersistSpec,
-    pub needs_issuing: bool
 }
 
 #[derive(Debug, Serialize, Clone)]
@@ -51,6 +53,16 @@ impl std::convert::TryFrom<&String> for DNSName {
 }
 
 impl DNSName {
+
+    fn generic_checks(&self, config: &FaytheConfig) -> Result<(), SpecError> {
+        if config.issue_wildcard_certs && self.is_wildcard {
+            return Err(SpecError::WildcardHostnameNotAllowedWithAutoWildcardIssuingEnabled)
+        }
+        if ! self.has_suffix(&config.auth_dns_zone) {
+            return Err(SpecError::NonAuthoritativeDomain)
+        }
+        Ok(())
+    }
 
     // will return *.example.com for wildcard name: *.example.com
     pub fn to_domain_string(&self) -> String {
@@ -259,21 +271,23 @@ pub trait ValidityVerifier {
 }
 
 pub trait CertSpecable: IssueSource {
-    fn to_cert_spec(&self, config: &ConfigContainer, needs_issuing: bool) -> Result<CertSpec, SpecError>;
+    fn to_cert_spec(&self, config: &ConfigContainer) -> Result<CertSpec, SpecError>;
     fn touch(&self, config: &ConfigContainer) -> Result<(), TouchError>;
     fn should_retry(&self, config: &ConfigContainer) -> bool;
-    fn prerequisites(&self, config: &FaytheConfig) -> Result<DNSName, SpecError>  {
-        let dns_name_ = DNSName::try_from(&self.get_raw_cn())?;
-        if dns_name_.is_wildcard {
-            return Err(SpecError::WildcardHostnameNotAllowed)
+    fn normalize(&self, config: &FaytheConfig) -> Result<DNSName, SpecError>  {
+        let cn = self.get_cn()?;
+        let sans = self.get_sans()?;
+        cn.generic_checks(&config)?;
+        if config.issue_wildcard_certs && sans.len() > 0 {
+            return Err(SpecError::SansNotSupportedWithAutoWildcardIssuingEnabled)
         }
-        if ! dns_name_.has_suffix(&config.auth_dns_zone) {
-            return Err(SpecError::NonAuthoritativeDomain)
+        for s in sans {
+            s.generic_checks(&config)?;
         }
 
         Ok(match config.issue_wildcard_certs {
-            true => dns_name_.to_wildcard()?,
-            false => dns_name_
+            true => cn.to_wildcard()?,
+            false => cn
         })
     }
 }
@@ -297,7 +311,8 @@ pub trait IssueSource {
 pub enum SpecError {
     InvalidHostname,
     NonAuthoritativeDomain,
-    WildcardHostnameNotAllowed,
+    WildcardHostnameNotAllowedWithAutoWildcardIssuingEnabled,
+    SansNotSupportedWithAutoWildcardIssuingEnabled,
     InvalidConfig
 }
 

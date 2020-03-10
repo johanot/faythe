@@ -10,14 +10,14 @@ use std::process::{Command, Stdio};
 use std::result::Result;
 use std::option::Option;
 use crate::exec;
-use crate::config::{FaytheConfig, KubeMonitorConfig, MonitorConfig, ConfigContainer};
+use crate::config::{FaytheConfig, KubeMonitorConfig, ConfigContainer};
 
 use std::collections::HashMap;
 
 use crate::exec::{SpawnOk, OpenStdin, Wait, ExecErrorInfo};
 use crate::log;
 use self::base64::DecodeError;
-use crate::common::{Cert, KubernetesPersistSpec, DNSName, IssueSource, ValidityVerifier, CertSpecable, CertSpec, SpecError, PersistSpec, TouchError};
+use crate::common::{Cert, KubernetesPersistSpec, DNSName, IssueSource, ValidityVerifier, CertSpecable, CertSpec, SpecError, PersistSpec, TouchError, CertName};
 use acme_lib::Certificate;
 
 #[derive(Debug, Clone)]
@@ -38,7 +38,7 @@ pub struct Secret {
 
 const TIME_FORMAT: &str = "%Y-%m-%dT%H:%M:%S%z"; // 2019-10-09T11:50:22+0200
 
-pub fn get_secrets(config: &KubeMonitorConfig) -> Result<HashMap<String, Secret>, KubeError> {
+pub fn get_secrets(config: &KubeMonitorConfig) -> Result<HashMap<CertName, Secret>, KubeError> {
 
     let v = kubectl(&["get", "secrets",
         "-l", config.secret_hostlabel.as_str(),
@@ -230,28 +230,27 @@ impl IssueSource for Ingress {
     }
 
     fn get_raw_sans(&self) -> Vec<String> {
-        unimplemented!()
+        Vec::new() // no sans for kube ingresses
     }
 }
 
 impl CertSpecable for Ingress {
-    fn to_cert_spec(&self, config: &ConfigContainer, needs_issuing: bool) -> Result<CertSpec, SpecError> {
+    fn to_cert_spec(&self, config: &ConfigContainer) -> Result<CertSpec, SpecError> {
         let faythe_config = &config.faythe_config;
-        let monitor_config = match &config.monitor_config {
-            MonitorConfig::Kube(c) => Ok(c),
-            _ => Err(SpecError::InvalidConfig)
-        }?;
-        let dns_name = CertSpecable::prerequisites(self, &faythe_config)?;
+        let cn = self.normalize(&faythe_config)?;
+
+        let monitor_config = config.get_kube_monitor_config()?;
+        let name = cn.to_kube_secret_name(&monitor_config);
         Ok(CertSpec {
-            cn: dns_name.clone(),
+            name: name.clone(),
+            cn: cn.clone(),
             sans: Vec::new(), // for now, no certs in Kubernetes Secrets
             persist_spec: PersistSpec::KUBERNETES(KubernetesPersistSpec {
-                name: dns_name.to_kube_secret_name(&monitor_config),
+                name: name.clone(),
                 namespace: monitor_config.secret_namespace.clone(),
                 host_label_key: monitor_config.secret_hostlabel.clone(),
-                host_label_value: dns_name.to_kube_secret_name(&monitor_config),
+                host_label_value: name.clone(),
             }),
-            needs_issuing
         })
     }
 

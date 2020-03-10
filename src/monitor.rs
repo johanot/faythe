@@ -13,7 +13,7 @@ use std::result::Result;
 
 use std::sync::mpsc::Sender;
 
-use crate::common::{CertSpec};
+use crate::common::{CertSpec, CertName};
 use std::collections::HashMap;
 use crate::common::{CertSpecable, ValidityVerifier};
 use crate::kube::KubeError;
@@ -47,32 +47,38 @@ pub fn monitor_files(config: ConfigContainer, tx: Sender<CertSpec>) {
     }
 }
 
-fn inspect<CS, VV>(config: &ConfigContainer, tx: &Sender<CertSpec>, objects: &Vec<CS>, certs: HashMap<String, VV>)
+
+fn inspect<CS, VV>(config: &ConfigContainer, tx: &Sender<CertSpec>, objects: &Vec<CS>, certs: HashMap<CertName, VV>)
     where CS: CertSpecable, VV: ValidityVerifier {
 
     let faythe_config = &config.faythe_config;
     for o in objects {
-        if o.should_retry(&config) {
-            let maybe_spec = match certs.get(&o.get_raw_cn()) {
-                Some(cert) => o.to_cert_spec(&config, !cert.is_valid(&faythe_config)),
-                None => o.to_cert_spec(&config, true)
-            };
+        let spec = o.to_cert_spec(&config);
+        match &spec {
+            s if s.is_ok() && o.should_retry(&config) => {
+                let spec = s.as_ref().unwrap();
 
-            match maybe_spec {
-                Ok(cert_spec) => {
-                    match o.touch(&config) {
-                        Ok(_) => {
-                            log::info("touched", &cert_spec.cn); //TODO: improve logging
-                            if cert_spec.needs_issuing {
-                                log::info("(re-)issuing", &cert_spec.cn); //TODO: improve logging
-                                tx.send(cert_spec).unwrap()
-                            }
-                        },
-                        Err(e) => log::error("failed to touch object, bailing out.", &e)
-                    };
-                },
-                Err(e) => log::error("certspec invalid", &e)
-            }
+                let should_issue = match certs.get(&spec.name) {
+                    Some(cert) => !cert.is_valid(&faythe_config),
+                    None => {
+                        log::info("no matching cert found for, first-time issue", &spec.name);
+                        true
+                    }
+                };
+
+                match o.touch(&config) {
+                    Ok(_) => {
+                        log::info("touched", &spec.name); //TODO: improve logging
+                        if should_issue {
+                            log::info("(re-)issuing", &spec.name); //TODO: improve logging
+                            tx.send(spec.to_owned()).unwrap()
+                        }
+                    },
+                    Err(e) => log::error("failed to touch object, bailing out.", &e)
+                };
+            },
+            Ok(_) => {}, // not time for issuing
+            Err(e) => log::error("certspec invalid", &e)
         }
     }
 }
@@ -135,6 +141,7 @@ mod tests {
     #[test]
     fn test_wildcard_new_issue() {
         let host = String::from("host1.subdivision.unit.test");
+        let name = String::from("wild---card.subdivision.unit.test");
 
         let config = common::create_test_config(true);
         let (tx, rx) = create_channel();
@@ -145,6 +152,7 @@ mod tests {
         });
 
         let spec = rx.recv().unwrap();
+        assert_eq!(spec.name, name);
         assert_eq!(spec.cn.to_domain_string(), String::from("*.subdivision.unit.test"));
         thread.join().unwrap();
     }
@@ -161,7 +169,7 @@ mod tests {
             inspect(&config, &tx, &ingresses, secrets)
         });
 
-        assert!(rx.recv().is_err()); // it is not allowed to ask for a wildcard cert in k8s ingress specs
+        assert!(rx.try_recv().is_err()); // it is not allowed to ask for a wildcard cert in k8s ingress specs
         thread.join().unwrap();
     }
 
@@ -203,12 +211,32 @@ mod tests {
     #[test]
     fn test_not_yet_time_for_renewal() {
         let host = String::from("renewal2.subdivision.unit.test");
+        let name = host.clone();
 
         let config = common::create_test_config(false);
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host);
         let mut secrets: HashMap<String, kube::Secret> = HashMap::new();
-        secrets.insert(host.clone(), create_secret(&host, 40));
+        secrets.insert(name, create_secret(&host, 40));
+
+        let thread = thread::spawn(move || {
+            inspect(&config,&tx, &ingresses, secrets)
+        });
+
+        assert!(rx.recv().is_err()); // there should be nothing to issue
+        thread.join().unwrap();
+    }
+
+    #[test]
+    fn test_wildcard_not_yet_time_for_renewal() {
+        let host = String::from("renewal2.subdivision.unit.test");
+        let name = String::from("wild---card.subdivision.unit.test");
+
+        let config = common::create_test_config(true);
+        let (tx, rx) = create_channel();
+        let ingresses = create_ingress(&host);
+        let mut secrets: HashMap<String, kube::Secret> = HashMap::new();
+        secrets.insert(name, create_secret(&host, 40));
 
         let thread = thread::spawn(move || {
             inspect(&config,&tx, &ingresses, secrets)

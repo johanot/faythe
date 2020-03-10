@@ -2,7 +2,7 @@ extern crate time;
 
 use crate::config::{FileMonitorConfig, FaytheConfig, ConfigContainer};
 use std::collections::{HashMap, HashSet};
-use crate::common::{ValidityVerifier, CertSpecable, CertSpec, SpecError, PersistSpec, TouchError, IssueSource, FilePersistSpec, Cert, PersistError};
+use crate::common::{ValidityVerifier, CertSpecable, CertSpec, SpecError, PersistSpec, TouchError, IssueSource, FilePersistSpec, Cert, PersistError, CertName};
 use std::fs::{File, OpenOptions};
 use std::path::{Path, PathBuf};
 use acme_lib::Certificate;
@@ -13,7 +13,7 @@ use std::os::unix::fs::PermissionsExt;
 use crate::log;
 use std::fs;
 
-pub fn read_certs(config: &FileMonitorConfig) -> Result<HashMap<String, FileCert>, FileError> {
+pub fn read_certs(config: &FileMonitorConfig) -> Result<HashMap<CertName, FileCert>, FileError> {
     let mut certs = HashMap::new();
     let mut wanted_files = HashSet::new();
     for s in &config.specs {
@@ -125,18 +125,18 @@ impl IssueSource for FileSpec {
 }
 
 impl CertSpecable for FileSpec {
-    fn to_cert_spec(&self, config: &ConfigContainer, needs_issuing: bool) -> Result<CertSpec, SpecError> {
-        self.prerequisites(&config.faythe_config)?;
+    fn to_cert_spec(&self, config: &ConfigContainer) -> Result<CertSpec, SpecError> {
+        let cn = self.normalize(&config.faythe_config)?;
         let monitor_config = config.get_file_monitor_config()?;
         let names = default_file_names(&self);
         Ok(CertSpec{
-            cn: self.get_cn()?,
+            name: self.name.clone(),
+            cn,
             sans: self.get_sans()?,
             persist_spec: PersistSpec::FILE(FilePersistSpec{
                 private_key_path: absolute_path(&monitor_config, &names.key),
                 public_key_path: absolute_path(&monitor_config,&names.cert),
             }),
-            needs_issuing
         })
     }
 
