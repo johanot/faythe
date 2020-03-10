@@ -1,4 +1,6 @@
 extern crate time;
+extern crate walkdir;
+
 
 use crate::config::{FileMonitorConfig, FaytheConfig, ConfigContainer};
 use std::collections::{HashMap, HashSet};
@@ -12,13 +14,14 @@ use std::time::SystemTime;
 use std::os::unix::fs::PermissionsExt;
 use crate::log;
 use std::fs;
+use self::walkdir::WalkDir;
 
 pub fn read_certs(config: &FileMonitorConfig) -> Result<HashMap<CertName, FileCert>, FileError> {
     let mut certs = HashMap::new();
     let mut wanted_files = HashSet::new();
     for s in &config.specs {
         let names = default_file_names(&s);
-        names.insert_into(&mut wanted_files);
+        names.insert_into(&config, &mut wanted_files);
         let raw = read_file(absolute_file_path(&config, &names, &names.cert).as_path()).unwrap_or(vec![]);
         let cert = Cert::parse(&raw);
         if cert.is_ok() {
@@ -35,35 +38,36 @@ pub fn read_certs(config: &FileMonitorConfig) -> Result<HashMap<CertName, FileCe
     Ok(certs)
 }
 
-fn prune(config: &FileMonitorConfig, wanted_files: &HashSet<String>) {
-    match fs::read_dir(&config.directory) {
-        Ok(dir) => {
-            for entry_ in dir {
-                let file_name = match &entry_ {
-                    Ok(e) => String::from(e.file_name().to_str().unwrap_or("")),
-                    _ => String::new()
-                };
-                match || -> Result<Option<()>, std::io::Error> {
-                    let entry = entry_?;
-                    match entry.file_type() {
-                        Ok(ft) => {
-                            if ft.is_file() && !wanted_files.contains(&file_name) {
-                                fs::remove_file(&entry.path())?;
-                                Ok(Some(()))
-                            } else {
-                                Ok(None)
-                            }
-                        },
-                        Err(e) => Err(e)
-                    }
-                }() {
-                    Ok(Some(_)) => log::info("pruned file", &file_name),
-                    Ok(None) => {},
-                    Err(e) => log::error("failed to prune file", &format!("{:?}", &e))
-                }
+fn prune(config: &FileMonitorConfig, wanted_files: &HashSet<PathBuf>) {
+    let unwanted = WalkDir::new(&config.directory)
+        .into_iter()
+        .filter_map(|e| e.ok())
+        .filter(|e| e.file_type().is_file() && !wanted_files.contains(e.path()));
+
+    for f in unwanted {
+        let path = f.path();
+        match fs::remove_file(&path) {
+            Ok(_) => log::info("Pruned file", &path),
+            Err(e) => log::error(&format!("failed to prune file: {}", &path.display()), &e)
+        }
+    }
+
+    // unwanted files are removed ^ , now: remove empty directories
+
+    let me = absolute_dir_path(&config, Some(&config.directory));
+    let dirs = WalkDir::new(&config.directory)
+        .into_iter()
+        .filter_map(|e| e.ok())
+        .filter(|e| e.file_type().is_dir() && e.path() != me && e.path().read_dir().is_ok());
+
+    for d in dirs {
+        let path = d.path();
+        if path.read_dir().unwrap().next().is_none() {
+            match fs::remove_dir(&path) {
+                Ok(_) => log::info("Removed directory", &path),
+                Err(e) => log::error(&format!("failed to remove directory: {}", &path.display()), &e)
             }
-        },
-        Err(e) => { log::error(&format!("failed to read dir: {}", &config.directory), &format!("{:?}", &e)); }
+        }
     }
 }
 
@@ -200,10 +204,10 @@ struct FileNames {
 }
 
 impl FileNames {
-    fn insert_into(&self, set: &mut HashSet<String>) {
-        set.insert(self.cert.clone());
-        set.insert(self.key.clone());
-        set.insert(self.meta.clone());
+    fn insert_into(&self, config: &FileMonitorConfig, set: &mut HashSet<PathBuf>) {
+        set.insert(absolute_file_path(&config, &self, &self.cert));
+        set.insert(absolute_file_path(&config, &self, &self.key));
+        set.insert(absolute_file_path(&config, &self, &self.meta));
     }
 }
 
