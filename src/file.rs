@@ -29,41 +29,41 @@ pub fn read_certs(config: &FileMonitorConfig) -> Result<HashMap<CertName, FileCe
             log::info("dropping secret due to invalid cert", &names.cert);
         }
     }
-    maybe_prune(&config, &wanted_files);
+    if config.prune {
+        prune(&config, &wanted_files);
+    }
     Ok(certs)
 }
 
-fn maybe_prune(config: &FileMonitorConfig, wanted_files: &HashSet<String>) {
-    if config.prune {
-        match fs::read_dir(&config.directory) {
-            Ok(dir) => {
-                for entry_ in dir {
-                    let file_name = match &entry_ {
-                        Ok(e) => String::from(e.file_name().to_str().unwrap_or("")),
-                        _ => String::new()
-                    };
-                    match || -> Result<Option<()>, std::io::Error> {
-                        let entry = entry_?;
-                        match entry.file_type() {
-                            Ok(ft) => {
-                                if ft.is_file() && !wanted_files.contains(&file_name) {
-                                    fs::remove_file(&entry.path())?;
-                                    Ok(Some(()))
-                                } else {
-                                    Ok(None)
-                                }
-                            },
-                            Err(e) => Err(e)
-                        }
-                    }() {
-                        Ok(Some(_)) => log::info("pruned file", &file_name),
-                        Ok(None) => {},
-                        Err(e) => log::error("failed to prune file", &format!("{:?}", &e))
+fn prune(config: &FileMonitorConfig, wanted_files: &HashSet<String>) {
+    match fs::read_dir(&config.directory) {
+        Ok(dir) => {
+            for entry_ in dir {
+                let file_name = match &entry_ {
+                    Ok(e) => String::from(e.file_name().to_str().unwrap_or("")),
+                    _ => String::new()
+                };
+                match || -> Result<Option<()>, std::io::Error> {
+                    let entry = entry_?;
+                    match entry.file_type() {
+                        Ok(ft) => {
+                            if ft.is_file() && !wanted_files.contains(&file_name) {
+                                fs::remove_file(&entry.path())?;
+                                Ok(Some(()))
+                            } else {
+                                Ok(None)
+                            }
+                        },
+                        Err(e) => Err(e)
                     }
+                }() {
+                    Ok(Some(_)) => log::info("pruned file", &file_name),
+                    Ok(None) => {},
+                    Err(e) => log::error("failed to prune file", &format!("{:?}", &e))
                 }
-            },
-            Err(e) => { log::error(&format!("failed to read dir: {}", &config.directory), &format!("{:?}", &e)); }
-        }
+            }
+        },
+        Err(e) => { log::error(&format!("failed to read dir: {}", &config.directory), &format!("{:?}", &e)); }
     }
 }
 
