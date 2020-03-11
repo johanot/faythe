@@ -15,6 +15,7 @@ use std::os::unix::fs::PermissionsExt;
 use crate::log;
 use std::fs;
 use self::walkdir::WalkDir;
+use std::process::Command;
 
 pub fn read_certs(config: &FileMonitorConfig) -> Result<HashMap<CertName, FileCert>, FileError> {
     let mut certs = HashMap::new();
@@ -156,7 +157,8 @@ impl CertSpecable for FileSpec {
         let names = default_file_names(&self);
         let sub_dir = absolute_dir_path(&monitor_config, names.sub_directory.as_ref());
         if names.sub_directory.is_some() && !sub_dir.exists() {
-            fs::create_dir(sub_dir)?
+            fs::create_dir(&sub_dir)?;
+            sub_dir.metadata()?.permissions().set_mode(0o655) // rw-r-xr-x
         }
         let file_path = absolute_file_path(&monitor_config, &names, &names.meta);
         let mut _file = OpenOptions::new().truncate(true).write(true).create(true).open(file_path)?;
@@ -223,8 +225,26 @@ pub fn persist(spec: &FilePersistSpec, cert: &Certificate) -> Result<(), Persist
     pub_file.write_all(pub_buf)?;
     priv_file.write_all(priv_buf)?;
     let mut priv_permissions = priv_file.metadata()?.permissions();
-    priv_permissions.set_mode(0o600); // rw-------
+    priv_permissions.set_mode(0o640); // rw-r------
+    match spec.public_key_path.parent() {
+        Some(d) => chgrp("certpull", &d), //TODO: don't hardcode group
+        None => Err(PersistError::File(FileError::IO))
+    }?;
     Ok(())
+}
+
+fn chgrp(group: &str, path: &Path) -> Result<(), PersistError> {
+    log::info("changing group for", &path.as_os_str());
+
+    let mut cmd = Command::new("chgrp");
+    match cmd.arg("-R")
+        .arg(group)
+        .arg(path.as_os_str())
+        .output() {
+
+        Ok(_) => Ok(()),
+        Err(e) => { log::error("chgroup failed", &e); Err(PersistError::File(FileError::IO)) }
+    }
 }
 
 impl std::convert::From<std::io::Error> for FileError {
