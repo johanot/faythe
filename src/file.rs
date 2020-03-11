@@ -78,13 +78,13 @@ fn default_file_names(spec: &FileSpec) -> FileNames {
     };
     let cert = match &spec.cert_file_name {
         Some(n) => Some(n.clone()),
-        None => Some(format!("{name}.pem",name=spec.name))
+        None => Some(String::from("fullchain.pem"))
     }.unwrap();
     let key = match &spec.key_file_name {
         Some(n) => Some(n.clone()),
-        None => Some(format!("{name}-key.pem",name=spec.name))
+        None => Some(String::from("privkey.pem"))
     }.unwrap();
-    let meta = format!("{name}.faythe",name=cert);
+    let meta = format!("{name}.faythe",name=spec.name);
 
     FileNames {
         sub_directory, // will always be Some(sub_dir), currently sub directory persistent can't be disabled
