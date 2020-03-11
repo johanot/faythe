@@ -1,4 +1,6 @@
 extern crate time;
+extern crate walkdir;
+
 
 use crate::config::{FileMonitorConfig, FaytheConfig, ConfigContainer};
 use std::collections::{HashMap, HashSet};
@@ -12,14 +14,15 @@ use std::time::SystemTime;
 use std::os::unix::fs::PermissionsExt;
 use crate::log;
 use std::fs;
+use self::walkdir::WalkDir;
 
 pub fn read_certs(config: &FileMonitorConfig) -> Result<HashMap<CertName, FileCert>, FileError> {
     let mut certs = HashMap::new();
     let mut wanted_files = HashSet::new();
     for s in &config.specs {
         let names = default_file_names(&s);
-        names.insert_into(&mut wanted_files);
-        let raw = read_file(absolute_path(&config, &names.cert).as_path()).unwrap_or(vec![]);
+        names.insert_into(&config, &mut wanted_files);
+        let raw = read_file(absolute_file_path(&config, &names, &names.cert).as_path()).unwrap_or(vec![]);
         let cert = Cert::parse(&raw);
         if cert.is_ok() {
             certs.insert(s.name.clone(), FileCert{
@@ -29,45 +32,50 @@ pub fn read_certs(config: &FileMonitorConfig) -> Result<HashMap<CertName, FileCe
             log::info("dropping secret due to invalid cert", &names.cert);
         }
     }
-    maybe_prune(&config, &wanted_files);
+    if config.prune {
+        prune(&config, &wanted_files);
+    }
     Ok(certs)
 }
 
-fn maybe_prune(config: &FileMonitorConfig, wanted_files: &HashSet<String>) {
-    if config.prune {
-        match fs::read_dir(&config.directory) {
-            Ok(dir) => {
-                for entry_ in dir {
-                    let file_name = match &entry_ {
-                        Ok(e) => String::from(e.file_name().to_str().unwrap_or("")),
-                        _ => String::new()
-                    };
-                    match || -> Result<Option<()>, std::io::Error> {
-                        let entry = entry_?;
-                        match entry.file_type() {
-                            Ok(ft) => {
-                                if ft.is_file() && !wanted_files.contains(&file_name) {
-                                    fs::remove_file(&entry.path())?;
-                                    Ok(Some(()))
-                                } else {
-                                    Ok(None)
-                                }
-                            },
-                            Err(e) => Err(e)
-                        }
-                    }() {
-                        Ok(Some(_)) => log::info("pruned file", &file_name),
-                        Ok(None) => {},
-                        Err(e) => log::error("failed to prune file", &format!("{:?}", &e))
-                    }
-                }
-            },
-            Err(e) => { log::error(&format!("failed to read dir: {}", &config.directory), &format!("{:?}", &e)); }
+fn prune(config: &FileMonitorConfig, wanted_files: &HashSet<PathBuf>) {
+    let unwanted = WalkDir::new(&config.directory)
+        .into_iter()
+        .filter_map(|e| e.ok())
+        .filter(|e| e.file_type().is_file() && !wanted_files.contains(e.path()));
+
+    for f in unwanted {
+        let path = f.path();
+        match fs::remove_file(&path) {
+            Ok(_) => log::info("Pruned file", &path),
+            Err(e) => log::error(&format!("failed to prune file: {}", &path.display()), &e)
+        }
+    }
+
+    // unwanted files are removed ^ , now: remove empty directories
+
+    let me = absolute_dir_path(&config, Some(&config.directory));
+    let dirs = WalkDir::new(&config.directory)
+        .into_iter()
+        .filter_map(|e| e.ok())
+        .filter(|e| e.file_type().is_dir() && e.path() != me && e.path().read_dir().is_ok());
+
+    for d in dirs {
+        let path = d.path();
+        if path.read_dir().unwrap().next().is_none() {
+            match fs::remove_dir(&path) {
+                Ok(_) => log::info("Removed directory", &path),
+                Err(e) => log::error(&format!("failed to remove directory: {}", &path.display()), &e)
+            }
         }
     }
 }
 
 fn default_file_names(spec: &FileSpec) -> FileNames {
+    let sub_directory = match &spec.sub_directory {
+        Some(n) => Some(n.clone()),
+        None => Some(format!("{name}",name=spec.name))
+    };
     let cert = match &spec.cert_file_name {
         Some(n) => Some(n.clone()),
         None => Some(format!("{name}.pem",name=spec.name))
@@ -79,6 +87,7 @@ fn default_file_names(spec: &FileSpec) -> FileNames {
     let meta = format!("{name}.faythe",name=cert);
 
     FileNames {
+        sub_directory, // will always be Some(sub_dir), currently sub directory persistent can't be disabled
         cert,
         key,
         meta
@@ -110,6 +119,8 @@ pub struct FileSpec {
     #[serde(default)]
     pub sans: Vec<String>,
     #[serde(default)]
+    pub sub_directory: Option<String>,
+    #[serde(default)]
     pub cert_file_name: Option<String>,
     #[serde(default)]
     pub key_file_name: Option<String>,
@@ -134,15 +145,20 @@ impl CertSpecable for FileSpec {
             cn,
             sans: self.get_sans()?,
             persist_spec: PersistSpec::FILE(FilePersistSpec{
-                private_key_path: absolute_path(&monitor_config, &names.key),
-                public_key_path: absolute_path(&monitor_config,&names.cert),
+                private_key_path: absolute_file_path(&monitor_config, &names, &names.key),
+                public_key_path: absolute_file_path(&monitor_config, &names, &names.cert),
             }),
         })
     }
 
     fn touch(&self, config: &ConfigContainer) -> Result<(), TouchError> {
+        let monitor_config = config.get_file_monitor_config()?;
         let names = default_file_names(&self);
-        let file_path = absolute_path(config.get_file_monitor_config()?, &names.meta);
+        let sub_dir = absolute_dir_path(&monitor_config, names.sub_directory.as_ref());
+        if names.sub_directory.is_some() && !sub_dir.exists() {
+            fs::create_dir(sub_dir)?
+        }
+        let file_path = absolute_file_path(&monitor_config, &names, &names.meta);
         let mut _file = OpenOptions::new().truncate(true).write(true).create(true).open(file_path)?;
         Ok(())
     }
@@ -153,7 +169,7 @@ impl CertSpecable for FileSpec {
         match || -> Result<(), TouchError> {
             let monitor_config = config.get_file_monitor_config()?;
             let names = default_file_names(&self);
-            let file = File::open(absolute_path(&monitor_config, &names.meta))?;
+            let file = File::open(absolute_file_path(&monitor_config, &names, &names.meta))?;
             let metadata = file.metadata()?;
             let modified = metadata.modified()?;
             let diff: Duration = SystemTime::now().duration_since(modified)?;
@@ -168,22 +184,30 @@ impl CertSpecable for FileSpec {
     }
 }
 
-fn absolute_path(config: &FileMonitorConfig, name: &String) -> PathBuf {
-    Path::new(&config.directory).join(&name)
+fn absolute_dir_path(config: &FileMonitorConfig, dir: Option<&String>) -> PathBuf {
+    match dir {
+        Some(dir) => Path::new(&config.directory).join(&dir),
+        None => Path::new(&config.directory).to_path_buf()
+    }
+}
+
+fn absolute_file_path(config: &FileMonitorConfig, names: &FileNames, file: &String) -> PathBuf {
+    absolute_dir_path(&config, names.sub_directory.as_ref()).join(&file)
 }
 
 #[derive(Clone, Debug)]
 struct FileNames {
+    sub_directory: Option<String>,
     cert: String,
     key: String,
     meta: String
 }
 
 impl FileNames {
-    fn insert_into(&self, set: &mut HashSet<String>) {
-        set.insert(self.cert.clone());
-        set.insert(self.key.clone());
-        set.insert(self.meta.clone());
+    fn insert_into(&self, config: &FileMonitorConfig, set: &mut HashSet<PathBuf>) {
+        set.insert(absolute_file_path(&config, &self, &self.cert));
+        set.insert(absolute_file_path(&config, &self, &self.key));
+        set.insert(absolute_file_path(&config, &self, &self.meta));
     }
 }
 
