@@ -5,16 +5,15 @@ use std::io::Read;
 use std::prelude::v1::Vec;
 use crate::file::FileSpec;
 use crate::common::SpecError;
+use std::collections::HashMap;
 
 #[derive(Clone, Deserialize, Debug)]
 pub struct FaytheConfig {
     pub lets_encrypt_url: String,
     pub lets_encrypt_proxy: Option<String>,
     pub lets_encrypt_email: String,
-    pub auth_dns_server: String,
-    pub auth_dns_key: String,
+    pub zones: HashMap<String, Zone>,
     pub val_dns_servers: Vec<String>,
-    pub auth_dns_zone: String,
     #[serde(default = "default_interval")]
     pub monitor_interval: u64,
     #[serde(default = "default_renewal_threshold")]
@@ -54,6 +53,13 @@ pub enum MonitorConfig {
 pub struct ConfigContainer {
     pub faythe_config: FaytheConfig,
     pub monitor_config: MonitorConfig
+}
+
+#[derive(Clone, Deserialize, Debug)]
+pub struct Zone {
+    pub server: String,
+    pub key: String,
+    pub challenge_zone: Option<String>,
 }
 
 impl ConfigContainer {
