@@ -90,12 +90,12 @@ fn default_wildcard_cert_k8s_prefix() -> String { "wild--card".to_string() }
 
 fn default_k8s_touch_annotation() -> Option<String> { Some("faythe.touched".to_string()) }
 
-pub fn parse_config_file(file: &str) -> FaytheConfig {
+pub fn parse_config_file(file: &str) -> serde_json::Result<FaytheConfig> {
     let path = std::path::Path::new(&file);
     let mut file = File::open(path).unwrap();
     let mut data = String::new();
     file.read_to_string(&mut data).unwrap();
 
     let c: serde_json::Result<FaytheConfig> = serde_json::from_str(&data);
-    c.unwrap()
+    c
 }
