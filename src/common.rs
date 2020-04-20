@@ -53,12 +53,12 @@ impl std::convert::TryFrom<&String> for DNSName {
 
 impl DNSName {
 
-    fn generic_checks(&self, config: &FaytheConfig) -> Result<(), SpecError> {
-        if config.issue_wildcard_certs && self.is_wildcard {
+    fn generic_checks<'l>(&self, config: &'l FaytheConfig) -> Result<&'l Zone, SpecError> {
+        let zone: &'l Zone = self.find_zone(&config)?;
+        if zone.issue_wildcard_certs && self.is_wildcard {
             return Err(SpecError::WildcardHostnameNotAllowedWithAutoWildcardIssuingEnabled)
         }
-        self.find_zone(&config)?;
-        Ok(())
+        Ok(zone)
     }
 
     // will return *.example.com for wildcard name: *.example.com
@@ -326,15 +326,15 @@ pub trait CertSpecable: IssueSource {
     fn normalize(&self, config: &FaytheConfig) -> Result<DNSName, SpecError>  {
         let cn = self.get_cn()?;
         let sans = self.get_sans()?;
-        cn.generic_checks(&config)?;
-        if config.issue_wildcard_certs && sans.len() > 0 {
+        let zone = cn.generic_checks(&config)?;
+        if zone.issue_wildcard_certs && sans.len() > 0 {
             return Err(SpecError::SansNotSupportedWithAutoWildcardIssuingEnabled)
         }
         for s in sans {
             s.generic_checks(&config)?;
         }
 
-        Ok(match config.issue_wildcard_certs {
+        Ok(match zone.issue_wildcard_certs {
             true => cn.to_wildcard()?,
             false => cn
         })
@@ -398,17 +398,20 @@ pub fn create_test_config(issue_wildcard_certs: bool) -> ConfigContainer {
     zones.insert(String::from("unit.test"), Zone{
         server: String::from("ns.unit.test"),
         key: String::new(),
-        challenge_suffix: None
+        challenge_suffix: None,
+        issue_wildcard_certs
     });
     zones.insert(String::from("alternative.unit.test"), Zone{
         server: String::from("ns.alternative.unit.test"),
         key: String::new(),
-        challenge_suffix: None
+        challenge_suffix: None,
+        issue_wildcard_certs
     });
     zones.insert(String::from("suffixed.unit.test"), Zone{
         server: String::from("ns.suffixed.unit.test"),
         key: String::new(),
-        challenge_suffix: Some(String::from("acme.example.com"))
+        challenge_suffix: Some(String::from("acme.example.com")),
+        issue_wildcard_certs
     });
     let faythe_config = FaytheConfig{
         kube_monitor_configs: vec![kube_monitor_config.clone()],
@@ -420,7 +423,6 @@ pub fn create_test_config(issue_wildcard_certs: bool) -> ConfigContainer {
         monitor_interval: 0,
         renewal_threshold: 30,
         issue_grace: 0,
-        issue_wildcard_certs,
         zones
     };
 

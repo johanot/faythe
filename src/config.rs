@@ -20,8 +20,6 @@ pub struct FaytheConfig {
     pub renewal_threshold: u16,
     #[serde(default = "default_issue_grace")]
     pub issue_grace: u64,
-    #[serde(default = "default_issue_wildcard_certs")]
-    pub issue_wildcard_certs: bool,
     #[serde(default)]
     pub kube_monitor_configs: Vec<KubeMonitorConfig>,
     #[serde(default)]
@@ -60,6 +58,8 @@ pub struct Zone {
     pub server: String,
     pub key: String,
     pub challenge_suffix: Option<String>,
+    #[serde(default = "default_issue_wildcard_certs")]
+    pub issue_wildcard_certs: bool,
 }
 
 impl ConfigContainer {
