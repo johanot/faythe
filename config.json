@@ -23,7 +23,7 @@
       "dbc.dk": {
         "server": "ns.dbc.dk",
         "key": "acme.dbc.dk.key",
-        "challenge_zone": "acme.dbc.dk"
+        "challenge_suffix": "acme.dbc.dk"
       }
     },
    "val_dns_servers": ["ns1.gratisdns.dk","ns2.gratisdns.dk","ns3.gratisdns.dk","ns4.gratisdns.dk","ns5.gratisdns.dk"],

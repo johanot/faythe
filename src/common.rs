@@ -398,12 +398,17 @@ pub fn create_test_config(issue_wildcard_certs: bool) -> ConfigContainer {
     zones.insert(String::from("unit.test"), Zone{
         server: String::from("ns.unit.test"),
         key: String::new(),
-        challenge_zone: None
+        challenge_suffix: None
     });
     zones.insert(String::from("alternative.unit.test"), Zone{
         server: String::from("ns.alternative.unit.test"),
         key: String::new(),
-        challenge_zone: None
+        challenge_suffix: None
+    });
+    zones.insert(String::from("suffixed.unit.test"), Zone{
+        server: String::from("ns.suffixed.unit.test"),
+        key: String::new(),
+        challenge_suffix: Some(String::from("acme.example.com"))
     });
     let faythe_config = FaytheConfig{
         kube_monitor_configs: vec![kube_monitor_config.clone()],

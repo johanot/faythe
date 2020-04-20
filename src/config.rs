@@ -59,7 +59,7 @@ pub struct ConfigContainer {
 pub struct Zone {
     pub server: String,
     pub key: String,
-    pub challenge_zone: Option<String>,
+    pub challenge_suffix: Option<String>,
 }
 
 impl ConfigContainer {

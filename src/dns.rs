@@ -29,7 +29,7 @@ fn add_cmd(zone: &Zone, name: &DNSName, proof: &String) -> String {
              update add {host} 120 TXT \"{proof}\"\n\
              send\n",
             server=&zone.server,
-            host=&challenge_host(&name),
+            host=&challenge_host(&name, Some(&zone)),
             proof=&proof)
 }
 
@@ -50,12 +50,12 @@ fn delete_cmd(zone: &Zone, name: &DNSName) -> String {
              update delete {host} TXT\n\
              send\n",
             server=&zone.server,
-            host=challenge_host(&name))
+            host=challenge_host(&name, Some(&zone)))
 }
 
 pub fn query(server: &String, host: &DNSName, proof: &String) -> Result<(), DNSError> {
     let mut cmd = Command::new("dig");
-    let c_host = challenge_host(host);
+    let c_host = challenge_host(host, None);
     let mut child = cmd.arg(format!("@{}", server))
         .arg("+short")
         .arg("-t")
@@ -73,8 +73,15 @@ pub fn query(server: &String, host: &DNSName, proof: &String) -> Result<(), DNSE
     }
 }
 
-fn challenge_host(host: &DNSName) -> String {
-    format!("_acme-challenge.{}.", &host.to_parent_domain_string())
+fn challenge_host(host: &DNSName, zone: Option<&Zone>) -> String {
+    let suffix = match zone {
+        Some(z) => match &z.challenge_suffix {
+            Some(s) => format!(".{}", s),
+            None => String::new()
+        }
+        None => String::new()
+    };
+    format!("_acme-challenge.{}{}.", &host.to_parent_domain_string(), &suffix)
 }
 
 fn update_dns(command: &String, zone: &Zone) -> Result<(), DNSError> {
@@ -175,5 +182,19 @@ mod tests {
 
         assert_eq!(delete_cmd(zone, &spec.cn),
                    "server ns.unit.test\nupdate delete _acme-challenge.unit.test. TXT\nsend\n")
+    }
+
+    #[test]
+    fn test_challenge_suffix() {
+        let config = common::create_test_config(false);
+        let spec = create_cert_spec(&String::from("*.suffixed.unit.test"));
+        let proof = String::from("abcdef1234");
+        let zone = config.faythe_config.zones.get("suffixed.unit.test").unwrap();
+
+        assert_eq!(add_cmd(zone, &spec.cn, &proof),
+                   "server ns.suffixed.unit.test\nprereq nxdomain _acme-challenge.suffixed.unit.test.acme.example.com. TXT\nupdate add _acme-challenge.suffixed.unit.test.acme.example.com. 120 TXT \"abcdef1234\"\nsend\n");
+
+        assert_eq!(delete_cmd(zone, &spec.cn),
+                   "server ns.suffixed.unit.test\nupdate delete _acme-challenge.suffixed.unit.test.acme.example.com. TXT\nsend\n")
     }
 }
