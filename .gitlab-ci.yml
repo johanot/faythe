@@ -1,3 +1,7 @@
 build:
   script:
     - nix-shell --run 'cargo test --locked && cargo rustc --release --locked --color never -- -D warnings'
+
+config:
+  script:
+    - nix-shell --run 'cargo run -- --config-check config.json'
