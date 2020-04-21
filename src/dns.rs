@@ -1,3 +1,4 @@
+extern crate trust_dns_resolver;
 
 use std::process::{Command, Stdio};
 use std::result::Result;
@@ -9,6 +10,8 @@ use crate::exec::{SpawnOk, OpenStdin, Wait, ExecErrorInfo};
 use crate::log;
 use crate::common::{CertSpec, DNSName, SpecError};
 use crate::config::Zone;
+use self::trust_dns_resolver::Resolver;
+use std::string::String;
 
 pub enum DNSError {
     Exec,
@@ -53,23 +56,24 @@ fn delete_cmd(zone: &Zone, name: &DNSName) -> String {
             host=challenge_host(&name, Some(&zone)))
 }
 
-pub fn query(server: &String, host: &DNSName, proof: &String) -> Result<(), DNSError> {
-    let mut cmd = Command::new("dig");
+pub fn query(resolver: &Resolver, host: &DNSName, proof: &String) -> Result<(), DNSError> {
     let c_host = challenge_host(host, None);
-    let mut child = cmd.arg(format!("@{}", server))
-        .arg("+short")
-        .arg("-t")
-        .arg("TXT")
-        .arg(&c_host)
-        .spawn_ok()?;
-
-    let out = child.wait_for_output()?;
-    let output = String::from_utf8(out.stdout)?;
+    let output = match resolver.txt_lookup(c_host.as_str()) {
+        Ok(res) => {
+            match res.iter().next() {
+                Some(t) => Ok(t.to_owned()),
+                None => Err(DNSError::WrongAnswer(c_host.clone()))
+            }
+        },
+        Err(_) => Err(DNSError::Exec),
+    }?;
 
     let trim_chars: &[_] = &['"', '\n'];
-    match &output.trim_matches(trim_chars) == proof {
+    let first_record = output.iter().next().ok_or(DNSError::WrongAnswer(c_host.clone()))?;
+    let txt = String::from_utf8((*first_record).to_vec())?;
+    match &txt.trim_matches(trim_chars) == proof {
         true => Ok(()),
-        false => Err(DNSError::WrongAnswer(c_host))
+        false => Err(DNSError::WrongAnswer(c_host.clone()))
     }
 }
 
