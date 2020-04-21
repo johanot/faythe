@@ -87,48 +87,26 @@ impl DNSName {
     }
 
     /*
-        Ok, admitted, "find_zone" turned out to be quite an algorithm - sorry.
         Since Faythe now supports multiple authoritative zones, we might end up with authoritative zones like:
           1. k8s.dbc.dk
           2. dbc.dk
 
         Trouble is then to select the appropriate DNS-zone for challenge responses.
-        The basic idea is to assign scores of zones based on the number of chars that suffix-matches between the hostname and the zonename
-
+        The basic idea is to match the zone name that is the longest suffix of the hostname.
         Examples:
 
-        "foo.k8s.dbc.dk" gives a score of 10 for zone "k8s.dbc.dk" and score 6 for "dbc.dk" -> the former is selected
-        "foo.dbc.dk" will not match "k8s.dbc.dk" and yield score 6 for "dbc.dk" -> the latter is selected
+        "foo.k8s.dbc.dk" matches "k8s.dbc.dk", not "dbc.dk", because the zone string .k8s.dbc.dk is the longest suffix of foo.k8s.dbc.dk.
+        "foo.dbc.dk" will not match "k8s.dbc.dk" but will match "dbc.dk", because ".k8s.dbc.dk" is not a suffix of "foo.dbc.dk" at all, but ".dbc.dk" is.
         "dk" will not match any of the zones.
 
         See test case "common::test_find_zone()" for more examples
     */
     pub fn find_zone<'l>(&self, config: &'l FaytheConfig) -> Result<&'l Zone, SpecError> {
-        let domain_string = format!(".{}", self.to_parent_domain_string());
-        struct Match<'a> {
-            zone: &'a Zone,
-            score: usize,
-        }
-        let mut best_match = None::<Match>;
-        for (name, zone) in &config.zones {
-            let new_match = match domain_string.ends_with(format!(".{}", name).as_str()) {
-                true => Some(Match {
-                    zone,
-                    score: name.len()
-                }),
-                false => None
-            };
-
-            if new_match.is_some() {
-                let nm = new_match.as_ref().unwrap();
-                match best_match {
-                    Some(ref bm) => if nm.score > bm.score { best_match = new_match; },
-                    None => if nm.score > 0 { best_match = new_match }
-                }
-            }
-        }
-        // if we haven't found at least one matching zone name by now, we can't honor the cert request, since we are not authoritative for the requested domain
-        best_match.and_then(|m| Some(m.zone)).ok_or(SpecError::NonAuthoritativeDomain(self.clone()))
+        let domain_string = format!(".{}",self.to_parent_domain_string());
+        let res = &config.zones.iter()
+            .filter(|(k,_)| domain_string.ends_with(format!(".{}", k).as_str()))
+            .max_by_key(|(k,_)| k.len());
+        res.and_then(|(_,z)| Some(z)).ok_or(SpecError::NonAuthoritativeDomain(self.clone()))
     }
 
     fn to_string(&self, include_asterisk: bool) -> String {
