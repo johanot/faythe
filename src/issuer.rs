@@ -6,7 +6,7 @@ use crate::{dns, FaytheConfig, common};
 use crate::log;
 
 use std::sync::mpsc::{Receiver,TryRecvError};
-use std::collections::VecDeque;
+use std::collections::{VecDeque, HashSet};
 
 use acme_lib::{ClientConfig, Directory, DirectoryUrl, create_rsa_key};
 use acme_lib::persist::MemoryPersist;
@@ -35,17 +35,17 @@ pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
             Err(_) => {}
         }
 
-        if check_queue(&faythe_config, &mut queue).is_err() {
+        if check_queue(&mut queue).is_err() {
             log::event("check queue err");
         }
         thread::sleep(Duration::from_millis(5000));
     }
 }
 
-fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Result<(), IssuerError> {
+fn check_queue(queue: &mut VecDeque<IssueOrder>) -> Result<(), IssuerError> {
     match queue.pop_front() {
         Some(mut order) => {
-            match validate_challenge(&config, &order) {
+            match validate_challenge(&order) {
                 Ok(_) => {
                     order.inner.refresh()?;
                     if order.inner.is_validated() {
@@ -75,7 +75,7 @@ fn check_queue(config: &FaytheConfig, queue: &mut VecDeque<IssueOrder>) -> Resul
     }
 }
 
-fn validate_challenge(config: &FaytheConfig, order: &IssueOrder) -> Result<(), IssuerError> {
+fn validate_challenge(order: &IssueOrder) -> Result<(), IssuerError> {
 
     for a in &order.authorizations {
         let domain = DNSName::try_from(&String::from(a.domain_name()))?;
@@ -84,8 +84,10 @@ fn validate_challenge(config: &FaytheConfig, order: &IssueOrder) -> Result<(), I
         let log_data = json!({ "domain": &domain, "proof": &proof });
 
         log::info("Validating internally", &log_data);
-        dns::query(&config.auth_dns_server, &domain, &proof)?;
-        for d in &config.val_dns_servers {
+        for d in &order.auth_dns_servers {
+            dns::query(&d, &domain, &proof)?;
+        }
+        for d in &order.val_dns_servers {
             dns::query( &d, &domain, &proof)?;
         }
         log::info("Asking LE to validate", &log_data);
@@ -123,11 +125,20 @@ fn setup_challenge(config: &FaytheConfig, spec: &CertSpec) -> Result<IssueOrder,
         }
     }
 
+    let auth_dns_servers = spec.get_auth_dns_servers(&config)?;
+    let mut val_dns_servers = HashSet::new();
+    for s in &config.val_dns_servers {
+        val_dns_servers.insert(s.to_owned());
+    }
+
+
     Ok(IssueOrder{
         spec: spec.clone(),
         authorizations,
         inner: ord_new,
         challenge_time: time::now_utc(),
+        auth_dns_servers,
+        val_dns_servers,
     })
 }
 
@@ -136,6 +147,8 @@ struct IssueOrder {
     inner: NewOrder<MemoryPersist>,
     authorizations: Vec<Auth<MemoryPersist>>,
     challenge_time: time::Tm,
+    auth_dns_servers: HashSet<String>,
+    val_dns_servers: HashSet<String>,
 }
 
 impl IssueOrder {

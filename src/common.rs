@@ -5,18 +5,17 @@ use acme_lib::persist::Persist;
 use acme_lib::order::NewOrder;
 use acme_lib::{Account, Certificate};
 use regex::Regex;
-use crate::config::{FaytheConfig, ConfigContainer};
-use crate::log;
+use crate::config::{FaytheConfig, ConfigContainer, Zone};
+use crate::{file, kube, log};
 use serde::export::Formatter;
-use crate::kube;
 use crate::kube::KubeError;
 use std::convert::TryFrom;
-use crate::file;
 use crate::file::FileError;
 use std::path::PathBuf;
 use self::openssl::x509::{X509, X509NameEntryRef};
 use self::openssl::nid::Nid;
 use self::openssl::asn1::Asn1TimeRef;
+use std::collections::HashSet;
 
 pub type CertName = String;
 
@@ -54,14 +53,12 @@ impl std::convert::TryFrom<&String> for DNSName {
 
 impl DNSName {
 
-    fn generic_checks(&self, config: &FaytheConfig) -> Result<(), SpecError> {
-        if config.issue_wildcard_certs && self.is_wildcard {
+    fn generic_checks<'l>(&self, config: &'l FaytheConfig) -> Result<&'l Zone, SpecError> {
+        let zone: &'l Zone = self.find_zone(&config)?;
+        if zone.issue_wildcard_certs && self.is_wildcard {
             return Err(SpecError::WildcardHostnameNotAllowedWithAutoWildcardIssuingEnabled)
         }
-        if ! self.has_suffix(&config.auth_dns_zone) {
-            return Err(SpecError::NonAuthoritativeDomain)
-        }
-        Ok(())
+        Ok(zone)
     }
 
     // will return *.example.com for wildcard name: *.example.com
@@ -89,16 +86,57 @@ impl DNSName {
         }
     }
 
+    /*
+        Ok, admitted, "find_zone" turned out to be quite an algorithm - sorry.
+        Since Faythe now supports multiple authoritative zones, we might end up with authoritative zones like:
+          1. k8s.dbc.dk
+          2. dbc.dk
+
+        Trouble is then to select the appropriate DNS-zone for challenge responses.
+        The basic idea is to assign scores of zones based on the number of chars that suffix-matches between the hostname and the zonename
+
+        Examples:
+
+        "foo.k8s.dbc.dk" gives a score of 10 for zone "k8s.dbc.dk" and score 6 for "dbc.dk" -> the former is selected
+        "foo.dbc.dk" will not match "k8s.dbc.dk" and yield score 6 for "dbc.dk" -> the latter is selected
+        "dk" will not match any of the zones.
+
+        See test case "common::test_find_zone()" for more examples
+    */
+    pub fn find_zone<'l>(&self, config: &'l FaytheConfig) -> Result<&'l Zone, SpecError> {
+        let domain_string = format!(".{}", self.to_parent_domain_string());
+        struct Match<'a> {
+            zone: &'a Zone,
+            score: usize,
+        }
+        let mut best_match = None::<Match>;
+        for (name, zone) in &config.zones {
+            let new_match = match domain_string.ends_with(format!(".{}", name).as_str()) {
+                true => Some(Match {
+                    zone,
+                    score: name.len()
+                }),
+                false => None
+            };
+
+            if new_match.is_some() {
+                let nm = new_match.as_ref().unwrap();
+                match best_match {
+                    Some(ref bm) => if nm.score > bm.score { best_match = new_match; },
+                    None => if nm.score > 0 { best_match = new_match }
+                }
+            }
+        }
+        // if we haven't found at least one matching zone name by now, we can't honor the cert request, since we are not authoritative for the requested domain
+        best_match.and_then(|m| Some(m.zone)).ok_or(SpecError::NonAuthoritativeDomain(self.clone()))
+    }
+
     fn to_string(&self, include_asterisk: bool) -> String {
         if self.is_wildcard && include_asterisk {
             format!("*.{name}",name=self.name)
         } else {
             self.name.clone()
         }
-    }
-
-    pub fn has_suffix(&self, suffix: &String) -> bool {
-        self.name.ends_with(suffix)
     }
 }
 
@@ -116,6 +154,14 @@ impl CertSpec {
         }
         let sans_: Vec<&str> = sans.iter().map(|s| s.as_str()).collect();
         acc.new_order(&self.cn.to_domain_string().as_str(), sans_.as_slice())
+    }
+    pub fn get_auth_dns_servers(&self, config: &FaytheConfig) -> Result<HashSet<String>, SpecError> {
+        let mut res = HashSet::new();
+        res.insert(self.cn.find_zone(&config)?.server.clone());
+        for s in &self.sans {
+            res.insert(s.find_zone(&config)?.server.clone());
+        }
+        Ok(res)
     }
 }
 
@@ -277,15 +323,15 @@ pub trait CertSpecable: IssueSource {
     fn normalize(&self, config: &FaytheConfig) -> Result<DNSName, SpecError>  {
         let cn = self.get_cn()?;
         let sans = self.get_sans()?;
-        cn.generic_checks(&config)?;
-        if config.issue_wildcard_certs && sans.len() > 0 {
+        let zone = cn.generic_checks(&config)?;
+        if zone.issue_wildcard_certs && sans.len() > 0 {
             return Err(SpecError::SansNotSupportedWithAutoWildcardIssuingEnabled)
         }
         for s in sans {
             s.generic_checks(&config)?;
         }
 
-        Ok(match config.issue_wildcard_certs {
+        Ok(match zone.issue_wildcard_certs {
             true => cn.to_wildcard()?,
             false => cn
         })
@@ -307,10 +353,10 @@ pub trait IssueSource {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub enum SpecError {
     InvalidHostname,
-    NonAuthoritativeDomain,
+    NonAuthoritativeDomain(DNSName),
     WildcardHostnameNotAllowedWithAutoWildcardIssuingEnabled,
     SansNotSupportedWithAutoWildcardIssuingEnabled,
     InvalidConfig
@@ -337,6 +383,7 @@ impl std::convert::From<time::ParseError> for CertState {
 #[cfg(test)]
 pub fn create_test_config(issue_wildcard_certs: bool) -> ConfigContainer {
     use crate::config::{KubeMonitorConfig, MonitorConfig};
+    use std::collections::HashMap;
 
     let kube_monitor_config = KubeMonitorConfig {
         secret_namespace: String::new(),
@@ -344,20 +391,36 @@ pub fn create_test_config(issue_wildcard_certs: bool) -> ConfigContainer {
         touch_annotation: None,
         wildcard_cert_prefix: String::from("wild---card")
     };
+    let mut zones = HashMap::new();
+    zones.insert(String::from("unit.test"), Zone{
+        server: String::from("ns.unit.test"),
+        key: String::new(),
+        challenge_suffix: None,
+        issue_wildcard_certs
+    });
+    zones.insert(String::from("alternative.unit.test"), Zone{
+        server: String::from("ns.alternative.unit.test"),
+        key: String::new(),
+        challenge_suffix: None,
+        issue_wildcard_certs
+    });
+    zones.insert(String::from("suffixed.unit.test"), Zone{
+        server: String::from("ns.suffixed.unit.test"),
+        key: String::new(),
+        challenge_suffix: Some(String::from("acme.example.com")),
+        issue_wildcard_certs
+    });
     let faythe_config = FaytheConfig{
         kube_monitor_configs: vec![kube_monitor_config.clone()],
         file_monitor_configs: vec![],
         lets_encrypt_url: String::new(),
         lets_encrypt_proxy: None,
         lets_encrypt_email: String::new(),
-        auth_dns_server: String::from("ns.unit.test"),
-        auth_dns_key: String::new(),
         val_dns_servers: Vec::new(),
-        auth_dns_zone: String::from("unit.test"),
         monitor_interval: 0,
         renewal_threshold: 30,
         issue_grace: 0,
-        issue_wildcard_certs,
+        zones
     };
 
     ConfigContainer{
@@ -407,4 +470,53 @@ fn test_expired_pem() {
     let config = create_test_config(false).faythe_config;
     assert!(cert.state(&config) == CertState::ExpiresSoon || cert.state(&config) == CertState::Expired);
     assert!(!cert.is_valid(&config));
+}
+
+#[test]
+fn test_find_zone() {
+    use crate::common;
+
+    {
+        let config = common::create_test_config(false);
+
+        let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.unit.wrongtest")).unwrap();
+        let z = host.find_zone(&config.faythe_config);
+        assert!(z.is_err());
+
+        let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.foo.test")).unwrap();
+        let z = host.find_zone(&config.faythe_config);
+        assert!(z.is_err());
+
+        let host: DNSName = DNSName::try_from(&String::from("test")).unwrap();
+        let z = host.find_zone(&config.faythe_config);
+        assert!(z.is_err());
+
+        let host: DNSName = DNSName::try_from(&String::from("google.com")).unwrap();
+        let z = host.find_zone(&config.faythe_config);
+        assert!(z.is_err());
+
+        let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.unit.test")).unwrap();
+        let z = host.find_zone(&config.faythe_config);
+        assert!(z.is_ok());
+    }
+
+    {
+        let config = common::create_test_config(false);
+
+        let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.unit.test")).unwrap();
+        let z = host.find_zone(&config.faythe_config).unwrap();
+        assert_eq!(z.server, "ns.unit.test");
+
+        let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.alternative.unit.test")).unwrap();
+        let z = host.find_zone(&config.faythe_config).unwrap();
+        assert_eq!(z.server, "ns.alternative.unit.test");
+
+        let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.other-alternative.unit.test")).unwrap();
+        let z = host.find_zone(&config.faythe_config).unwrap();
+        assert_eq!(z.server, "ns.unit.test");
+
+        let host: DNSName = DNSName::try_from(&String::from("unit.test")).unwrap();
+        let z = host.find_zone(&config.faythe_config).unwrap();
+        assert_eq!(z.server, "ns.unit.test");
+    }
 }
