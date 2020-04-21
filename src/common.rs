@@ -93,40 +93,37 @@ impl DNSName {
           2. dbc.dk
 
         Trouble is then to select the appropriate DNS-zone for challenge responses.
-        The basic idea is to go backwards through zone fragments and name fragments until the best match is found.
+        The basic idea is to assign scores of zones based on the number of chars that suffix-matches between the hostname and the zonename
 
         Examples:
 
-        "foo.k8s.dbc.dk" gives a score of 3 for zone "k8s.dbc.dk" and score 2 for "dbc.dk" -> the former is selected
-        "foo.dbc.dk" will not match "k8s.dbc.dk" and yield score 2 for "dbc.dk" -> the latter is selected
+        "foo.k8s.dbc.dk" gives a score of 10 for zone "k8s.dbc.dk" and score 6 for "dbc.dk" -> the former is selected
+        "foo.dbc.dk" will not match "k8s.dbc.dk" and yield score 6 for "dbc.dk" -> the latter is selected
         "dk" will not match any of the zones.
 
         See test case "common::test_find_zone()" for more examples
     */
     pub fn find_zone<'l>(&self, config: &'l FaytheConfig) -> Result<&'l Zone, SpecError> {
-        let domain_string = self.to_parent_domain_string();
+        let domain_string = format!(".{}", self.to_parent_domain_string());
         struct Match<'a> {
             zone: &'a Zone,
-            score: i32,
+            score: usize,
         }
         let mut best_match = None::<Match>;
         for (name, zone) in &config.zones {
-            let mut name_parts = domain_string.split('.');
-            let mut zone_parts = name.split('.');
-            let mut score= 0;
-            while let Some(np) = name_parts.next_back() {
-                match zone_parts.next_back() {
-                    zp if zp.is_some() && zp.as_ref().unwrap() == &np => score += 1,  // the zone and the ns name has one matching name fraction; increment the score of this match by 1
-                    None => {},                                                       // the zone name has no more parts left to check; this is all fine
-                    _ => score = -30000                                               // the current zone name fraction doesn't match the corresponding name fraction, disregard zone as "no match" by setting the score very low
-                }
-            }
-            if zone_parts.next_back().is_none() {
-                if best_match.is_none() && score > 0 || best_match.is_some() && score > best_match.as_ref().unwrap().score {
-                    best_match = Some(Match {
-                        zone,
-                        score
-                    })
+            let new_match = match domain_string.ends_with(format!(".{}", name).as_str()) {
+                true => Some(Match {
+                    zone,
+                    score: name.len()
+                }),
+                false => None
+            };
+
+            if new_match.is_some() {
+                let nm = new_match.as_ref().unwrap();
+                match best_match {
+                    Some(ref bm) => if nm.score > bm.score { best_match = new_match; },
+                    None => if nm.score > 0 { best_match = new_match }
                 }
             }
         }
