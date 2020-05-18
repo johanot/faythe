@@ -26,10 +26,14 @@ pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
         let res = rx.try_recv();
         match res {
             Ok(cert_spec) => {
-                match setup_challenge(&faythe_config, &cert_spec) {
-                    Ok(order) => queue.push_back(order),
-                    Err(_) => log::event(format!("failed to setup challenge for host: {host}", host=cert_spec.cn).as_str())
-                };
+                if ! queue.iter().any(|o: &IssueOrder| o.spec.name == cert_spec.name) {
+                    match setup_challenge(&faythe_config, &cert_spec) {
+                        Ok(order) => queue.push_back(order),
+                        Err(_) => log::event(format!("failed to setup challenge for host: {host}", host = cert_spec.cn).as_str())
+                    };
+                } else {
+                    log::info("similar cert-spec is already in the issuing queue", &cert_spec)
+                }
             },
             Err(TryRecvError::Disconnected) => panic!("channel disconnected"),
             Err(_) => {}
