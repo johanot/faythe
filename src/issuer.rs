@@ -70,8 +70,7 @@ fn check_queue(queue: &mut VecDeque<IssueOrder>) -> Result<(), IssuerError> {
                 Err(e) => match e {
                     IssuerError::DNS(dns::DNSError::WrongAnswer(domain)) => {
                         log::info("Wrong DNS answer", &domain);
-                        // if now is less than 5 minutes since LE challenge request, put the order back on the queue for processing,
-                        // otherwise: give up. 5 minutes is the apparent max validity for LE replay nonces anyway.
+                        // Retry for two hours. Propagation on gratisdns is pretty slow.
                         if time::now_utc() < order.challenge_time + time::Duration::minutes(120) {
                             queue.push_back(order);
                         } else {
