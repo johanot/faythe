@@ -174,14 +174,14 @@ impl IssueOrder {
     fn issue(&self) -> Result<(), IssuerError> {
         log::info("Issuing", &self.spec);
 
-        let (pkey_pri, pkey_pub) = create_rsa_key(2048);
+        let pkey_pri = create_rsa_key(2048);
         let ord_csr = match self.inner.confirm_validations() {
             Some(csr) => Ok(csr),
             None => Err(IssuerError::ChallengeRejected)
         }?;
 
         let ord_cert =
-            ord_csr.finalize_pkey(pkey_pri, pkey_pub, 5000)?;
+            ord_csr.finalize_pkey(pkey_pri, 5000)?;
         let cert = ord_cert.download_and_save_cert()?;
 
         Ok(self.spec.persist(cert)?)
