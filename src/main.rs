@@ -11,7 +11,6 @@ use std::sync::mpsc;
 use crate::common::CertSpec;
 use crate::config::{FaytheConfig, ConfigContainer, MonitorConfig};
 
-
 mod common;
 mod config;
 mod exec;
@@ -23,7 +22,7 @@ mod log;
 mod dns;
 
 fn main() {
-
+    env_logger::init();
     let args = clap::App::new("faythe")
          .arg(clap::Arg::with_name("config-check")
              .long("config-check")

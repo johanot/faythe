@@ -35,7 +35,7 @@ pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
                 if ! queue.iter().any(|o: &IssueOrder| o.spec.name == cert_spec.name) {
                     match setup_challenge(&faythe_config, &cert_spec) {
                         Ok(order) => queue.push_back(order),
-                        Err(_) => log::event(format!("failed to setup challenge for host: {host}", host = cert_spec.cn).as_str())
+                        Err(e) => log::event(format!("failed to setup challenge for host: {host}, error: {error:?}", host = cert_spec.cn, error = e).as_str())
                     };
                 } else {
                     log::info("similar cert-spec is already in the issuing queue", &cert_spec)
@@ -45,8 +45,10 @@ pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
             Err(_) => {}
         }
 
-        if check_queue(&mut queue).is_err() {
+        let queue_check = check_queue(&mut queue);
+        if queue_check.is_err() {
             log::event("check queue err");
+            log::event(&format!("{:?}", queue_check));
         }
         thread::sleep(Duration::from_millis(5000));
     }
@@ -66,11 +68,11 @@ fn check_queue(queue: &mut VecDeque<IssueOrder>) -> Result<(), IssuerError> {
                     Ok(())
                 },
                 Err(e) => match e {
-                    IssuerError::DNSWrongAnswer(domain) => {
+                    IssuerError::DNS(dns::DNSError::WrongAnswer(domain)) => {
                         log::info("Wrong DNS answer", &domain);
                         // if now is less than 5 minutes since LE challenge request, put the order back on the queue for processing,
                         // otherwise: give up. 5 minutes is the apparent max validity for LE replay nonces anyway.
-                        if time::now_utc() < order.challenge_time + time::Duration::minutes(5) {
+                        if time::now_utc() < order.challenge_time + time::Duration::minutes(120) {
                             queue.push_back(order);
                         } else {
                             log::info("giving up validating dns challenge for spec", &order.spec);
@@ -94,10 +96,14 @@ fn validate_challenge(order: &IssueOrder) -> Result<(), IssuerError> {
         let log_data = json!({ "domain": &domain, "proof": &proof });
 
         RESOLVERS.with(|r| -> Result<(), DNSError> {
-            log::info("Validating internally", &log_data);
+            // TODO: Proper retry logic
+            log::event("Validating internally after 20s");
+
+            log::info("Validating auth_dns_servers internally", &log_data);
             for d in &order.auth_dns_servers {
                 dns::query(r.read().unwrap().get(&d).unwrap(), &domain, &proof)?;
             }
+            log::info("Validating val_dns_servers internally", &log_data);
             for d in &order.val_dns_servers {
                 dns::query(r.read().unwrap().get(&d).unwrap(), &domain, &proof)?;
             }
@@ -168,35 +174,32 @@ impl IssueOrder {
     fn issue(&self) -> Result<(), IssuerError> {
         log::info("Issuing", &self.spec);
 
-        let (pkey_pri, pkey_pub) = create_rsa_key(2048);
+        let pkey_pri = create_rsa_key(2048);
         let ord_csr = match self.inner.confirm_validations() {
             Some(csr) => Ok(csr),
             None => Err(IssuerError::ChallengeRejected)
         }?;
 
         let ord_cert =
-            ord_csr.finalize_pkey(pkey_pri, pkey_pub, 5000)?;
+            ord_csr.finalize_pkey(pkey_pri, 5000)?;
         let cert = ord_cert.download_and_save_cert()?;
 
         Ok(self.spec.persist(cert)?)
     }
 }
 
+#[derive(Debug)]
 pub enum IssuerError {
     ConfigurationError,
     ChallengeRejected,
-    AcmeClient,
-    DNS,
-    DNSWrongAnswer(String),
+    AcmeClient (acme_lib::Error),
+    DNS (dns::DNSError),
     PersistError
 }
 
 impl std::convert::From<dns::DNSError> for IssuerError {
     fn from(error: dns::DNSError) -> IssuerError {
-        match error {
-            dns::DNSError::WrongAnswer(domain) => IssuerError::DNSWrongAnswer(domain),
-            _ => IssuerError::DNS
-        }
+        IssuerError::DNS(error)
     }
 }
 
@@ -207,8 +210,8 @@ impl std::convert::From<PersistError> for IssuerError {
 }
 
 impl std::convert::From<acme_lib::Error> for IssuerError {
-    fn from(_: acme_lib::Error) -> IssuerError {
-        IssuerError::AcmeClient
+    fn from(error: acme_lib::Error) -> IssuerError {
+        IssuerError::AcmeClient(error)
     }
 }
 
@@ -279,8 +282,12 @@ fn init_resolvers<'l>(config: &FaytheConfig) -> HashMap<String, Resolver> {
             for c in &*NameServerConfigGroup::from_ips_clear(&[ip.to_owned()], 53) {
                 conf.add_name_server(c.to_owned());
             }
-
-            resolvers.insert(server.to_owned(), Resolver::new(conf, ResolverOpts::default())?);
+            let opts = ResolverOpts {
+                // Never believe NXDOMAIN for more than 1 minute
+                negative_max_ttl: Some(Duration::new(60,0)),
+                .. ResolverOpts::default()
+            };
+            resolvers.insert(server.to_owned(), Resolver::new(conf, opts).unwrap());
             Ok(())
         }() {
             Err(e) => { log::error(format!("failed to init resolver for server: {}", &server).as_str(), &e); }
