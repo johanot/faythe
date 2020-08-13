@@ -72,7 +72,7 @@ fn check_queue(queue: &mut VecDeque<IssueOrder>) -> Result<(), IssuerError> {
                         log::info("Wrong DNS answer", &domain);
                         // if now is less than 5 minutes since LE challenge request, put the order back on the queue for processing,
                         // otherwise: give up. 5 minutes is the apparent max validity for LE replay nonces anyway.
-                        if time::now_utc() < order.challenge_time + time::Duration::minutes(5) {
+                        if time::now_utc() < order.challenge_time + time::Duration::minutes(120) {
                             queue.push_back(order);
                         } else {
                             log::info("giving up validating dns challenge for spec", &order.spec);
@@ -96,6 +96,8 @@ fn validate_challenge(order: &IssueOrder) -> Result<(), IssuerError> {
         let log_data = json!({ "domain": &domain, "proof": &proof });
 
         RESOLVERS.with(|r| -> Result<(), DNSError> {
+            // TODO: Proper retry logic
+            log::event("Validating internally after 20s");
 
             log::info("Validating auth_dns_servers internally", &log_data);
             for d in &order.auth_dns_servers {
@@ -280,8 +282,12 @@ fn init_resolvers<'l>(config: &FaytheConfig) -> HashMap<String, Resolver> {
             for c in &*NameServerConfigGroup::from_ips_clear(&[ip.to_owned()], 53) {
                 conf.add_name_server(c.to_owned());
             }
-
-            resolvers.insert(server.to_owned(), Resolver::new(conf, ResolverOpts::default())?);
+            let opts = ResolverOpts {
+                // Never believe NXDOMAIN for more than 1 minute
+                negative_max_ttl: Some(Duration::new(60,0)),
+                .. ResolverOpts::default()
+            };
+            resolvers.insert(server.to_owned(), Resolver::new(conf, opts).unwrap());
             Ok(())
         }() {
             Err(e) => { log::error(format!("failed to init resolver for server: {}", &server).as_str(), &e); }
