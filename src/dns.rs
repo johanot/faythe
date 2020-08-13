@@ -69,7 +69,12 @@ pub fn query(resolver: &Resolver, host: &DNSName, proof: &String) -> Result<(), 
                 None => Err(DNSError::WrongAnswer(c_host.clone()))
             }
         },
-        Err(_) => Err(DNSError::Exec),
+        Err(e) => {
+            match e.kind() {
+                ResolveErrorKind::NoRecordsFound{..} => Err(DNSError::WrongAnswer(c_host.clone())),
+                _ => Err(DNSError::ResolveError(e))
+            }
+        }
     }?;
 
     let trim_chars: &[_] = &['"', '\n'];
