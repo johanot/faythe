@@ -11,11 +11,15 @@ use crate::log;
 use crate::common::{CertSpec, DNSName, SpecError};
 use crate::config::Zone;
 use self::trust_dns_resolver::Resolver;
+use self::trust_dns_resolver::error::{ResolveError,ResolveErrorKind};
 use std::string::String;
 
+#[derive(Debug)]
 pub enum DNSError {
-    Exec,
+    Exec(ExecErrorInfo),
+    IO(std::io::Error),
     OutputFormat,
+    ResolveError(ResolveError),
     WrongAnswer(String),
     WrongSpec
 }
@@ -103,8 +107,8 @@ fn update_dns(command: &String, zone: &Zone) -> Result<(), DNSError> {
 
 
 impl From<std::io::Error> for DNSError {
-    fn from(_: std::io::Error) -> DNSError {
-        DNSError::Exec
+    fn from(e: std::io::Error) -> DNSError {
+        DNSError::IO(e)
     }
 }
 
@@ -117,7 +121,7 @@ impl From<std::string::FromUtf8Error> for DNSError {
 impl std::convert::From<ExecErrorInfo> for DNSError {
     fn from(err: ExecErrorInfo) -> Self {
         log::error("Failed to exec dns command", (&err).to_log_data());
-        DNSError::Exec
+        DNSError::Exec(err)
     }
 }
 
