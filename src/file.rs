@@ -118,7 +118,7 @@ pub struct FileSpec {
     pub name: String,
     pub cn: String,
     #[serde(default)]
-    pub sans: Vec<String>,
+    pub sans: HashSet<String>,
     #[serde(default)]
     pub sub_directory: Option<String>,
     #[serde(default)]
@@ -131,7 +131,7 @@ impl IssueSource for FileSpec {
     fn get_raw_cn(&self) -> String {
         self.cn.clone()
     }
-    fn get_raw_sans(&self) -> Vec<String> {
+    fn get_raw_sans(&self) -> HashSet<String> {
         self.sans.clone()
     }
 }

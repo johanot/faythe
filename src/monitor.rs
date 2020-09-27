@@ -93,6 +93,7 @@ mod tests {
     use crate::kube::{Ingress, Secret};
     use crate::common::Cert;
     use std::ops::Add;
+    use std::collections::HashSet;
 
     fn create_channel() -> (Sender<CertSpec>, Receiver<CertSpec>) {
         mpsc::channel()
@@ -113,7 +114,7 @@ mod tests {
             namespace: String::from("test"),
             cert: Cert{
                 cn: host.clone(),
-                sans: vec![],
+                sans: HashSet::new(),
                 valid_from: time::now_utc(),
                 valid_to: time::now_utc().add(time::Duration::days(valid_days))
             },

@@ -12,7 +12,7 @@ use std::option::Option;
 use crate::exec;
 use crate::config::{FaytheConfig, KubeMonitorConfig, ConfigContainer};
 
-use std::collections::HashMap;
+use std::collections::{HashMap,HashSet};
 
 use crate::exec::{SpawnOk, OpenStdin, Wait, ExecErrorInfo};
 use crate::log;
@@ -229,8 +229,8 @@ impl IssueSource for Ingress {
         self.hosts[0].clone()
     }
 
-    fn get_raw_sans(&self) -> Vec<String> {
-        Vec::new() // no sans for kube ingresses
+    fn get_raw_sans(&self) -> HashSet<String> {
+        HashSet::new() // no sans for kube ingresses
     }
 }
 
@@ -244,7 +244,7 @@ impl CertSpecable for Ingress {
         Ok(CertSpec {
             name: name.clone(),
             cn: cn.clone(),
-            sans: Vec::new(), // for now, no certs in Kubernetes Secrets
+            sans: HashSet::new(), // for now, no certs in Kubernetes Secrets
             persist_spec: PersistSpec::KUBERNETES(KubernetesPersistSpec {
                 name: name.clone(),
                 namespace: monitor_config.secret_namespace.clone(),
