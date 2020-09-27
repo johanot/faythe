@@ -59,7 +59,7 @@ fn inspect<CS, VV>(config: &ConfigContainer, tx: &Sender<CertSpec>, objects: &Ve
                 let spec = s.as_ref().unwrap();
 
                 let should_issue = match certs.get(&spec.name) {
-                    Some(cert) => !cert.is_valid(&faythe_config),
+                    Some(cert) => !cert.is_valid(&faythe_config, &spec),
                     None => {
                         log::info("no matching cert found for, first-time issue", &spec.name);
                         true
@@ -229,14 +229,17 @@ mod tests {
 
     #[test]
     fn test_wildcard_not_yet_time_for_renewal() {
-        let host = String::from("renewal2.subdivision.unit.test");
+        use common::DNSName;
+        use std::convert::TryFrom;
+
+        let host = DNSName::try_from(&String::from("renewal2.subdivision.unit.test")).unwrap();
         let name = String::from("wild---card.subdivision.unit.test");
 
         let config = common::create_test_config(true);
         let (tx, rx) = create_channel();
-        let ingresses = create_ingress(&host);
+        let ingresses = create_ingress(&host.to_domain_string());
         let mut secrets: HashMap<String, kube::Secret> = HashMap::new();
-        secrets.insert(name, create_secret(&host, 40));
+        secrets.insert(name, create_secret(&host.to_wildcard().unwrap().to_domain_string(), 40));
 
         let thread = thread::spawn(move || {
             inspect(&config,&tx, &ingresses, secrets)

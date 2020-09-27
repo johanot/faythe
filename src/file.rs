@@ -108,8 +108,8 @@ pub struct FileCert {
 }
 
 impl ValidityVerifier for FileCert {
-    fn is_valid(&self, config: &FaytheConfig) -> bool {
-        self.cert.is_valid(&config)
+    fn is_valid(&self, config: &FaytheConfig, spec: &CertSpec) -> bool {
+        self.cert.is_valid(config, spec)
     }
 }
 
