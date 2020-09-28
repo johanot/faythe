@@ -144,13 +144,14 @@ mod tests {
     use crate::common::PersistSpec::DONTPERSIST;
     use std::convert::TryFrom;
     use crate::common;
+    use std::collections::HashSet;
 
     fn create_cert_spec(cn: &String) -> CertSpec {
         let dns_name = DNSName::try_from(cn).unwrap();
         CertSpec{
             name: String::from("test"),
             cn: dns_name,
-            sans: Vec::new(),
+            sans: HashSet::new(),
             persist_spec: DONTPERSIST,
         }
     }

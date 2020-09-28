@@ -21,6 +21,19 @@ mod file;
 mod log;
 mod dns;
 
+#[macro_export]
+macro_rules! set {
+    ( $( $x:expr ),* ) => {
+        {
+            let mut set = std::collections::HashSet::new();
+            $(
+                set.insert($x.to_string());
+            )*
+            set
+        }
+    };
+}
+
 fn main() {
     env_logger::init();
     let args = clap::App::new("faythe")

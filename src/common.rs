@@ -23,11 +23,11 @@ pub type CertName = String;
 pub struct CertSpec {
     pub name: CertName,
     pub cn: DNSName,
-    pub sans: Vec<DNSName>,
+    pub sans: HashSet<DNSName>,
     pub persist_spec: PersistSpec,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, PartialEq, Eq, Hash)]
 pub struct DNSName {
     pub name: String,
     pub is_wildcard: bool
@@ -141,6 +141,14 @@ impl CertSpec {
         }
         Ok(res)
     }
+    pub fn compare_cn(&self, other: &String) -> bool {
+        &self.cn.to_domain_string() == other
+    }
+    pub fn compare_sans(&self, others: &HashSet<String>) -> bool {
+        let spec_sans: HashSet<String> = self.sans.iter().map(|s| s.to_domain_string()).collect();
+        let other_sans: HashSet<String> = others.iter().map(|s| s.to_owned()).collect();
+        spec_sans == other_sans
+    }
 }
 
 pub trait Persistable {
@@ -193,7 +201,7 @@ impl std::convert::From<KubeError> for PersistError {
 #[derive(Debug, Clone)]
 pub struct Cert {
     pub cn: String,
-    pub sans: Vec<String>,
+    pub sans: HashSet<String>,
     pub valid_from: time::Tm, // always utc
     pub valid_to: time::Tm // always utc
 }
@@ -227,13 +235,13 @@ impl Cert {
         }
     }
 
-    fn get_sans(x509: &X509) -> Vec<String> {
-        let mut out: Vec<String> = Vec::new();
+    fn get_sans(x509: &X509) -> HashSet<String> {
+        let mut out: HashSet<String> = HashSet::new();
         if x509.subject_alt_names().is_some() {
             for n in x509.subject_alt_names().unwrap() {
                 let dns_name = n.dnsname();
                 if dns_name.is_some() { // ip sans etc. are not supported currently
-                    out.push(String::from(dns_name.unwrap()))
+                    out.insert(String::from(dns_name.unwrap()));
                 }
             }
         }
@@ -254,7 +262,7 @@ impl Cert {
         time::strptime(&format!("{}", &time_ref), IN_FORMAT)
     }
 
-    pub fn state(&self, config: &FaytheConfig) -> CertState {
+    pub fn state(&self, config: &FaytheConfig, spec: &CertSpec) -> CertState {
         let now = time::now_utc();
         let state = match self.valid_to {
             to if now > to => CertState::Expired,
@@ -263,12 +271,19 @@ impl Cert {
             to if now >= self.valid_from && now <= to => CertState::Valid,
             _ => CertState::Unknown,
         };
+
+        let state = match &spec {
+            s if ! s.compare_cn(&self.cn) => CertState::CNDoesntMatch,
+            s if ! s.compare_sans(&self.sans) => CertState::SANSDontMatch,
+            _ => state
+        };
+
         log::info(&format!("State for cert: {}", &self.cn), &state);
         state
     }
 
-    pub fn is_valid(&self, config: &FaytheConfig) -> bool {
-        self.state(&config) == CertState::Valid
+    pub fn is_valid(&self, config: &FaytheConfig, spec: &CertSpec) -> bool {
+        self.state(config, spec) == CertState::Valid
     }
 }
 
@@ -287,11 +302,13 @@ pub enum CertState {
     ExpiresSoon,
     NotYetValid,
     Valid,
+    CNDoesntMatch,
+    SANSDontMatch,
     Unknown,
 }
 
 pub trait ValidityVerifier {
-    fn is_valid(&self, config: &FaytheConfig) -> bool;
+    fn is_valid(&self, config: &FaytheConfig, spec: &CertSpec) -> bool;
 }
 
 pub trait CertSpecable: IssueSource {
@@ -318,19 +335,18 @@ pub trait CertSpecable: IssueSource {
 
 pub trait IssueSource {
     fn get_raw_cn(&self) -> String;
-    fn get_raw_sans(&self) -> Vec<String>;
+    fn get_raw_sans(&self) -> HashSet<String>;
     fn get_cn(&self) -> Result<DNSName, SpecError> {
         DNSName::try_from(&self.get_raw_cn())
     }
-    fn get_sans(&self) -> Result<Vec<DNSName>, SpecError> {
-        let mut out = Vec::new();
+    fn get_sans(&self) -> Result<HashSet<DNSName>, SpecError> {
+        let mut out = HashSet::new();
         for s in &self.get_raw_sans() {
-            out.push(DNSName::try_from(s)?)
+            out.insert(DNSName::try_from(s)?);
         }
         Ok(out)
     }
 }
-
 #[derive(Debug, Clone, Serialize)]
 pub enum SpecError {
     InvalidHostname,
@@ -408,15 +424,38 @@ pub fn create_test_config(issue_wildcard_certs: bool) -> ConfigContainer {
 }
 
 #[cfg(test)]
+fn create_test_certspec(cn: &str, sans: HashSet<String>) -> CertSpec {
+
+    let name = cn.to_string();
+    let cn = DNSName::try_from(&cn.to_string()).unwrap();
+    let sans: HashSet<DNSName> = sans.iter().map(|s| DNSName::try_from(&s.to_string()).unwrap()).collect();
+    let persist_spec = PersistSpec::DONTPERSIST; 
+
+    CertSpec {
+        name,
+        cn,
+        sans,
+        persist_spec
+    }
+}
+
+
+#[cfg(test)]
 const TIME_FORMAT: &str = "%Y-%m-%dT%H:%M:%S%z"; // 2019-10-09T11:50:22+0200
+
+#[cfg(test)]
+use crate::set;
 
 #[test]
 fn test_valid_pem() {
     let bytes = include_bytes!("../test/longlived.pem");
     let cert = Cert::parse(&bytes.to_vec()).unwrap();
 
-    assert_eq!(cert.cn, "cn.longlived");
-    assert_eq!(cert.sans, vec!["san1.longlived", "san2.longlived"]);
+    let cn = "cn.longlived";
+    let sans = set!["san1.longlived", "san2.longlived"];
+
+    assert_eq!(cert.cn, cn);
+    assert_eq!(cert.sans, sans);
 
     /*
         Not Before: Mar  3 12:09:22 2020 GMT
@@ -426,8 +465,77 @@ fn test_valid_pem() {
     assert_eq!(cert.valid_to, time::strptime("2050-02-24T12:09:22+0000", TIME_FORMAT).unwrap());
 
     let config = create_test_config(false).faythe_config;
-    assert_eq!(cert.state(&config), CertState::Valid);
-    assert!(cert.is_valid(&config));
+    let spec = create_test_certspec(cn, sans);
+
+    assert_eq!(cert.state(&config, &spec), CertState::Valid);
+    assert!(cert.is_valid(&config, &spec));
+}
+
+#[test]
+fn test_cn_mismatch() {
+    let bytes = include_bytes!("../test/longlived.pem");
+    let cert = Cert::parse(&bytes.to_vec()).unwrap();
+
+    let cn = "cn.shortlived";
+    let sans = set!["san1.longlived", "san2.longlived"];
+
+    /*
+        Not Before: Mar  3 12:09:22 2020 GMT
+        Not After : Feb 24 12:09:22 2050 GMT
+    */
+    assert_eq!(cert.valid_from, time::strptime("2020-03-03T12:09:22+0000", TIME_FORMAT).unwrap());
+    assert_eq!(cert.valid_to, time::strptime("2050-02-24T12:09:22+0000", TIME_FORMAT).unwrap());
+
+    let config = create_test_config(false).faythe_config;
+    let spec = create_test_certspec(cn, sans);
+
+    assert_eq!(cert.state(&config, &spec), CertState::CNDoesntMatch);
+    assert!(!cert.is_valid(&config, &spec));
+}
+
+#[test]
+fn test_sans_mismatch() {
+    let bytes = include_bytes!("../test/longlived.pem");
+    let cert = Cert::parse(&bytes.to_vec()).unwrap();
+
+    /*
+        Not Before: Mar  3 12:09:22 2020 GMT
+        Not After : Feb 24 12:09:22 2050 GMT
+    */
+    assert_eq!(cert.valid_from, time::strptime("2020-03-03T12:09:22+0000", TIME_FORMAT).unwrap());
+    assert_eq!(cert.valid_to, time::strptime("2050-02-24T12:09:22+0000", TIME_FORMAT).unwrap());
+
+    let cn = "cn.longlived";
+    let sans = set!["san1.longlived", "san2.shortlived"];
+    let config = create_test_config(false).faythe_config;
+    let spec = create_test_certspec(cn, sans);
+
+    assert_eq!(cert.state(&config, &spec), CertState::SANSDontMatch);
+    assert!(!cert.is_valid(&config, &spec));
+
+    let cn = "cn.longlived";
+    let sans = set!["san1.longlived", "san2.longlived", "san3.longlived"];
+    let config = create_test_config(false).faythe_config;
+    let spec = create_test_certspec(cn, sans);
+
+    assert_eq!(cert.state(&config, &spec), CertState::SANSDontMatch);
+    assert!(!cert.is_valid(&config, &spec));
+
+    let cn = "cn.longlived";
+    let sans = set!["san2.longlived", "san1.longlived"]; // order of sans doesn't matter
+    let config = create_test_config(false).faythe_config;
+    let spec = create_test_certspec(cn, sans);
+
+    assert_eq!(cert.state(&config, &spec), CertState::Valid);
+    assert!(cert.is_valid(&config, &spec));
+
+    let cn = "cn.longlived";
+    let sans = set!["san2.longlived", "san1.longlived", "san2.longlived"]; // same san can be passed multiple times to the san set
+    let config = create_test_config(false).faythe_config;
+    let spec = create_test_certspec(cn, sans);
+
+    assert_eq!(cert.state(&config, &spec), CertState::Valid);
+    assert!(cert.is_valid(&config, &spec));
 }
 
 #[test]
@@ -435,8 +543,11 @@ fn test_expired_pem() {
     let bytes = include_bytes!("../test/expired.pem");
     let cert = Cert::parse(&bytes.to_vec()).unwrap();
 
-    assert_eq!(cert.cn, "cn.expired");
-    assert_eq!(cert.sans, vec!["san1.expired", "san2.expired"]);
+    let cn = "cn.expired";
+    let sans = set!["san1.expired", "san2.expired"];
+
+    assert_eq!(cert.cn, cn);
+    assert_eq!(cert.sans, sans);
 
     /*
         Not Before: Mar  3 13:18:46 2020 GMT
@@ -446,8 +557,10 @@ fn test_expired_pem() {
     assert_eq!(cert.valid_to, time::strptime("2020-03-04T13:18:46+0000", TIME_FORMAT).unwrap());
 
     let config = create_test_config(false).faythe_config;
-    assert!(cert.state(&config) == CertState::ExpiresSoon || cert.state(&config) == CertState::Expired);
-    assert!(!cert.is_valid(&config));
+    let spec = create_test_certspec(cn, sans);
+
+    assert!(cert.state(&config, &spec) == CertState::ExpiresSoon || cert.state(&config, &spec) == CertState::Expired);
+    assert!(!cert.is_valid(&config, &spec));
 }
 
 #[test]
