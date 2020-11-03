@@ -1,18 +1,18 @@
 let
-  pkgs = import (builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs-channels/archive/5272327b81ed355bbed5659b8d303cf2979b6953.tar.gz";
-    sha256 = "0182ys095dfx02vl2a20j1hz92dx3mfgz2a6fhn31bqlp1wa8hlq";
-  }) {};
+  sources = import ./nix/sources.nix;
+  pkgs = import sources.nixpkgs {};
+  crate2nix = pkgs.callPackage (import sources.crate2nix) {};
 in
-  pkgs.mkShell {
-    buildInputs = with pkgs; [
-      gcc
-      pkgconfig
-      openssl.dev
-      zlib.dev
-      rustc
-      cargo
-      dnsutils  # runtime
-      kubectl   # runtime
-    ];
-  }
+pkgs.mkShell {
+  buildInputs = with pkgs; [
+    cargo
+    crate2nix
+    niv
+    openssl.dev
+    pkgconfig
+    rustc
+    zlib.dev
+    dnsutils # runtime
+    kubectl # runtime
+  ];
+}
