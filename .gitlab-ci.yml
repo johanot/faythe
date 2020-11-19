@@ -1,7 +1,2 @@
-build:
-  script:
-    - nix-shell --run 'cargo test --locked && cargo rustc --release --locked --color never -- -D warnings'
-
-config:
-  script:
-    - nix-shell --run 'cargo run -- --config-check config.json'
+include:
+  remote: https://gitlab.dbc.dk/platform/detached-ci/raw/master/rust-ci/rust-ci.yml

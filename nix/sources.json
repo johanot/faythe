@@ -11,6 +11,12 @@
         "url": "https://github.com/kolloch/crate2nix/archive/e07af104b8e41d1cd7e41dc7ac3fdcdf4953efae.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "detached-ci": {
+        "ref": "master",
+        "repo": "https://gitlab.dbc.dk/platform/detached-ci",
+        "rev": "c5a5bb5181b68aff6176a24cce42fa9ae6efb3d9",
+        "type": "git"
+    },
     "niv": {
         "branch": "master",
         "description": "Easy dependency management for Nix projects",
