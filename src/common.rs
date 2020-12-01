@@ -319,7 +319,7 @@ pub trait CertSpecable: IssueSource {
         let cn = self.get_cn()?;
         let sans = self.get_sans()?;
         let zone = cn.generic_checks(&config)?;
-        if zone.issue_wildcard_certs && sans.len() > 0 {
+        if zone.issue_wildcard_certs && sans.len() > 1 {
             return Err(SpecError::SansNotSupportedWithAutoWildcardIssuingEnabled)
         }
         for s in sans {
@@ -344,6 +344,7 @@ pub trait IssueSource {
         for s in &self.get_raw_sans() {
             out.insert(DNSName::try_from(s)?);
         }
+        out.insert(self.get_cn()?); // include the cn in the san-list, always
         Ok(out)
     }
 }
@@ -452,17 +453,17 @@ fn test_valid_pem() {
     let cert = Cert::parse(&bytes.to_vec()).unwrap();
 
     let cn = "cn.longlived";
-    let sans = set!["san1.longlived", "san2.longlived"];
+    let sans = set![cn, "san1.longlived", "san2.longlived"];
 
     assert_eq!(cert.cn, cn);
     assert_eq!(cert.sans, sans);
 
     /*
-        Not Before: Mar  3 12:09:22 2020 GMT
-        Not After : Feb 24 12:09:22 2050 GMT
+        Not Before: Dec  1 11:42:07 2020 GMT
+        Not After : Nov 24 11:42:07 2050 GMT
     */
-    assert_eq!(cert.valid_from, time::strptime("2020-03-03T12:09:22+0000", TIME_FORMAT).unwrap());
-    assert_eq!(cert.valid_to, time::strptime("2050-02-24T12:09:22+0000", TIME_FORMAT).unwrap());
+    assert_eq!(cert.valid_from, time::strptime("2020-12-01T11:42:07+0000", TIME_FORMAT).unwrap());
+    assert_eq!(cert.valid_to, time::strptime("2050-11-24T11:42:07+0000", TIME_FORMAT).unwrap());
 
     let config = create_test_config(false).faythe_config;
     let spec = create_test_certspec(cn, sans);
@@ -480,11 +481,11 @@ fn test_cn_mismatch() {
     let sans = set!["san1.longlived", "san2.longlived"];
 
     /*
-        Not Before: Mar  3 12:09:22 2020 GMT
-        Not After : Feb 24 12:09:22 2050 GMT
+        Not Before: Dec  1 11:42:07 2020 GMT
+        Not After : Nov 24 11:42:07 2050 GMT
     */
-    assert_eq!(cert.valid_from, time::strptime("2020-03-03T12:09:22+0000", TIME_FORMAT).unwrap());
-    assert_eq!(cert.valid_to, time::strptime("2050-02-24T12:09:22+0000", TIME_FORMAT).unwrap());
+    assert_eq!(cert.valid_from, time::strptime("2020-12-01T11:42:07+0000", TIME_FORMAT).unwrap());
+    assert_eq!(cert.valid_to, time::strptime("2050-11-24T11:42:07+0000", TIME_FORMAT).unwrap());
 
     let config = create_test_config(false).faythe_config;
     let spec = create_test_certspec(cn, sans);
@@ -499,14 +500,14 @@ fn test_sans_mismatch() {
     let cert = Cert::parse(&bytes.to_vec()).unwrap();
 
     /*
-        Not Before: Mar  3 12:09:22 2020 GMT
-        Not After : Feb 24 12:09:22 2050 GMT
+        Not Before: Dec  1 11:42:07 2020 GMT
+        Not After : Nov 24 11:42:07 2050 GMT
     */
-    assert_eq!(cert.valid_from, time::strptime("2020-03-03T12:09:22+0000", TIME_FORMAT).unwrap());
-    assert_eq!(cert.valid_to, time::strptime("2050-02-24T12:09:22+0000", TIME_FORMAT).unwrap());
+    assert_eq!(cert.valid_from, time::strptime("2020-12-01T11:42:07+0000", TIME_FORMAT).unwrap());
+    assert_eq!(cert.valid_to, time::strptime("2050-11-24T11:42:07+0000", TIME_FORMAT).unwrap());
 
     let cn = "cn.longlived";
-    let sans = set!["san1.longlived", "san2.shortlived"];
+    let sans = set![cn, "san1.longlived", "san2.shortlived"];
     let config = create_test_config(false).faythe_config;
     let spec = create_test_certspec(cn, sans);
 
@@ -514,7 +515,7 @@ fn test_sans_mismatch() {
     assert!(!cert.is_valid(&config, &spec));
 
     let cn = "cn.longlived";
-    let sans = set!["san1.longlived", "san2.longlived", "san3.longlived"];
+    let sans = set![cn, "san1.longlived", "san2.longlived", "san3.longlived"];
     let config = create_test_config(false).faythe_config;
     let spec = create_test_certspec(cn, sans);
 
@@ -522,7 +523,7 @@ fn test_sans_mismatch() {
     assert!(!cert.is_valid(&config, &spec));
 
     let cn = "cn.longlived";
-    let sans = set!["san2.longlived", "san1.longlived"]; // order of sans doesn't matter
+    let sans = set!["san2.longlived", "san1.longlived", cn]; // order of sans doesn't matter
     let config = create_test_config(false).faythe_config;
     let spec = create_test_certspec(cn, sans);
 
@@ -530,7 +531,7 @@ fn test_sans_mismatch() {
     assert!(cert.is_valid(&config, &spec));
 
     let cn = "cn.longlived";
-    let sans = set!["san2.longlived", "san1.longlived", "san2.longlived"]; // same san can be passed multiple times to the san set
+    let sans = set![cn, "san2.longlived", "san1.longlived", "san2.longlived"]; // same san can be passed multiple times to the san set
     let config = create_test_config(false).faythe_config;
     let spec = create_test_certspec(cn, sans);
 
@@ -544,17 +545,17 @@ fn test_expired_pem() {
     let cert = Cert::parse(&bytes.to_vec()).unwrap();
 
     let cn = "cn.expired";
-    let sans = set!["san1.expired", "san2.expired"];
+    let sans = set![cn, "san1.expired", "san2.expired"];
 
     assert_eq!(cert.cn, cn);
     assert_eq!(cert.sans, sans);
 
     /*
-        Not Before: Mar  3 13:18:46 2020 GMT
-        Not After : Mar  4 13:18:46 2020 GMT
+        Not Before: Dec  1 11:41:19 2020 GMT
+        Not After : Dec  2 11:41:19 2020 GMT
     */
-    assert_eq!(cert.valid_from, time::strptime("2020-03-03T13:18:46+0000", TIME_FORMAT).unwrap());
-    assert_eq!(cert.valid_to, time::strptime("2020-03-04T13:18:46+0000", TIME_FORMAT).unwrap());
+    assert_eq!(cert.valid_from, time::strptime("2020-12-01T11:41:19+0000", TIME_FORMAT).unwrap());
+    assert_eq!(cert.valid_to, time::strptime("2020-12-02T11:41:19+0000", TIME_FORMAT).unwrap());
 
     let config = create_test_config(false).faythe_config;
     let spec = create_test_certspec(cn, sans);
