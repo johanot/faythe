@@ -143,8 +143,8 @@ mod tests {
     use super::*;
     use crate::common::PersistSpec::DONTPERSIST;
     use std::convert::TryFrom;
-    use crate::common;
     use std::collections::HashSet;
+    use crate::common::tests::*;
 
     fn create_cert_spec(cn: &String) -> CertSpec {
         let dns_name = DNSName::try_from(cn).unwrap();
@@ -158,7 +158,7 @@ mod tests {
 
     #[test]
     fn test_add_normal() {
-        let config = common::create_test_kubernetes_config(false);
+        let config = create_test_kubernetes_config(false);
         let spec = create_cert_spec(&String::from("moo.unit.test"));
         let proof = String::from("abcdef1234");
         let zone = config.faythe_config.zones.get("unit.test").unwrap();
@@ -169,7 +169,7 @@ mod tests {
 
     #[test]
     fn test_add_wildcard() {
-        let config = common::create_test_kubernetes_config(false);
+        let config = create_test_kubernetes_config(false);
         let spec = create_cert_spec(&String::from("*.unit.test"));
         let proof = String::from("abcdef1234");
         let zone = config.faythe_config.zones.get("unit.test").unwrap();
@@ -180,7 +180,7 @@ mod tests {
 
     #[test]
     fn test_delete_normal() {
-        let config = common::create_test_kubernetes_config(false);
+        let config = create_test_kubernetes_config(false);
         let spec = create_cert_spec(&String::from("moo.unit.test"));
         let zone = config.faythe_config.zones.get("unit.test").unwrap();
 
@@ -190,7 +190,7 @@ mod tests {
 
     #[test]
     fn test_delete_wildcard() {
-        let config = common::create_test_kubernetes_config(false);
+        let config = create_test_kubernetes_config(false);
         let spec = create_cert_spec(&String::from("*.unit.test"));
         let zone = config.faythe_config.zones.get("unit.test").unwrap();
 
@@ -200,7 +200,7 @@ mod tests {
 
     #[test]
     fn test_challenge_suffix() {
-        let config = common::create_test_kubernetes_config(false);
+        let config = create_test_kubernetes_config(false);
         let spec = create_cert_spec(&String::from("*.suffixed.unit.test"));
         let proof = String::from("abcdef1234");
         let zone = config.faythe_config.zones.get("suffixed.unit.test").unwrap();
