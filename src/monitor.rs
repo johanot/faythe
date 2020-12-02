@@ -109,12 +109,14 @@ mod tests {
     }
 
     fn create_secret(host: &String, valid_days: i64) -> Secret {
+        let mut sans = HashSet::new();
+        sans.insert(host.clone());
         Secret{
             name: String::from("test"),
             namespace: String::from("test"),
             cert: Cert{
                 cn: host.clone(),
-                sans: HashSet::new(),
+                sans,
                 valid_from: time::now_utc(),
                 valid_to: time::now_utc().add(time::Duration::days(valid_days))
             },
@@ -126,7 +128,7 @@ mod tests {
     fn test_normal_new_issue() {
         let host = String::from("host1.subdivision.unit.test");
 
-        let config = common::create_test_config(false);
+        let config = common::create_test_kubernetes_config(false);
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host);
         let secrets: HashMap<String, kube::Secret> = HashMap::new();
@@ -144,7 +146,7 @@ mod tests {
         let host = String::from("host1.subdivision.unit.test");
         let name = String::from("wild---card.subdivision.unit.test");
 
-        let config = common::create_test_config(true);
+        let config = common::create_test_kubernetes_config(true);
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host);
         let secrets: HashMap<String, kube::Secret> = HashMap::new();
@@ -162,7 +164,7 @@ mod tests {
     fn test_wildcard_host_in_ingress() {
         let host = String::from("*.subdivision.unit.test");
 
-        let config = common::create_test_config(false);
+        let config = common::create_test_kubernetes_config(false);
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host);
         let secrets: HashMap<String, kube::Secret> = HashMap::new();
@@ -178,7 +180,7 @@ mod tests {
     fn test_non_authoritative_domain() {
         let host = String::from("host1.subdivision.unit.wrongtest");
 
-        let config = common::create_test_config(false);
+        let config = common::create_test_kubernetes_config(false);
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host);
         let secrets: HashMap<String, kube::Secret> = HashMap::new();
@@ -194,7 +196,7 @@ mod tests {
     fn test_normal_renewal() {
         let host = String::from("renewal1.subdivision.unit.test");
 
-        let config = common::create_test_config(false);
+        let config = common::create_test_kubernetes_config(false);
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host);
         let mut secrets: HashMap<String, kube::Secret> = HashMap::new();
@@ -214,7 +216,7 @@ mod tests {
         let host = String::from("renewal2.subdivision.unit.test");
         let name = host.clone();
 
-        let config = common::create_test_config(false);
+        let config = common::create_test_kubernetes_config(false);
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host);
         let mut secrets: HashMap<String, kube::Secret> = HashMap::new();
@@ -236,7 +238,7 @@ mod tests {
         let host = DNSName::try_from(&String::from("renewal2.subdivision.unit.test")).unwrap();
         let name = String::from("wild---card.subdivision.unit.test");
 
-        let config = common::create_test_config(true);
+        let config = common::create_test_kubernetes_config(true);
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host.to_domain_string());
         let mut secrets: HashMap<String, kube::Secret> = HashMap::new();
