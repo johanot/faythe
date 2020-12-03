@@ -237,14 +237,14 @@ impl IssueSource for Ingress {
 impl CertSpecable for Ingress {
     fn to_cert_spec(&self, config: &ConfigContainer) -> Result<CertSpec, SpecError> {
         let faythe_config = &config.faythe_config;
-        let cn = self.normalize(&faythe_config)?;
+        let cn = self.get_computed_cn(faythe_config)?;
 
         let monitor_config = config.get_kube_monitor_config()?;
         let name = cn.to_kube_secret_name(&monitor_config);
         Ok(CertSpec {
             name: name.clone(),
             cn: cn.clone(),
-            sans: HashSet::new(), // for now, no certs in Kubernetes Secrets
+            sans: self.get_computed_sans(faythe_config)?,
             persist_spec: PersistSpec::KUBERNETES(KubernetesPersistSpec {
                 name: name.clone(),
                 namespace: monitor_config.secret_namespace.clone(),

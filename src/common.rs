@@ -315,36 +315,36 @@ pub trait CertSpecable: IssueSource {
     fn to_cert_spec(&self, config: &ConfigContainer) -> Result<CertSpec, SpecError>;
     fn touch(&self, config: &ConfigContainer) -> Result<(), TouchError>;
     fn should_retry(&self, config: &ConfigContainer) -> bool;
-    fn normalize(&self, config: &FaytheConfig) -> Result<DNSName, SpecError>  {
-        let cn = self.get_cn()?;
-        let sans = self.get_sans()?;
-        let zone = cn.generic_checks(&config)?;
-        if zone.issue_wildcard_certs && sans.len() > 1 {
-            return Err(SpecError::SansNotSupportedWithAutoWildcardIssuingEnabled)
-        }
-        for s in sans {
-            s.generic_checks(&config)?;
-        }
-
-        Ok(match zone.issue_wildcard_certs {
-            true => cn.to_wildcard()?,
-            false => cn
-        })
-    }
 }
 
 pub trait IssueSource {
     fn get_raw_cn(&self) -> String;
     fn get_raw_sans(&self) -> HashSet<String>;
-    fn get_cn(&self) -> Result<DNSName, SpecError> {
-        DNSName::try_from(&self.get_raw_cn())
+
+    fn get_computed_cn(&self, config: &FaytheConfig) -> Result<DNSName, SpecError> {
+        let cn = DNSName::try_from(&self.get_raw_cn())?;
+        let zone = cn.generic_checks(&config)?;
+        Ok(match zone.issue_wildcard_certs {
+            true => cn.to_wildcard()?,
+            false => cn
+        })
     }
-    fn get_sans(&self) -> Result<HashSet<DNSName>, SpecError> {
+    fn get_computed_sans(&self, config: &FaytheConfig) -> Result<HashSet<DNSName>, SpecError> {
         let mut out = HashSet::new();
-        for s in &self.get_raw_sans() {
-            out.insert(DNSName::try_from(s)?);
+        let cn = DNSName::try_from(&self.get_raw_cn())?;
+
+        let raw_sans = self.get_raw_sans();
+        let zone = cn.generic_checks(&config)?;
+        if zone.issue_wildcard_certs && raw_sans.len() > 0 {
+            return Err(SpecError::SansNotSupportedWithAutoWildcardIssuingEnabled)
         }
-        out.insert(self.get_cn()?); // include the cn in the san-list, always
+
+        for s in &raw_sans {
+            let s_ = DNSName::try_from(s)?;
+            s_.generic_checks(&config)?;
+            out.insert(s_);
+        }
+        out.insert(self.get_computed_cn(&config)?);
         Ok(out)
     }
 }
@@ -376,239 +376,316 @@ impl std::convert::From<time::ParseError> for CertState {
 }
 
 #[cfg(test)]
-pub fn create_test_config(issue_wildcard_certs: bool) -> ConfigContainer {
-    use crate::config::{KubeMonitorConfig, MonitorConfig};
+pub mod tests {
+
+    use super::*;
+    use crate::kube::Ingress;
+    use crate::file::FileSpec;
     use std::collections::HashMap;
+    use crate::set;
+    use super::DNSName;
+    use crate::config::{KubeMonitorConfig, FileMonitorConfig, MonitorConfig};
 
-    let kube_monitor_config = KubeMonitorConfig {
-        secret_namespace: String::new(),
-        secret_hostlabel: String::new(),
-        touch_annotation: None,
-        wildcard_cert_prefix: String::from("wild---card")
-    };
-    let mut zones = HashMap::new();
-    zones.insert(String::from("unit.test"), Zone{
-        server: String::from("ns.unit.test"),
-        key: String::new(),
-        challenge_suffix: None,
-        issue_wildcard_certs
-    });
-    zones.insert(String::from("alternative.unit.test"), Zone{
-        server: String::from("ns.alternative.unit.test"),
-        key: String::new(),
-        challenge_suffix: None,
-        issue_wildcard_certs
-    });
-    zones.insert(String::from("suffixed.unit.test"), Zone{
-        server: String::from("ns.suffixed.unit.test"),
-        key: String::new(),
-        challenge_suffix: Some(String::from("acme.example.com")),
-        issue_wildcard_certs
-    });
-    let faythe_config = FaytheConfig{
-        kube_monitor_configs: vec![kube_monitor_config.clone()],
-        file_monitor_configs: vec![],
-        lets_encrypt_url: String::new(),
-        lets_encrypt_proxy: None,
-        lets_encrypt_email: String::new(),
-        val_dns_servers: Vec::new(),
-        monitor_interval: 0,
-        renewal_threshold: 30,
-        issue_grace: 0,
+    const TIME_FORMAT: &str = "%Y-%m-%dT%H:%M:%S%z"; // 2019-10-09T11:50:22+0200
+
+    pub fn create_test_file_config(issue_wildcard_certs: bool) -> ConfigContainer {
+        let file_monitor_configs = FileMonitorConfig {
+            directory: "/tmp".to_string(),
+            specs: vec!(create_filespec("host")),
+            prune: false
+        };
+        let zones = create_zones(issue_wildcard_certs);
+        let faythe_config = FaytheConfig{
+            kube_monitor_configs: vec!(),
+            file_monitor_configs: vec![file_monitor_configs.clone()],
+            lets_encrypt_url: String::new(),
+            lets_encrypt_proxy: None,
+            lets_encrypt_email: String::new(),
+            val_dns_servers: Vec::new(),
+            monitor_interval: 0,
+            renewal_threshold: 30,
+            issue_grace: 0,
+            zones
+        };
+
+        ConfigContainer{
+            faythe_config,
+            monitor_config: MonitorConfig::File(file_monitor_configs)
+        }
+    }
+
+    fn create_zones(issue_wildcard_certs: bool) -> HashMap<String, Zone> {
+        let mut zones = HashMap::new();
+        zones.insert(String::from("unit.test"), Zone{
+            server: String::from("ns.unit.test"),
+            key: String::new(),
+            challenge_suffix: None,
+            issue_wildcard_certs
+        });
+        zones.insert(String::from("alternative.unit.test"), Zone{
+            server: String::from("ns.alternative.unit.test"),
+            key: String::new(),
+            challenge_suffix: None,
+            issue_wildcard_certs
+        });
+        zones.insert(String::from("suffixed.unit.test"), Zone{
+            server: String::from("ns.suffixed.unit.test"),
+            key: String::new(),
+            challenge_suffix: Some(String::from("acme.example.com")),
+            issue_wildcard_certs
+        });
         zones
-    };
-
-    ConfigContainer{
-        faythe_config,
-        monitor_config: MonitorConfig::Kube(kube_monitor_config)
-    }
-}
-
-#[cfg(test)]
-fn create_test_certspec(cn: &str, sans: HashSet<String>) -> CertSpec {
-
-    let name = cn.to_string();
-    let cn = DNSName::try_from(&cn.to_string()).unwrap();
-    let sans: HashSet<DNSName> = sans.iter().map(|s| DNSName::try_from(&s.to_string()).unwrap()).collect();
-    let persist_spec = PersistSpec::DONTPERSIST; 
-
-    CertSpec {
-        name,
-        cn,
-        sans,
-        persist_spec
-    }
-}
-
-
-#[cfg(test)]
-const TIME_FORMAT: &str = "%Y-%m-%dT%H:%M:%S%z"; // 2019-10-09T11:50:22+0200
-
-#[cfg(test)]
-use crate::set;
-
-#[test]
-fn test_valid_pem() {
-    let bytes = include_bytes!("../test/longlived.pem");
-    let cert = Cert::parse(&bytes.to_vec()).unwrap();
-
-    let cn = "cn.longlived";
-    let sans = set![cn, "san1.longlived", "san2.longlived"];
-
-    assert_eq!(cert.cn, cn);
-    assert_eq!(cert.sans, sans);
-
-    /*
-        Not Before: Dec  1 11:42:07 2020 GMT
-        Not After : Nov 24 11:42:07 2050 GMT
-    */
-    assert_eq!(cert.valid_from, time::strptime("2020-12-01T11:42:07+0000", TIME_FORMAT).unwrap());
-    assert_eq!(cert.valid_to, time::strptime("2050-11-24T11:42:07+0000", TIME_FORMAT).unwrap());
-
-    let config = create_test_config(false).faythe_config;
-    let spec = create_test_certspec(cn, sans);
-
-    assert_eq!(cert.state(&config, &spec), CertState::Valid);
-    assert!(cert.is_valid(&config, &spec));
-}
-
-#[test]
-fn test_cn_mismatch() {
-    let bytes = include_bytes!("../test/longlived.pem");
-    let cert = Cert::parse(&bytes.to_vec()).unwrap();
-
-    let cn = "cn.shortlived";
-    let sans = set!["san1.longlived", "san2.longlived"];
-
-    /*
-        Not Before: Dec  1 11:42:07 2020 GMT
-        Not After : Nov 24 11:42:07 2050 GMT
-    */
-    assert_eq!(cert.valid_from, time::strptime("2020-12-01T11:42:07+0000", TIME_FORMAT).unwrap());
-    assert_eq!(cert.valid_to, time::strptime("2050-11-24T11:42:07+0000", TIME_FORMAT).unwrap());
-
-    let config = create_test_config(false).faythe_config;
-    let spec = create_test_certspec(cn, sans);
-
-    assert_eq!(cert.state(&config, &spec), CertState::CNDoesntMatch);
-    assert!(!cert.is_valid(&config, &spec));
-}
-
-#[test]
-fn test_sans_mismatch() {
-    let bytes = include_bytes!("../test/longlived.pem");
-    let cert = Cert::parse(&bytes.to_vec()).unwrap();
-
-    /*
-        Not Before: Dec  1 11:42:07 2020 GMT
-        Not After : Nov 24 11:42:07 2050 GMT
-    */
-    assert_eq!(cert.valid_from, time::strptime("2020-12-01T11:42:07+0000", TIME_FORMAT).unwrap());
-    assert_eq!(cert.valid_to, time::strptime("2050-11-24T11:42:07+0000", TIME_FORMAT).unwrap());
-
-    let cn = "cn.longlived";
-    let sans = set![cn, "san1.longlived", "san2.shortlived"];
-    let config = create_test_config(false).faythe_config;
-    let spec = create_test_certspec(cn, sans);
-
-    assert_eq!(cert.state(&config, &spec), CertState::SANSDontMatch);
-    assert!(!cert.is_valid(&config, &spec));
-
-    let cn = "cn.longlived";
-    let sans = set![cn, "san1.longlived", "san2.longlived", "san3.longlived"];
-    let config = create_test_config(false).faythe_config;
-    let spec = create_test_certspec(cn, sans);
-
-    assert_eq!(cert.state(&config, &spec), CertState::SANSDontMatch);
-    assert!(!cert.is_valid(&config, &spec));
-
-    let cn = "cn.longlived";
-    let sans = set!["san2.longlived", "san1.longlived", cn]; // order of sans doesn't matter
-    let config = create_test_config(false).faythe_config;
-    let spec = create_test_certspec(cn, sans);
-
-    assert_eq!(cert.state(&config, &spec), CertState::Valid);
-    assert!(cert.is_valid(&config, &spec));
-
-    let cn = "cn.longlived";
-    let sans = set![cn, "san2.longlived", "san1.longlived", "san2.longlived"]; // same san can be passed multiple times to the san set
-    let config = create_test_config(false).faythe_config;
-    let spec = create_test_certspec(cn, sans);
-
-    assert_eq!(cert.state(&config, &spec), CertState::Valid);
-    assert!(cert.is_valid(&config, &spec));
-}
-
-#[test]
-fn test_expired_pem() {
-    let bytes = include_bytes!("../test/expired.pem");
-    let cert = Cert::parse(&bytes.to_vec()).unwrap();
-
-    let cn = "cn.expired";
-    let sans = set![cn, "san1.expired", "san2.expired"];
-
-    assert_eq!(cert.cn, cn);
-    assert_eq!(cert.sans, sans);
-
-    /*
-        Not Before: Dec  1 11:41:19 2020 GMT
-        Not After : Dec  2 11:41:19 2020 GMT
-    */
-    assert_eq!(cert.valid_from, time::strptime("2020-12-01T11:41:19+0000", TIME_FORMAT).unwrap());
-    assert_eq!(cert.valid_to, time::strptime("2020-12-02T11:41:19+0000", TIME_FORMAT).unwrap());
-
-    let config = create_test_config(false).faythe_config;
-    let spec = create_test_certspec(cn, sans);
-
-    assert!(cert.state(&config, &spec) == CertState::ExpiresSoon || cert.state(&config, &spec) == CertState::Expired);
-    assert!(!cert.is_valid(&config, &spec));
-}
-
-#[test]
-fn test_find_zone() {
-    use crate::common;
-
-    {
-        let config = common::create_test_config(false);
-
-        let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.unit.wrongtest")).unwrap();
-        let z = host.find_zone(&config.faythe_config);
-        assert!(z.is_err());
-
-        let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.foo.test")).unwrap();
-        let z = host.find_zone(&config.faythe_config);
-        assert!(z.is_err());
-
-        let host: DNSName = DNSName::try_from(&String::from("test")).unwrap();
-        let z = host.find_zone(&config.faythe_config);
-        assert!(z.is_err());
-
-        let host: DNSName = DNSName::try_from(&String::from("google.com")).unwrap();
-        let z = host.find_zone(&config.faythe_config);
-        assert!(z.is_err());
-
-        let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.unit.test")).unwrap();
-        let z = host.find_zone(&config.faythe_config);
-        assert!(z.is_ok());
     }
 
-    {
-        let config = common::create_test_config(false);
+    pub fn create_test_kubernetes_config(issue_wildcard_certs: bool) -> ConfigContainer {
+        let kube_monitor_config = KubeMonitorConfig {
+            secret_namespace: String::new(),
+            secret_hostlabel: String::new(),
+            touch_annotation: None,
+            wildcard_cert_prefix: String::from("wild---card")
+        };
+        let zones = create_zones(issue_wildcard_certs);
+        let faythe_config = FaytheConfig{
+            kube_monitor_configs: vec![kube_monitor_config.clone()],
+            file_monitor_configs: vec!(),
+            lets_encrypt_url: String::new(),
+            lets_encrypt_proxy: None,
+            lets_encrypt_email: String::new(),
+            val_dns_servers: Vec::new(),
+            monitor_interval: 0,
+            renewal_threshold: 30,
+            issue_grace: 0,
+            zones
+        };
 
-        let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.unit.test")).unwrap();
-        let z = host.find_zone(&config.faythe_config).unwrap();
-        assert_eq!(z.server, "ns.unit.test");
+        ConfigContainer{
+            faythe_config,
+            monitor_config: MonitorConfig::Kube(kube_monitor_config)
+        }
+    }
 
-        let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.alternative.unit.test")).unwrap();
-        let z = host.find_zone(&config.faythe_config).unwrap();
-        assert_eq!(z.server, "ns.alternative.unit.test");
+    fn create_test_certspec(cn: &str, sans: HashSet<String>) -> CertSpec {
 
-        let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.other-alternative.unit.test")).unwrap();
-        let z = host.find_zone(&config.faythe_config).unwrap();
-        assert_eq!(z.server, "ns.unit.test");
+        let name = cn.to_string();
+        let cn = DNSName::try_from(&cn.to_string()).unwrap();
+        let sans: HashSet<DNSName> = sans.iter().map(|s| DNSName::try_from(&s.to_string()).unwrap()).collect();
+        let persist_spec = PersistSpec::DONTPERSIST; 
 
-        let host: DNSName = DNSName::try_from(&String::from("unit.test")).unwrap();
-        let z = host.find_zone(&config.faythe_config).unwrap();
-        assert_eq!(z.server, "ns.unit.test");
+        CertSpec {
+            name,
+            cn,
+            sans,
+            persist_spec
+        }
+    }
+
+    fn create_ingress(host: &str) -> Ingress {
+        Ingress{
+            name: "test".to_string(),
+            namespace: "test".to_string(),
+            touched: time::empty_tm(),
+            hosts: [host.to_string()].to_vec(),
+        }
+    }
+
+    fn create_filespec(host: &str) -> FileSpec {
+        FileSpec{
+            name: "test".to_string(),
+            cn: host.to_string(),
+            sans: HashSet::new(),
+            sub_directory: None,
+            cert_file_name: None,
+            key_file_name: None,
+        }
+    }
+
+    #[test]
+    fn test_valid_pem() {
+        let bytes = include_bytes!("../test/longlived.pem");
+        let cert = Cert::parse(&bytes.to_vec()).unwrap();
+
+        let cn = "cn.longlived";
+        let sans = set![cn, "san1.longlived", "san2.longlived"];
+
+        assert_eq!(cert.cn, cn);
+        assert_eq!(cert.sans, sans);
+
+        /*
+            Not Before: Dec  1 11:42:07 2020 GMT
+            Not After : Nov 24 11:42:07 2050 GMT
+        */
+        assert_eq!(cert.valid_from, time::strptime("2020-12-01T11:42:07+0000", TIME_FORMAT).unwrap());
+        assert_eq!(cert.valid_to, time::strptime("2050-11-24T11:42:07+0000", TIME_FORMAT).unwrap());
+
+        let config = create_test_kubernetes_config(false).faythe_config;
+        let spec = create_test_certspec(cn, sans);
+
+        assert_eq!(cert.state(&config, &spec), CertState::Valid);
+        assert!(cert.is_valid(&config, &spec));
+    }
+
+    #[test]
+    fn test_cn_mismatch() {
+        let bytes = include_bytes!("../test/longlived.pem");
+        let cert = Cert::parse(&bytes.to_vec()).unwrap();
+
+        let cn = "cn.shortlived";
+        let sans = set!["san1.longlived", "san2.longlived"];
+
+        /*
+            Not Before: Dec  1 11:42:07 2020 GMT
+            Not After : Nov 24 11:42:07 2050 GMT
+        */
+        assert_eq!(cert.valid_from, time::strptime("2020-12-01T11:42:07+0000", TIME_FORMAT).unwrap());
+        assert_eq!(cert.valid_to, time::strptime("2050-11-24T11:42:07+0000", TIME_FORMAT).unwrap());
+
+        let config = create_test_kubernetes_config(false).faythe_config;
+        let spec = create_test_certspec(cn, sans);
+
+        assert_eq!(cert.state(&config, &spec), CertState::CNDoesntMatch);
+        assert!(!cert.is_valid(&config, &spec));
+    }
+
+    #[test]
+    fn test_sans_mismatch() {
+        let bytes = include_bytes!("../test/longlived.pem");
+        let cert = Cert::parse(&bytes.to_vec()).unwrap();
+
+        /*
+            Not Before: Dec  1 11:42:07 2020 GMT
+            Not After : Nov 24 11:42:07 2050 GMT
+        */
+        assert_eq!(cert.valid_from, time::strptime("2020-12-01T11:42:07+0000", TIME_FORMAT).unwrap());
+        assert_eq!(cert.valid_to, time::strptime("2050-11-24T11:42:07+0000", TIME_FORMAT).unwrap());
+
+        let cn = "cn.longlived";
+        let sans = set![cn, "san1.longlived", "san2.shortlived"];
+        let config = create_test_kubernetes_config(false).faythe_config;
+        let spec = create_test_certspec(cn, sans);
+
+        assert_eq!(cert.state(&config, &spec), CertState::SANSDontMatch);
+        assert!(!cert.is_valid(&config, &spec));
+
+        let cn = "cn.longlived";
+        let sans = set![cn, "san1.longlived", "san2.longlived", "san3.longlived"];
+        let config = create_test_kubernetes_config(false).faythe_config;
+        let spec = create_test_certspec(cn, sans);
+
+        assert_eq!(cert.state(&config, &spec), CertState::SANSDontMatch);
+        assert!(!cert.is_valid(&config, &spec));
+
+        let cn = "cn.longlived";
+        let sans = set!["san2.longlived", "san1.longlived", cn]; // order of sans doesn't matter
+        let config = create_test_kubernetes_config(false).faythe_config;
+        let spec = create_test_certspec(cn, sans);
+
+        assert_eq!(cert.state(&config, &spec), CertState::Valid);
+        assert!(cert.is_valid(&config, &spec));
+
+        let cn = "cn.longlived";
+        let sans = set![cn, "san2.longlived", "san1.longlived", "san2.longlived"]; // same san can be passed multiple times to the san set
+        let config = create_test_kubernetes_config(false).faythe_config;
+        let spec = create_test_certspec(cn, sans);
+
+        assert_eq!(cert.state(&config, &spec), CertState::Valid);
+        assert!(cert.is_valid(&config, &spec));
+    }
+
+    #[test]
+    fn test_expired_pem() {
+        let bytes = include_bytes!("../test/expired.pem");
+        let cert = Cert::parse(&bytes.to_vec()).unwrap();
+
+        let cn = "cn.expired";
+        let sans = set![cn, "san1.expired", "san2.expired"];
+
+        assert_eq!(cert.cn, cn);
+        assert_eq!(cert.sans, sans);
+
+        /*
+            Not Before: Dec  1 11:41:19 2020 GMT
+            Not After : Dec  2 11:41:19 2020 GMT
+        */
+        assert_eq!(cert.valid_from, time::strptime("2020-12-01T11:41:19+0000", TIME_FORMAT).unwrap());
+        assert_eq!(cert.valid_to, time::strptime("2020-12-02T11:41:19+0000", TIME_FORMAT).unwrap());
+
+        let config = create_test_kubernetes_config(false).faythe_config;
+        let spec = create_test_certspec(cn, sans);
+
+        assert!(cert.state(&config, &spec) == CertState::ExpiresSoon || cert.state(&config, &spec) == CertState::Expired);
+        assert!(!cert.is_valid(&config, &spec));
+    }
+
+    #[test]
+    fn test_find_zone() {
+        {
+            let config = create_test_kubernetes_config(false);
+
+            let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.unit.wrongtest")).unwrap();
+            let z = host.find_zone(&config.faythe_config);
+            assert!(z.is_err());
+
+            let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.foo.test")).unwrap();
+            let z = host.find_zone(&config.faythe_config);
+            assert!(z.is_err());
+
+            let host: DNSName = DNSName::try_from(&String::from("test")).unwrap();
+            let z = host.find_zone(&config.faythe_config);
+            assert!(z.is_err());
+
+            let host: DNSName = DNSName::try_from(&String::from("google.com")).unwrap();
+            let z = host.find_zone(&config.faythe_config);
+            assert!(z.is_err());
+
+            let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.unit.test")).unwrap();
+            let z = host.find_zone(&config.faythe_config);
+            assert!(z.is_ok());
+        }
+
+        {
+            let config = create_test_kubernetes_config(false);
+
+            let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.unit.test")).unwrap();
+            let z = host.find_zone(&config.faythe_config).unwrap();
+            assert_eq!(z.server, "ns.unit.test");
+
+            let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.alternative.unit.test")).unwrap();
+            let z = host.find_zone(&config.faythe_config).unwrap();
+            assert_eq!(z.server, "ns.alternative.unit.test");
+
+            let host: DNSName = DNSName::try_from(&String::from("host1.subdivision.other-alternative.unit.test")).unwrap();
+            let z = host.find_zone(&config.faythe_config).unwrap();
+            assert_eq!(z.server, "ns.unit.test");
+
+            let host: DNSName = DNSName::try_from(&String::from("unit.test")).unwrap();
+            let z = host.find_zone(&config.faythe_config).unwrap();
+            assert_eq!(z.server, "ns.unit.test");
+        }
+    }
+
+    #[test]
+    fn test_wildcard_san_mismatch_regression() {
+        let bytes = include_bytes!("../test/wildcard.pem");
+        let cert = Cert::parse(&bytes.to_vec()).unwrap();
+
+        let cn = "*.unit.test";
+        let sans = set![cn];
+
+        assert_eq!(cert.cn, cn);
+        assert_eq!(cert.sans, sans);
+
+        let container = create_test_kubernetes_config(true);
+        let config = &container.faythe_config;
+        let spec = create_ingress("foo.unit.test").to_cert_spec(&container).unwrap();
+
+        assert!(cert.state(&config, &spec) == CertState::Valid);
+        assert!(cert.is_valid(&config, &spec));
+
+        let container = create_test_file_config(true);
+        let config = &container.faythe_config;
+        let spec = create_filespec("foo.unit.test").to_cert_spec(&container).unwrap();
+
+        assert!(cert.state(&config, &spec) == CertState::Valid);
+        assert!(cert.is_valid(&config, &spec));
     }
 }

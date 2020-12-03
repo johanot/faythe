@@ -138,13 +138,13 @@ impl IssueSource for FileSpec {
 
 impl CertSpecable for FileSpec {
     fn to_cert_spec(&self, config: &ConfigContainer) -> Result<CertSpec, SpecError> {
-        let cn = self.normalize(&config.faythe_config)?;
+        let cn = self.get_computed_cn(&config.faythe_config)?;
         let monitor_config = config.get_file_monitor_config()?;
         let names = default_file_names(&self);
         Ok(CertSpec{
             name: self.name.clone(),
             cn,
-            sans: self.get_sans()?,
+            sans: self.get_computed_sans(&config.faythe_config)?,
             persist_spec: PersistSpec::FILE(FilePersistSpec{
                 private_key_path: absolute_file_path(&monitor_config, &names, &names.key),
                 public_key_path: absolute_file_path(&monitor_config, &names, &names.cert),
