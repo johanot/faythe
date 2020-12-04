@@ -127,8 +127,15 @@ impl std::fmt::Display for DNSName {
 impl CertSpec {
     pub fn to_acme_order<'l, P>(&self, acc: &Account<P>) -> Result<NewOrder<P>, acme_lib::Error> where P: Persist {
         let mut sans: Vec<String> = Vec::new();
+        // insert the CN as first entry in the san list for Let's encrypt
+        let cn = self.cn.to_domain_string();
+        sans.push(cn.clone());
         for s in &self.sans {
-            sans.push(s.to_domain_string());
+            let s_ = s.to_domain_string();
+            // we already added the CN to the SAN-list earlier, so don't re-add
+            if &s_ != &cn {
+                sans.push(s_);
+            }
         }
         let sans_: Vec<&str> = sans.iter().map(|s| s.as_str()).collect();
         acc.new_order(&self.cn.to_domain_string().as_str(), sans_.as_slice())
