@@ -90,8 +90,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/DBCDK/acme-lib";
-          rev = "8bc875e18b21d7d25f8aeb330446721ec510d8f9";
-          sha256 = "0drxvw5kncs5lk1dklypd4jzv4wb6yr6czs0g1xaip2m1wan9kvj";
+          rev = "84a3b8ccf58660d33984fe0e8ff04c9b46de9ad8";
+          sha256 = "0jkavyqcpnm6dx6scx366ha1pigffzm3k48dzqifc22g86mpgw5i";
         };
         authors = [
           "Martin Algesten <martin@algesten.se>"
