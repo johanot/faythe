@@ -3,7 +3,7 @@
 [[package]]
 name = "acme-lib"
 version = "0.8.1"
-source = "git+https://github.com/DBCDK/acme-lib?branch=v0.8.1-reqwest-fix-badNonce#8bc875e18b21d7d25f8aeb330446721ec510d8f9"
+source = "git+https://github.com/DBCDK/acme-lib?branch=v0.8.1-reqwest#84a3b8ccf58660d33984fe0e8ff04c9b46de9ad8"
 dependencies = [
  "base64 0.12.3",
  "lazy_static",
