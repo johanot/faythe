@@ -14,6 +14,8 @@
 , rootFeatures ? [ "default" ]
   # If true, throw errors instead of issueing deprecation warnings.
 , strictDeprecation ? false
+  # Used for conditional compilation based on CPU feature detection.
+, targetFeatures ? []
   # Whether to perform release builds: longer compile times, faster binaries.
 , release ? true
   # Additional crate2nix configuration if it exists.
@@ -2084,9 +2086,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.80";
+        version = "0.2.81";
         edition = "2015";
-        sha256 = "0506fqf03n3rl7j6hffk68b2ld5hlck6mgyzckvqhj001fvx2n2d";
+        sha256 = "1jsk82v5snd286ba92lir5snrxl18qm3kjkagz8c97hn0q9q50hl";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3801,9 +3803,9 @@ rec {
       };
       "serde" = rec {
         crateName = "serde";
-        version = "1.0.117";
+        version = "1.0.118";
         edition = "2015";
-        sha256 = "06nwyyma9hch1abjqj0y9cb09m1y6lbzbsc7jff6483pvs1sk3xq";
+        sha256 = "0028kv3dh3ix5g7jfws22zb9hcqq4cnpwn2lnlpam1wxhmil5ih6";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -3829,9 +3831,9 @@ rec {
       };
       "serde_derive" = rec {
         crateName = "serde_derive";
-        version = "1.0.117";
+        version = "1.0.118";
         edition = "2015";
-        sha256 = "0kn7ais3zv9ajbyc216qm14r61zwlm229815yd4anjmlmmraxlfb";
+        sha256 = "1pvj4v8k107ichsnm7jgm9kxyi2lf971x52bmxhm5mcwd4k3akf8";
         procMacro = true;
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
@@ -3947,11 +3949,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
-      "smallvec 1.5.0" = rec {
+      "smallvec 1.5.1" = rec {
         crateName = "smallvec";
-        version = "1.5.0";
+        version = "1.5.1";
         edition = "2018";
-        sha256 = "11gwjrrkr0bkrijmz2fl8dcl3mrl3n61wg98sdcs5s5r9vrxdjks";
+        sha256 = "0xcxvc2lh2fj02d91v4dx1l4q14m5rb4yac788bhwxvxdl2lylmf";
         authors = [
           "The Servo Project Developers"
         ];
@@ -4769,7 +4771,7 @@ rec {
           }
           {
             name = "smallvec";
-            packageId = "smallvec 1.5.0";
+            packageId = "smallvec 1.5.1";
           }
           {
             name = "thiserror";
@@ -4860,7 +4862,7 @@ rec {
           }
           {
             name = "smallvec";
-            packageId = "smallvec 1.5.0";
+            packageId = "smallvec 1.5.1";
           }
           {
             name = "thiserror";
@@ -5489,10 +5491,11 @@ rec {
               }
             );
         in
-        pkgs.runCommand "run-tests-${testCrate.name}" {
-          inherit testCrateFlags;
-          buildInputs = testInputs;
-        } ''
+        pkgs.runCommand "run-tests-${testCrate.name}"
+          {
+            inherit testCrateFlags;
+            buildInputs = testInputs;
+          } ''
           set -ex
 
           export RUST_BACKTRACE=1
@@ -5524,17 +5527,16 @@ rec {
           done
         '';
     in
-    crate.overrideAttrs
-      (
-        old: {
-          checkPhase = ''
-            test -e ${test}
-          '';
-          passthru = (old.passthru or { }) // {
-            inherit test;
-          };
-        }
-      );
+    pkgs.runCommand "${crate.name}-linked"
+      {
+        inherit (crate) outputs crateName;
+        passthru = (crate.passthru or { }) // {
+          inherit test;
+        };
+      } ''
+      echo tested by ${test}
+      ${lib.concatMapStringsSep "\n" (output: "ln -s ${crate.${output}} ${"$"}${output}") crate.outputs}
+    '';
 
   /* A restricted overridable version of builtRustCratesWithFeatures. */
   buildRustCrateWithFeatures =
@@ -5558,13 +5560,15 @@ rec {
           buildRustCrateFuncOverriden =
             if buildRustCrateFunc != null
             then buildRustCrateFunc
-            else (
-              if crateOverrides == pkgs.defaultCrateOverrides
-              then buildRustCrate
-              else buildRustCrate.override {
-                defaultCrateOverrides = crateOverrides;
-              }
-            );
+            else
+              (
+                if crateOverrides == pkgs.defaultCrateOverrides
+                then buildRustCrate
+                else
+                  buildRustCrate.override {
+                    defaultCrateOverrides = crateOverrides;
+                  }
+              );
           builtRustCrates = builtRustCratesWithFeatures {
             inherit packageId features;
             buildRustCrateFunc = buildRustCrateFuncOverriden;
@@ -5579,11 +5583,12 @@ rec {
           testDrv = builtTestRustCrates.${packageId};
           derivation =
             if runTests then
-              crateWithTest {
-                crate = drv;
-                testCrate = testDrv;
-                inherit testCrateFlags testInputs;
-              }
+              crateWithTest
+                {
+                  crate = drv;
+                  testCrate = testDrv;
+                  inherit testCrateFlags testInputs;
+                }
             else drv;
         in
         derivation
@@ -5691,6 +5696,7 @@ rec {
                       crateConfig.sha256;
                   }
                 );
+                extraRustcOpts = lib.lists.optional (targetFeatures != [ ]) "-C target-feature=${stdenv.lib.concatMapStringsSep "," (x: "+${x}") targetFeatures}";
                 inherit features dependencies buildDependencies crateRenames release;
               }
             );
@@ -5853,11 +5859,12 @@ rec {
                 in
                 if cache ? ${packageId} && cache.${packageId} == combinedFeatures
                 then cache
-                else mergePackageFeatures {
-                  features = combinedFeatures;
-                  featuresByPackageId = cache;
-                  inherit crateConfigs packageId target runTests rootPackageId;
-                }
+                else
+                  mergePackageFeatures {
+                    features = combinedFeatures;
+                    featuresByPackageId = cache;
+                    inherit crateConfigs packageId target runTests rootPackageId;
+                  }
             );
         cacheWithSelf =
           let
