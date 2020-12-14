@@ -2461,9 +2461,9 @@ rec {
       };
       "net2" = rec {
         crateName = "net2";
-        version = "0.2.36";
+        version = "0.2.37";
         edition = "2015";
-        sha256 = "00kx6flzbi1l2xq3gfix49ngfm6kpxnxr13p07m0bjqnizrpbkyp";
+        sha256 = "1bk8jp0i12gvhrlaqbfq19ancja70r1rg3sywbhjl0385g8k05ir";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -2548,9 +2548,9 @@ rec {
       };
       "openssl" = rec {
         crateName = "openssl";
-        version = "0.10.30";
+        version = "0.10.31";
         edition = "2015";
-        sha256 = "1d5wwajanjw1q5d2y23yaq8rvbaqb20z53v7hfdryhb56vzmwmwd";
+        sha256 = "11wihrwdjss2w7sb1b6s5q0j7haid9p60s0a8p9s1zxcn58qy04d";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
         ];
@@ -2561,7 +2561,7 @@ rec {
           }
           {
             name = "cfg-if";
-            packageId = "cfg-if 0.1.10";
+            packageId = "cfg-if 1.0.0";
           }
           {
             name = "foreign-types";
@@ -2596,9 +2596,9 @@ rec {
       };
       "openssl-sys" = rec {
         crateName = "openssl-sys";
-        version = "0.9.58";
+        version = "0.9.59";
         edition = "2015";
-        sha256 = "1pkq3x8w16kqvkg75g4w7nny56w9clssww0ibpzg015n153xnhm8";
+        sha256 = "1znmwx2ni5ix0dxfw3q133hz38fyswqa3frri99i2wr1ppmdhlny";
         build = "build/main.rs";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
@@ -4027,9 +4027,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.53";
+        version = "1.0.54";
         edition = "2018";
-        sha256 = "0s3y325n7s6gsg4wg0dq0pxymhv1x8qd4nmsp8my2kf24h3y4cw8";
+        sha256 = "0i3z22zvzzsmrsbhi0ivpmv71fgxkcywjnf3alid8srxlrbzjals";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -4377,11 +4377,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "bytes" "io" "mio" "num_cpus" "reactor" "rt-full" "tcp" "timer" "tokio-current-thread" "tokio-executor" "tokio-io" "tokio-reactor" "tokio-tcp" "tokio-threadpool" "tokio-timer" ];
       };
-      "tokio 0.2.23" = rec {
+      "tokio 0.2.24" = rec {
         crateName = "tokio";
-        version = "0.2.23";
+        version = "0.2.24";
         edition = "2018";
-        sha256 = "1zqjzhnpb2g8d8smj5msw3aydlmfykqapaqdx33zr6ymxmhsvmx6";
+        sha256 = "0j5yxvxqb69h7m9irl5mzkxgc4mlccig1cqb0q4ah5jc8v9kg609";
         authors = [
           "Tokio Contributors <team@tokio.rs>"
         ];
@@ -4779,7 +4779,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 0.2.23";
+            packageId = "tokio 0.2.24";
             optional = true;
           }
           {
@@ -4796,7 +4796,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 0.2.23";
+            packageId = "tokio 0.2.24";
             features = [ "rt-core" "time" ];
           }
         ];
@@ -4870,7 +4870,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 0.2.23";
+            packageId = "tokio 0.2.24";
             optional = true;
           }
           {
@@ -5115,9 +5115,9 @@ rec {
       };
       "vcpkg" = rec {
         crateName = "vcpkg";
-        version = "0.2.10";
+        version = "0.2.11";
         edition = "2015";
-        sha256 = "132hlmsc4maava91vl4lh677sl1c7vr8ccl53fnr5w41y6dh4m34";
+        sha256 = "1yvrd2b97j4hv5bfhcj3al0dpkbzkdsr6dclxqz3zqm50rhwl2xh";
         authors = [
           "Jim McGrath <jimmc2@gmail.com>"
         ];
