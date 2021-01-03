@@ -135,9 +135,9 @@ rec {
       };
       "addr2line" = rec {
         crateName = "addr2line";
-        version = "0.14.0";
+        version = "0.14.1";
         edition = "2015";
-        sha256 = "08x42676mp3wa4amhgnlwlsjxsyarfgr2sc283srppbqkvb2j2bw";
+        sha256 = "1xs5bsi40zpyxbbylyaysya5h36ykcbg91i82415sxw5wk7q4px5";
         authors = [
           "Nick Fitzgerald <fitzgen@gmail.com>"
           "Philip Craig <philipjcraig@gmail.com>"
@@ -827,9 +827,9 @@ rec {
       };
       "dtoa" = rec {
         crateName = "dtoa";
-        version = "0.4.6";
+        version = "0.4.7";
         edition = "2015";
-        sha256 = "0as2dja7bpv5mnqbji2il9yjggzgh4k27x5shjdxpnlb0bs52j8k";
+        sha256 = "0kpagin5jx9khw1ylardzm9hp1g8k0i87qrkgsrwchfp6hlyvmw8";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -1497,16 +1497,16 @@ rec {
       };
       "getrandom" = rec {
         crateName = "getrandom";
-        version = "0.1.15";
+        version = "0.1.16";
         edition = "2018";
-        sha256 = "1rj7psnlrnmsgyj6x2ag4c6367laq4g8kfd6pzamac99xk07nn7w";
+        sha256 = "1kjzmz60qx9mn615ks1akjbf36n3lkv27zfwbcam0fzmj56wphwg";
         authors = [
           "The Rand Project Developers"
         ];
         dependencies = [
           {
             name = "cfg-if";
-            packageId = "cfg-if 0.1.10";
+            packageId = "cfg-if 1.0.0";
           }
           {
             name = "libc";
@@ -1523,6 +1523,7 @@ rec {
         features = {
           "rustc-dep-of-std" = [ "compiler_builtins" "core" ];
           "test-in-browser" = [ "wasm-bindgen" ];
+          "wasm-bindgen" = [ "bindgen" "js-sys" ];
         };
         resolvedDefaultFeatures = [ "std" ];
       };
@@ -1614,9 +1615,9 @@ rec {
       };
       "heck" = rec {
         crateName = "heck";
-        version = "0.3.1";
-        edition = "2015";
-        sha256 = "01a2v7yvkiqxakdqz4hw3w3g4sm52ivz9cs3qcsv2arxsmw4wmi0";
+        version = "0.3.2";
+        edition = "2018";
+        sha256 = "1b56s2c1ymdd0qmy31bw0ndhm31hcdamnhg3npp7ssrmc1ag9jw7";
         authors = [
           "Without Boats <woboats@gmail.com>"
         ];
@@ -1962,9 +1963,9 @@ rec {
       };
       "indexmap" = rec {
         crateName = "indexmap";
-        version = "1.6.0";
+        version = "1.6.1";
         edition = "2018";
-        sha256 = "1wi8l3y2f3k4c2azaf3jm3pw2sksm90rzgv18x1a0lxacp3y9qjm";
+        sha256 = "0friqyzr4ssyayks7nirqbc36zcsf8fdi67jmvl4vpjh8a9zmcag";
         authors = [
           "bluss"
           "Josh Stone <cuviper@gmail.com>"
@@ -2038,9 +2039,9 @@ rec {
       };
       "itoa" = rec {
         crateName = "itoa";
-        version = "0.4.6";
+        version = "0.4.7";
         edition = "2015";
-        sha256 = "1rnpb7rr8df76gnlk07b9086cn7fc0dxxy1ghh00q6nip7bklvyw";
+        sha256 = "0di7fggbknwfjcw8cgzm1dnm3ik32l2m1f7nmyh8ipmh45h069fx";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -2397,9 +2398,9 @@ rec {
       };
       "native-tls" = rec {
         crateName = "native-tls";
-        version = "0.2.6";
+        version = "0.2.7";
         edition = "2015";
-        sha256 = "0grsinsgq1pd70c6k9mif7wambwq2jxh8jhvdgwf9i7dnlwpkk3g";
+        sha256 = "1m6v16xl8h4pm32pw6yhrvgwznf60bqhj2qhb1yrb8wd3hp6pndq";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
         ];
@@ -2455,7 +2456,14 @@ rec {
             target = { target, features }: ((target."os" == "macos") || (target."os" == "ios"));
           }
         ];
+        devDependencies = [
+          {
+            name = "tempfile";
+            packageId = "tempfile";
+          }
+        ];
         features = {
+          "alpn" = [ "security-framework/alpn" ];
           "vendored" = [ "openssl/vendored" ];
         };
       };
@@ -2548,9 +2556,9 @@ rec {
       };
       "openssl" = rec {
         crateName = "openssl";
-        version = "0.10.31";
+        version = "0.10.32";
         edition = "2015";
-        sha256 = "11wihrwdjss2w7sb1b6s5q0j7haid9p60s0a8p9s1zxcn58qy04d";
+        sha256 = "0w4s742al5yx77mfkhpc9rwy8mhv0g6xhc06j2lsgp0xbnc47383";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
         ];
@@ -2596,9 +2604,9 @@ rec {
       };
       "openssl-sys" = rec {
         crateName = "openssl-sys";
-        version = "0.9.59";
+        version = "0.9.60";
         edition = "2015";
-        sha256 = "1znmwx2ni5ix0dxfw3q133hz38fyswqa3frri99i2wr1ppmdhlny";
+        sha256 = "1rpkfl0rmdcvxzyzp3n24g9clplh4avgzpi5c2a3hx96hcccf7wj";
         build = "build/main.rs";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
@@ -2893,9 +2901,9 @@ rec {
       };
       "quote" = rec {
         crateName = "quote";
-        version = "1.0.7";
+        version = "1.0.8";
         edition = "2018";
-        sha256 = "0drzd6pq7whq7qhdvvs8wn6pbb0hhc12pz8wv80fb05ixhbksmma";
+        sha256 = "1pr8dz4pyfbbsqpqw6ygin8m4sz61iir7nl23233cgwsa71k254r";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -3860,9 +3868,9 @@ rec {
       };
       "serde_json" = rec {
         crateName = "serde_json";
-        version = "1.0.60";
+        version = "1.0.61";
         edition = "2018";
-        sha256 = "0yapc7xxk8dx12691yj0l13008rgvknmc6krvk8jwj7y4x6yh00m";
+        sha256 = "0nijvxvgcncvd1wbn73zx7q14bdxah0gf2789qd8kdjpa1cv5kjg";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -3949,11 +3957,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
-      "smallvec 1.5.1" = rec {
+      "smallvec 1.6.0" = rec {
         crateName = "smallvec";
-        version = "1.5.1";
+        version = "1.6.0";
         edition = "2018";
-        sha256 = "0xcxvc2lh2fj02d91v4dx1l4q14m5rb4yac788bhwxvxdl2lylmf";
+        sha256 = "1h0s7dbhf96k1g726h7rp16wm4m83mpnmi7qkfbirr387dgwlm8s";
         authors = [
           "The Servo Project Developers"
         ];
@@ -3962,9 +3970,9 @@ rec {
       };
       "socket2" = rec {
         crateName = "socket2";
-        version = "0.3.17";
+        version = "0.3.19";
         edition = "2018";
-        sha256 = "00k98q2ab98j9ffmmsh0wlwck2apy83a7v5bfy122apfpmx98a9c";
+        sha256 = "0vldz14mxqxnjqb6an2pj7mgclv7nrk45cpscwq7g3fj2c0mfbhj";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -3972,18 +3980,13 @@ rec {
           {
             name = "cfg-if";
             packageId = "cfg-if 1.0.0";
-            target = { target, features }: (target."unix" || (target."os" == "redox"));
+            target = { target, features }: target."unix";
           }
           {
             name = "libc";
             packageId = "libc";
-            target = { target, features }: (target."unix" || (target."os" == "redox"));
+            target = { target, features }: target."unix";
             features = [ "align" ];
-          }
-          {
-            name = "redox_syscall";
-            packageId = "redox_syscall";
-            target = { target, features }: (target."os" == "redox");
           }
           {
             name = "winapi";
@@ -4027,9 +4030,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.54";
+        version = "1.0.56";
         edition = "2018";
-        sha256 = "0i3z22zvzzsmrsbhi0ivpmv71fgxkcywjnf3alid8srxlrbzjals";
+        sha256 = "0wlvjgxhqvcp36zg20q4jzx5khfrk2vhal7fxs3d2w21x7fjv059";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -4172,9 +4175,9 @@ rec {
       };
       "thiserror" = rec {
         crateName = "thiserror";
-        version = "1.0.22";
+        version = "1.0.23";
         edition = "2018";
-        sha256 = "0gp5wp7izpv9rdvq035ajbxcl3g0vck61pg9y6mfsvk1hi5y76hf";
+        sha256 = "0imiv97kdlba0r0ld6mlizfmw5rpmfzhvk7xw8l8k35zd9n63k3n";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -4188,9 +4191,9 @@ rec {
       };
       "thiserror-impl" = rec {
         crateName = "thiserror-impl";
-        version = "1.0.22";
+        version = "1.0.23";
         edition = "2018";
-        sha256 = "0mnx51374c69l1w7gh98prn2wzm2yvmlll4ms567a42vx0ihz8lv";
+        sha256 = "1law4wqpc36hxs4vcgc1pjjniy4l6xn7kwvf0k886xf2mqn3mrwv";
         procMacro = true;
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
@@ -4771,7 +4774,7 @@ rec {
           }
           {
             name = "smallvec";
-            packageId = "smallvec 1.5.1";
+            packageId = "smallvec 1.6.0";
           }
           {
             name = "thiserror";
@@ -4862,7 +4865,7 @@ rec {
           }
           {
             name = "smallvec";
-            packageId = "smallvec 1.5.1";
+            packageId = "smallvec 1.6.0";
           }
           {
             name = "thiserror";
