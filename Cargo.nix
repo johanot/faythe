@@ -1240,11 +1240,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "use_std" "with-deprecated" ];
       };
-      "futures 0.3.8" = rec {
+      "futures 0.3.9" = rec {
         crateName = "futures";
-        version = "0.3.8";
+        version = "0.3.9";
         edition = "2018";
-        sha256 = "1l434mh7p5na5c3c7lih575hszqc515r9idk62fm5rhz1820qfwv";
+        sha256 = "171wvi5h88vhbfs93dsb9f51aqrv2qcbkk5b763f7bh5qlsf82y7";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1301,9 +1301,9 @@ rec {
       };
       "futures-channel" = rec {
         crateName = "futures-channel";
-        version = "0.3.8";
+        version = "0.3.9";
         edition = "2018";
-        sha256 = "0r7y228kkhwx9jj3ny5ppmw2gvw0capm6ig8dzppgqd4g9l0jwab";
+        sha256 = "1ad0921sziz3apky4hsffhyklfkk90i70icjrjb5zs8l6f26277h";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1332,9 +1332,9 @@ rec {
       };
       "futures-core" = rec {
         crateName = "futures-core";
-        version = "0.3.8";
+        version = "0.3.9";
         edition = "2018";
-        sha256 = "0j0pixxv8dmqas1h5cgy92z4r9lpmnlis8ls22v17yrgnwqy2z44";
+        sha256 = "022yjh7fradc7ffmcmqadds4mb4gh413q4vkc6ls4qzz2w4kp3fv";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1372,9 +1372,9 @@ rec {
       };
       "futures-io" = rec {
         crateName = "futures-io";
-        version = "0.3.8";
+        version = "0.3.9";
         edition = "2018";
-        sha256 = "1frh7d0n96lczy22al3bkgwpq0p1agbgax5kqh9vv8da33738631";
+        sha256 = "0fr5yd3slv0lfydy8767sjmxhp1cd68fv3jbhqi0kf1pn18ilz73";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1385,9 +1385,9 @@ rec {
       };
       "futures-sink" = rec {
         crateName = "futures-sink";
-        version = "0.3.8";
+        version = "0.3.9";
         edition = "2018";
-        sha256 = "0gfb1z97q861ki6lqsvpgfn3hnm9w3vkrf82dc00xrff95d1jy7q";
+        sha256 = "1sqzny97b66xw7rq28ncy71x4ji4nqpijycz13x9q44h2anapbgn";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1399,9 +1399,9 @@ rec {
       };
       "futures-task" = rec {
         crateName = "futures-task";
-        version = "0.3.8";
+        version = "0.3.9";
         edition = "2018";
-        sha256 = "03ad39v8scy353src2f9dkkvcs24n736iavi8xn45cj8pyslwmbw";
+        sha256 = "0f00xi1mc1v35m0jqmikwmj2pgh9kbzbyxvwiwx84rpzl91hham9";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1422,9 +1422,9 @@ rec {
       };
       "futures-util" = rec {
         crateName = "futures-util";
-        version = "0.3.8";
+        version = "0.3.9";
         edition = "2018";
-        sha256 = "1lnbhpyrypn9giw6122af0pffxfijfz3zm7phrwzp75rlzscy16k";
+        sha256 = "1afdjrfvsxfzbf91nz9vr9iwsrxd7lv6q6rg6bbzcmzbrl3j2sh3";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1465,8 +1465,8 @@ rec {
             optional = true;
           }
           {
-            name = "pin-project";
-            packageId = "pin-project";
+            name = "pin-project-lite";
+            packageId = "pin-project-lite 0.2.1";
           }
           {
             name = "pin-utils";
@@ -2087,9 +2087,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.81";
+        version = "0.2.82";
         edition = "2015";
-        sha256 = "1jsk82v5snd286ba92lir5snrxl18qm3kjkagz8c97hn0q9q50hl";
+        sha256 = "0a8r4wiyn7hbg8fmlkcr7zwhl368wfy8xbfad989adqap8zky849";
         authors = [
           "The Rust Project Developers"
         ];
@@ -2744,54 +2744,21 @@ rec {
         ];
         
       };
-      "pin-project" = rec {
-        crateName = "pin-project";
-        version = "1.0.2";
-        edition = "2018";
-        sha256 = "19qw2nm2kk38v9j16nsm8j3fkh0g8pjq0k4cplx7i2f4q8vj5k4w";
-        authors = [
-          "Taiki Endo <te316e89@gmail.com>"
-        ];
-        dependencies = [
-          {
-            name = "pin-project-internal";
-            packageId = "pin-project-internal";
-            usesDefaultFeatures = false;
-          }
-        ];
-        
-      };
-      "pin-project-internal" = rec {
-        crateName = "pin-project-internal";
-        version = "1.0.2";
-        edition = "2018";
-        sha256 = "0pwy3m32scf3ypjb9ai151lmaa27vyj06lc64i28l0r31fzx5s7q";
-        procMacro = true;
-        authors = [
-          "Taiki Endo <te316e89@gmail.com>"
-        ];
-        dependencies = [
-          {
-            name = "proc-macro2";
-            packageId = "proc-macro2";
-          }
-          {
-            name = "quote";
-            packageId = "quote";
-          }
-          {
-            name = "syn";
-            packageId = "syn";
-            features = [ "full" "visit-mut" ];
-          }
-        ];
-        
-      };
-      "pin-project-lite" = rec {
+      "pin-project-lite 0.1.11" = rec {
         crateName = "pin-project-lite";
         version = "0.1.11";
         edition = "2018";
         sha256 = "0srgdb3vkx7ppcww1qr7a67c7n84y01lq35j9g44z4h1z8x145y9";
+        authors = [
+          "Taiki Endo <te316e89@gmail.com>"
+        ];
+        
+      };
+      "pin-project-lite 0.2.1" = rec {
+        crateName = "pin-project-lite";
+        version = "0.2.1";
+        edition = "2018";
+        sha256 = "1n22ljlhvy6zvb19jr2gh5604vhh9cnwwlp3q9a9kpycakbl6rz3";
         authors = [
           "Taiki Endo <te316e89@gmail.com>"
         ];
@@ -4030,9 +3997,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.56";
+        version = "1.0.58";
         edition = "2018";
-        sha256 = "0wlvjgxhqvcp36zg20q4jzx5khfrk2vhal7fxs3d2w21x7fjv059";
+        sha256 = "1m85bvywsm6cf17d534c5ma73zch0cgwqc6q2bblqnd67vbs6q6c";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -4216,9 +4183,9 @@ rec {
       };
       "thread_local" = rec {
         crateName = "thread_local";
-        version = "1.0.1";
+        version = "1.1.0";
         edition = "2015";
-        sha256 = "054vlrr1vsdy1h4b7n99mr24pnj8928ig9qwzg36wnkld4dns36l";
+        sha256 = "0iyl5jby55q6mv6j69csjpdw57pw9x9qb7cxn6r7c7nms29c16xv";
         authors = [
           "Amanieu d'Antras <amanieu@gmail.com>"
         ];
@@ -4410,7 +4377,7 @@ rec {
           }
           {
             name = "pin-project-lite";
-            packageId = "pin-project-lite";
+            packageId = "pin-project-lite 0.1.11";
           }
           {
             name = "slab";
@@ -4752,7 +4719,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.3.8";
+            packageId = "futures 0.3.9";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -4793,7 +4760,7 @@ rec {
         devDependencies = [
           {
             name = "futures";
-            packageId = "futures 0.3.8";
+            packageId = "futures 0.3.9";
             usesDefaultFeatures = false;
             features = [ "std" "executor" ];
           }
@@ -4835,7 +4802,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.3.8";
+            packageId = "futures 0.3.9";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -4885,7 +4852,7 @@ rec {
         devDependencies = [
           {
             name = "futures";
-            packageId = "futures 0.3.8";
+            packageId = "futures 0.3.9";
             usesDefaultFeatures = false;
             features = [ "std" "executor" ];
           }
