@@ -1,7 +1,7 @@
 use std::process::{Command, Child, Output};
 use serde_json::Value;
 use std::error::Error;
-use serde::export::fmt::Debug;
+use std::fmt::Debug;
 use std::fmt;
 use std::io::Write;
 use std::io::Read;
