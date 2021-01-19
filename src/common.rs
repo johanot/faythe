@@ -7,7 +7,7 @@ use acme_lib::{Account, Certificate};
 use regex::Regex;
 use crate::config::{FaytheConfig, ConfigContainer, Zone};
 use crate::{file, kube, log};
-use serde::export::Formatter;
+use std::fmt::Formatter;
 use crate::kube::KubeError;
 use std::convert::TryFrom;
 use crate::file::FileError;
