@@ -295,9 +295,9 @@ rec {
       };
       "backtrace" = rec {
         crateName = "backtrace";
-        version = "0.3.55";
+        version = "0.3.56";
         edition = "2018";
-        sha256 = "161mc9ii12n7pha3m4ggrj3k4jxam2474jsdpfdizc459hs40lgg";
+        sha256 = "1g716jmrik0fx29va3js4gw8hwk5jlsmvqaa9ryp1c9qyh07c4cx";
         authors = [
           "The Rust Project Developers"
         ];
@@ -1244,11 +1244,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "use_std" "with-deprecated" ];
       };
-      "futures 0.3.11" = rec {
+      "futures 0.3.12" = rec {
         crateName = "futures";
-        version = "0.3.11";
+        version = "0.3.12";
         edition = "2018";
-        sha256 = "1v0ilyx14rzy72wxh2hi4nsxr666xa3dmc3hhmxnic15kp14rylh";
+        sha256 = "0l7i1hcag46k5v34cbn5dk45gwxn5yy5rxcvmbaxhi02lnhm546s";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1305,9 +1305,9 @@ rec {
       };
       "futures-channel" = rec {
         crateName = "futures-channel";
-        version = "0.3.11";
+        version = "0.3.12";
         edition = "2018";
-        sha256 = "09y0vkyclfdk268x2066bv5z8nky387ddb8qwhqf6gciqs8c7sri";
+        sha256 = "0ihq3a3yc6ial3sw536q75hrhixq22xk6wn5qzpnxazgqxz1plzj";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1336,9 +1336,9 @@ rec {
       };
       "futures-core" = rec {
         crateName = "futures-core";
-        version = "0.3.11";
+        version = "0.3.12";
         edition = "2018";
-        sha256 = "0491sph93c5bg31367lhvpzxzj2gzvzkhqsl2rlj3lr4y2xd16q8";
+        sha256 = "0r8ag0mkxx9cd74yrccjk31lph4gr6lhgb9di6rx39wdvrfi9rbr";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1376,9 +1376,9 @@ rec {
       };
       "futures-io" = rec {
         crateName = "futures-io";
-        version = "0.3.11";
+        version = "0.3.12";
         edition = "2018";
-        sha256 = "15rr4y43jsdfyrjpfwzfrb5cpxpfksa9jv0pw8a6df2s9rz9cs1q";
+        sha256 = "0005hz30pdxlbdamhd0imixmxcjpwrfxxr27kljxh6i84lshbgi8";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1389,9 +1389,9 @@ rec {
       };
       "futures-sink" = rec {
         crateName = "futures-sink";
-        version = "0.3.11";
+        version = "0.3.12";
         edition = "2018";
-        sha256 = "0q0khf144gkrfyg45zgdng80nq6xb0cpbysqzmr7fdf01szgdq6l";
+        sha256 = "1mj22d4w6digh7wfp6jkr5fdcl9r138q41fxzm1yg8mx568cdxfa";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1403,9 +1403,9 @@ rec {
       };
       "futures-task" = rec {
         crateName = "futures-task";
-        version = "0.3.11";
+        version = "0.3.12";
         edition = "2018";
-        sha256 = "15lb6fs2zrgh7610h55kiwlnwm07v18qr4v2fk5vcpcjibr91046";
+        sha256 = "11ldlpl7mis5crys731dj7s7npgigdgrzdm7mi2y86m8ivmhgphk";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1426,9 +1426,9 @@ rec {
       };
       "futures-util" = rec {
         crateName = "futures-util";
-        version = "0.3.11";
+        version = "0.3.12";
         edition = "2018";
-        sha256 = "1ldm5x3c4c3rsfpsvdiqnhp8wkg26l9fvb9jg508sxfzhqkyimfa";
+        sha256 = "0jv25s07igmqavigdfzr02yw6j1q0vg8pw2p2vmgvcx4yb88qak3";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1531,11 +1531,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "std" ];
       };
-      "getrandom 0.2.1" = rec {
+      "getrandom 0.2.2" = rec {
         crateName = "getrandom";
-        version = "0.2.1";
+        version = "0.2.2";
         edition = "2018";
-        sha256 = "1rmfh5g58awfcc2fhpal8lvxhqp8l8c2pc0mc9v8x2z7gdjz8q20";
+        sha256 = "1j1jcwahnkn45kapq9i5nvw2s5hcfmp1zpjx0fzl0wcy4w2mfjf9";
         authors = [
           "The Rand Project Developers"
         ];
@@ -1558,7 +1558,7 @@ rec {
         ];
         features = {
           "js" = [ "wasm-bindgen" "js-sys" ];
-          "rustc-dep-of-std" = [ "compiler_builtins" "core" ];
+          "rustc-dep-of-std" = [ "compiler_builtins" "core" "libc/rustc-dep-of-std" "wasi/rustc-dep-of-std" ];
         };
         resolvedDefaultFeatures = [ "std" ];
       };
@@ -1666,9 +1666,9 @@ rec {
       };
       "hermit-abi" = rec {
         crateName = "hermit-abi";
-        version = "0.1.17";
+        version = "0.1.18";
         edition = "2018";
-        sha256 = "1s1ss7xypnbpjglmj5k39svzsmni1rqp57a91qi5pyv0yxjmbjjs";
+        sha256 = "0p6czgbk1izviwxzm6ypy3vz2wqj1yd3ab03wp82xqjng7klsbrj";
         authors = [
           "Stefan Lankes"
         ];
@@ -2556,9 +2556,9 @@ rec {
       };
       "object" = rec {
         crateName = "object";
-        version = "0.22.0";
+        version = "0.23.0";
         edition = "2018";
-        sha256 = "15r383qxxwq08q3a5rfqhp971wd0nixd9ny22xw37jy31qv66fwd";
+        sha256 = "1m658q2ci9hk8csbl17zwcg1hpvcxm2sspjb9bzg0kc1cifsp9x9";
         authors = [
           "Nick Fitzgerald <fitzgen@gmail.com>"
           "Philip Craig <philipjcraig@gmail.com>"
@@ -3258,7 +3258,7 @@ rec {
         dependencies = [
           {
             name = "getrandom";
-            packageId = "getrandom 0.2.1";
+            packageId = "getrandom 0.2.2";
             optional = true;
           }
         ];
@@ -3949,9 +3949,9 @@ rec {
       };
       "serde" = rec {
         crateName = "serde";
-        version = "1.0.119";
+        version = "1.0.120";
         edition = "2015";
-        sha256 = "1hwwx4a7lk4sxsrd11i2zmhmjagxd307zanqxx4ivdimkvs3dpcv";
+        sha256 = "1aqaqfm148wyi6c739gay87fp7rni4yb3r2q9bsvm08k0r4j6sqn";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -3977,9 +3977,9 @@ rec {
       };
       "serde_derive" = rec {
         crateName = "serde_derive";
-        version = "1.0.119";
+        version = "1.0.120";
         edition = "2015";
-        sha256 = "1kg1zyp1h0801hw70j97nb51bgbl4dcp3hk8zpaxsnd0g7758aam";
+        sha256 = "0xaprf386crlji08v4rdfv6cwlxmnxjkfpj3jlxrxkh5b35si8hc";
         procMacro = true;
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
@@ -4890,7 +4890,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.3.11";
+            packageId = "futures 0.3.12";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -4931,7 +4931,7 @@ rec {
         devDependencies = [
           {
             name = "futures";
-            packageId = "futures 0.3.11";
+            packageId = "futures 0.3.12";
             usesDefaultFeatures = false;
             features = [ "std" "executor" ];
           }
@@ -4973,7 +4973,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.3.11";
+            packageId = "futures 0.3.12";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -5023,7 +5023,7 @@ rec {
         devDependencies = [
           {
             name = "futures";
-            packageId = "futures 0.3.11";
+            packageId = "futures 0.3.12";
             usesDefaultFeatures = false;
             features = [ "std" "executor" ];
           }
