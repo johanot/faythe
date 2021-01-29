@@ -2122,9 +2122,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.82";
+        version = "0.2.84";
         edition = "2015";
-        sha256 = "0a8r4wiyn7hbg8fmlkcr7zwhl368wfy8xbfad989adqap8zky849";
+        sha256 = "1zy5z0yc10ninwhvb7hv1z0vbwmqav1lsljrjjcc1s4207x35jhw";
         authors = [
           "The Rust Project Developers"
         ];
@@ -2169,21 +2169,23 @@ rec {
       };
       "log" = rec {
         crateName = "log";
-        version = "0.4.13";
+        version = "0.4.14";
         edition = "2015";
-        sha256 = "1cj2bbbd317qlp6calxpmm4c3sxj5jgfpkqd0y35pfw08ifq1wzw";
+        sha256 = "04175hv0v62shd82qydq58a48k3bjijmk54v38zgqlbxqkkbpfai";
         authors = [
           "The Rust Project Developers"
         ];
         dependencies = [
           {
             name = "cfg-if";
-            packageId = "cfg-if 0.1.10";
+            packageId = "cfg-if 1.0.0";
           }
         ];
         features = {
-          "kv_unstable_std" = [ "kv_unstable" "std" ];
-          "kv_unstable_sval" = [ "kv_unstable" "sval/fmt" ];
+          "kv_unstable" = [ "value-bag" ];
+          "kv_unstable_serde" = [ "kv_unstable_std" "value-bag/serde" "serde" ];
+          "kv_unstable_std" = [ "std" "kv_unstable" "value-bag/error" ];
+          "kv_unstable_sval" = [ "kv_unstable" "value-bag/sval" "sval" ];
         };
         resolvedDefaultFeatures = [ "std" ];
       };
@@ -2588,7 +2590,7 @@ rec {
           "default" = [ "std" ];
           "std" = [ "alloc" ];
         };
-        resolvedDefaultFeatures = [ "alloc" "std" ];
+        resolvedDefaultFeatures = [ "alloc" "default" "std" ];
       };
       "openssl" = rec {
         crateName = "openssl";
@@ -3055,11 +3057,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "alloc" "default" "getrandom" "getrandom_package" "libc" "std" ];
       };
-      "rand 0.8.2" = rec {
+      "rand 0.8.3" = rec {
         crateName = "rand";
-        version = "0.8.2";
+        version = "0.8.3";
         edition = "2018";
-        sha256 = "07lb17qj02bi17mhqxlmsiyf4g8cmplm6hbiw5hxc900li19nl8q";
+        sha256 = "0zldxfx4gi551n2fna4zz9ab22zsnzw1mj5hzi5nfs24dgkfgy8f";
         authors = [
           "The Rand Project Developers"
           "The Rust Project Developers"
@@ -3949,9 +3951,9 @@ rec {
       };
       "serde" = rec {
         crateName = "serde";
-        version = "1.0.120";
+        version = "1.0.123";
         edition = "2015";
-        sha256 = "1aqaqfm148wyi6c739gay87fp7rni4yb3r2q9bsvm08k0r4j6sqn";
+        sha256 = "1bk9733mgiv5sg8yb19y8mc85fb2aaqp1k02v10alavj688idmcj";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -3977,9 +3979,9 @@ rec {
       };
       "serde_derive" = rec {
         crateName = "serde_derive";
-        version = "1.0.120";
+        version = "1.0.123";
         edition = "2015";
-        sha256 = "0xaprf386crlji08v4rdfv6cwlxmnxjkfpj3jlxrxkh5b35si8hc";
+        sha256 = "0ccg4m7ww6mfs5vjdbdifri2kf1wyd4difjnqnraph2gssaw54ck";
         procMacro = true;
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
@@ -3997,7 +3999,6 @@ rec {
           {
             name = "syn";
             packageId = "syn";
-            features = [ "visit" ];
           }
         ];
         features = {
@@ -4168,9 +4169,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.58";
+        version = "1.0.60";
         edition = "2018";
-        sha256 = "1m85bvywsm6cf17d534c5ma73zch0cgwqc6q2bblqnd67vbs6q6c";
+        sha256 = "1080gw6mlja7yl26crya3k403wjdp7v3wx9mxcmpcnlar9z5j067";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -4258,7 +4259,7 @@ rec {
           }
           {
             name = "rand";
-            packageId = "rand 0.8.2";
+            packageId = "rand 0.8.3";
           }
           {
             name = "redox_syscall";
@@ -4354,16 +4355,16 @@ rec {
       };
       "thread_local" = rec {
         crateName = "thread_local";
-        version = "1.1.0";
-        edition = "2015";
-        sha256 = "0iyl5jby55q6mv6j69csjpdw57pw9x9qb7cxn6r7c7nms29c16xv";
+        version = "1.1.2";
+        edition = "2018";
+        sha256 = "05b94g3giadny554wpwzlqwclj7wp3952sfpbgfiicqw3qrql86q";
         authors = [
           "Amanieu d'Antras <amanieu@gmail.com>"
         ];
         dependencies = [
           {
-            name = "lazy_static";
-            packageId = "lazy_static";
+            name = "once_cell";
+            packageId = "once_cell";
           }
         ];
         
@@ -4404,9 +4405,9 @@ rec {
       };
       "tinyvec" = rec {
         crateName = "tinyvec";
-        version = "1.1.0";
+        version = "1.1.1";
         edition = "2018";
-        sha256 = "0vva61rhzvgyvc0n6vbjn8a2q3mm5wlfrapyx08blbxlkv0xpy6c";
+        sha256 = "08qhf0a9vxf85bj1hd38i8qzwiwm6v4vvwd11k7c728f59bwlz1i";
         authors = [
           "Lokathor <zefria@gmail.com>"
         ];
@@ -4518,11 +4519,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "bytes" "io" "mio" "num_cpus" "reactor" "rt-full" "tcp" "timer" "tokio-current-thread" "tokio-executor" "tokio-io" "tokio-reactor" "tokio-tcp" "tokio-threadpool" "tokio-timer" ];
       };
-      "tokio 0.2.24" = rec {
+      "tokio 0.2.25" = rec {
         crateName = "tokio";
-        version = "0.2.24";
+        version = "0.2.25";
         edition = "2018";
-        sha256 = "0j5yxvxqb69h7m9irl5mzkxgc4mlccig1cqb0q4ah5jc8v9kg609";
+        sha256 = "14l0rll6y1dyzh6qcd8rma2ch3wx0dxzxq8b54di744sjirs40v7";
         authors = [
           "Tokio Contributors <team@tokio.rs>"
         ];
@@ -4920,7 +4921,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 0.2.24";
+            packageId = "tokio 0.2.25";
             optional = true;
           }
           {
@@ -4937,7 +4938,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 0.2.24";
+            packageId = "tokio 0.2.25";
             features = [ "rt-core" "time" ];
           }
         ];
@@ -5011,7 +5012,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 0.2.24";
+            packageId = "tokio 0.2.25";
             optional = true;
           }
           {
