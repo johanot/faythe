@@ -32,7 +32,6 @@ pub fn add(config: &FaytheConfig, name: &DNSName, proof: &String) -> Result<(), 
 
 fn add_cmd(zone: &Zone, name: &DNSName, proof: &String) -> String {
     format!("server {server}\n\
-             prereq nxdomain {host} TXT\n\
              update add {host} 120 TXT \"{proof}\"\n\
              send\n",
             server=&zone.server,
@@ -62,12 +61,17 @@ fn delete_cmd(zone: &Zone, name: &DNSName) -> String {
 
 pub fn query(resolver: &Resolver, host: &DNSName, proof: &String) -> Result<(), DNSError> {
     let c_host = challenge_host(host, None);
-    let output = match resolver.txt_lookup(c_host.as_str()) {
+    match resolver.txt_lookup(c_host.as_str()) {
         Ok(res) => {
-            match res.iter().next() {
-                Some(t) => Ok(t.to_owned()),
-                None => Err(DNSError::WrongAnswer(c_host.clone()))
-            }
+            let trim_chars: &[_] = &['"', '\n'];
+            res.iter().find(|rr|
+                rr.iter().find(|r| {
+                    match String::from_utf8((*r).to_vec()) {
+                        Ok(txt) => &txt.trim_matches(trim_chars) == proof,
+                        Err(_) => false,
+                    }
+                }).is_some()
+            ).ok_or(DNSError::WrongAnswer(c_host.clone())).and(Ok(()))
         },
         Err(e) => {
             match e.kind() {
@@ -75,14 +79,6 @@ pub fn query(resolver: &Resolver, host: &DNSName, proof: &String) -> Result<(), 
                 _ => Err(DNSError::ResolveError(e))
             }
         }
-    }?;
-
-    let trim_chars: &[_] = &['"', '\n'];
-    let first_record = output.iter().next().ok_or(DNSError::WrongAnswer(c_host.clone()))?;
-    let txt = String::from_utf8((*first_record).to_vec())?;
-    match &txt.trim_matches(trim_chars) == proof {
-        true => Ok(()),
-        false => Err(DNSError::WrongAnswer(c_host.clone()))
     }
 }
 
@@ -164,7 +160,7 @@ mod tests {
         let zone = config.faythe_config.zones.get("unit.test").unwrap();
 
         assert_eq!(add_cmd(zone, &spec.cn, &proof),
-                   "server ns.unit.test\nprereq nxdomain _acme-challenge.moo.unit.test. TXT\nupdate add _acme-challenge.moo.unit.test. 120 TXT \"abcdef1234\"\nsend\n")
+                   "server ns.unit.test\nupdate add _acme-challenge.moo.unit.test. 120 TXT \"abcdef1234\"\nsend\n")
     }
 
     #[test]
@@ -175,7 +171,7 @@ mod tests {
         let zone = config.faythe_config.zones.get("unit.test").unwrap();
 
         assert_eq!(add_cmd(zone, &spec.cn, &proof),
-                   "server ns.unit.test\nprereq nxdomain _acme-challenge.unit.test. TXT\nupdate add _acme-challenge.unit.test. 120 TXT \"abcdef1234\"\nsend\n")
+                   "server ns.unit.test\nupdate add _acme-challenge.unit.test. 120 TXT \"abcdef1234\"\nsend\n")
     }
 
     #[test]
@@ -206,7 +202,7 @@ mod tests {
         let zone = config.faythe_config.zones.get("suffixed.unit.test").unwrap();
 
         assert_eq!(add_cmd(zone, &spec.cn, &proof),
-                   "server ns.suffixed.unit.test\nprereq nxdomain _acme-challenge.suffixed.unit.test.acme.example.com. TXT\nupdate add _acme-challenge.suffixed.unit.test.acme.example.com. 120 TXT \"abcdef1234\"\nsend\n");
+                   "server ns.suffixed.unit.test\nupdate add _acme-challenge.suffixed.unit.test.acme.example.com. 120 TXT \"abcdef1234\"\nsend\n");
 
         assert_eq!(delete_cmd(zone, &spec.cn),
                    "server ns.suffixed.unit.test\nupdate delete _acme-challenge.suffixed.unit.test.acme.example.com. TXT\nsend\n")
