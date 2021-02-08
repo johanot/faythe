@@ -22,6 +22,9 @@ use std::sync::RwLock;
 use std::fmt::Debug;
 use crate::dns::DNSError;
 
+use crate::metrics;
+use crate::metrics::MetricsType;
+
 pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
 
     let mut queue: VecDeque<IssueOrder> = VecDeque::new();
@@ -35,7 +38,10 @@ pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
                 if ! queue.iter().any(|o: &IssueOrder| o.spec.name == cert_spec.name) {
                     match setup_challenge(&faythe_config, &cert_spec) {
                         Ok(order) => queue.push_back(order),
-                        Err(e) => log::event(format!("failed to setup challenge for host: {host}, error: {error:?}", host = cert_spec.cn, error = e).as_str())
+                        Err(e) => {
+                            log::event(format!("failed to setup challenge for host: {host}, error: {error:?}", host = cert_spec.cn, error = e).as_str());
+                            metrics::new_event(&cert_spec.name, MetricsType::Failure);
+                        }
                     };
                 } else {
                     log::info("similar cert-spec is already in the issuing queue", &cert_spec)
@@ -61,11 +67,16 @@ fn check_queue(queue: &mut VecDeque<IssueOrder>) -> Result<(), IssuerError> {
                 Ok(_) => {
                     order.inner.refresh()?;
                     if order.inner.is_validated() {
-                        order.issue()?;
+                        let result = order.issue();
+                        match result {
+                            Ok(_) => metrics::new_event(&order.spec.name, MetricsType::Success),
+                            Err(_) => metrics::new_event(&order.spec.name, MetricsType::Failure),
+                        }
+                        result
                     } else {
                         queue.push_back(order);
+                        Ok(())
                     }
-                    Ok(())
                 },
                 Err(e) => match e {
                     IssuerError::DNS(dns::DNSError::WrongAnswer(domain)) => {
@@ -75,10 +86,14 @@ fn check_queue(queue: &mut VecDeque<IssueOrder>) -> Result<(), IssuerError> {
                             queue.push_back(order);
                         } else {
                             log::info("giving up validating dns challenge for spec", &order.spec);
+                            metrics::new_event(&order.spec.name, MetricsType::Failure);
                         }
                         Ok(())
                     },
-                        _ => Err(e)
+                        _ => {
+                            metrics::new_event(&order.spec.name, MetricsType::Failure);
+                            Err(e)
+                        }
                     }
             }
         },

@@ -20,6 +20,9 @@ use crate::kube::KubeError;
 use std::prelude::v1::Vec;
 use crate::file::FileError;
 
+use crate::metrics;
+use crate::metrics::MetricsType;
+
 pub fn monitor_k8s(config: ConfigContainer, tx: Sender<CertSpec>) {
     log::event("k8s monitoring-started");
     let monitor_config = config.get_kube_monitor_config().unwrap();
@@ -74,7 +77,10 @@ fn inspect<CS, VV>(config: &ConfigContainer, tx: &Sender<CertSpec>, objects: &Ve
                             tx.send(spec.to_owned()).unwrap()
                         }
                     },
-                    Err(e) => log::error("failed to touch object, bailing out.", &e)
+                    Err(e) => {
+                        log::error("failed to touch object, bailing out.", &e);
+                        metrics::new_event(&spec.name, MetricsType::Failure);
+                    }
                 };
             },
             Ok(_) => {}, // not time for issuing

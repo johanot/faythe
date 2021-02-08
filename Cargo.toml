@@ -18,3 +18,5 @@ lazy_static = "1.4.0"
 walkdir = "2.3"
 trust-dns-resolver = "0.19"
 env_logger = "0.7.1"
+prometheus_exporter_base = "0.31"
+tokio = { version = "0.2", features = [ "macros" ] }
