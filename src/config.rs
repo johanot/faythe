@@ -9,6 +9,8 @@ use std::collections::HashMap;
 
 #[derive(Clone, Deserialize, Debug)]
 pub struct FaytheConfig {
+    #[serde(default = "default_metrics_port")]
+    pub metrics_port: u16,
     pub lets_encrypt_url: String,
     pub lets_encrypt_proxy: Option<String>,
     pub lets_encrypt_email: String,
@@ -95,6 +97,8 @@ fn default_issue_wildcard_certs() -> bool { false }
 fn default_wildcard_cert_k8s_prefix() -> String { "wild--card".to_string() }
 
 fn default_k8s_touch_annotation() -> Option<String> { Some("faythe.touched".to_string()) }
+
+fn default_metrics_port() -> u16 { 9105 }
 
 pub fn parse_config_file(file: &str) -> serde_json::Result<FaytheConfig> {
     let path = std::path::Path::new(&file);

@@ -396,6 +396,7 @@ pub mod tests {
         };
         let zones = create_zones(issue_wildcard_certs);
         let faythe_config = FaytheConfig{
+            metrics_port: 9105,
             kube_monitor_configs: vec!(),
             file_monitor_configs: vec![file_monitor_configs.clone()],
             lets_encrypt_url: String::new(),
@@ -446,6 +447,7 @@ pub mod tests {
         };
         let zones = create_zones(issue_wildcard_certs);
         let faythe_config = FaytheConfig{
+            metrics_port: 9105,
             kube_monitor_configs: vec![kube_monitor_config.clone()],
             file_monitor_configs: vec!(),
             lets_encrypt_url: String::new(),

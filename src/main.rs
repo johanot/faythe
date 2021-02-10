@@ -20,6 +20,7 @@ mod kube;
 mod file;
 mod log;
 mod dns;
+mod metrics;
 
 #[macro_export]
 macro_rules! set {
@@ -85,6 +86,8 @@ fn run(config: &FaytheConfig) {
         panic!("No monitors started! Did you forget to add monitor configuration to the config file?")
     }
 
+    let metrics_port = config.metrics_port;
+    metrics::serve(metrics_port);
     for t in threads {
         t.join().unwrap();
     }
