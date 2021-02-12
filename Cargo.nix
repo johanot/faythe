@@ -946,9 +946,9 @@ rec {
       };
       "encoding_rs" = rec {
         crateName = "encoding_rs";
-        version = "0.8.26";
+        version = "0.8.28";
         edition = "2018";
-        sha256 = "10xjcafwbxvm2kfsyymxlz8wc9s4bmdj1xzlc809rxyp2yrbl6w0";
+        sha256 = "0rf0r99q4kgjrx22kx7pjyjg4lm21599y3ggvy3hzj2spi7h5pw0";
         authors = [
           "Henri Sivonen <hsivonen@hsivonen.fi>"
         ];
@@ -1189,9 +1189,9 @@ rec {
       };
       "flate2" = rec {
         crateName = "flate2";
-        version = "1.0.19";
+        version = "1.0.20";
         edition = "2018";
-        sha256 = "0abinkvc6ylbhshm8b3yfsfyl0vi2qplvjv4m8cs95yzalyqc4bl";
+        sha256 = "1q5b4r2rclhjbcxlbv5231avp1y6y8bynrf5v3brdzhhvr9yqfnd";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
           "Josh Triplett <josh@joshtriplett.org>"
@@ -2045,9 +2045,9 @@ rec {
       };
       "httparse" = rec {
         crateName = "httparse";
-        version = "1.3.4";
+        version = "1.3.5";
         edition = "2015";
-        sha256 = "1yf23ldnjwfkkhkca7f4w15mky9961gjz28dlwyybhphc7l9l5yd";
+        sha256 = "14anx05yjiwxd72kvmhxi085zvgl6m9r1k1csl9v6q1i5jzalp31";
         authors = [
           "Sean McArthur <sean@seanmonstar.com>"
         ];
@@ -2425,11 +2425,11 @@ rec {
         ];
         
       };
-      "idna 0.2.0" = rec {
+      "idna 0.2.1" = rec {
         crateName = "idna";
-        version = "0.2.0";
-        edition = "2015";
-        sha256 = "1a9066imqpdrm1aavfasdyb1zahqaz8jmdcwdawvb1pf60y6gqh2";
+        version = "0.2.1";
+        edition = "2018";
+        sha256 = "1500w4f6d3kys0f3hz7mqqfyvdg022wirnz89mf17hvw3x90v4fy";
         authors = [
           "The rust-url developers"
         ];
@@ -2591,9 +2591,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.84";
+        version = "0.2.86";
         edition = "2015";
-        sha256 = "1zy5z0yc10ninwhvb7hv1z0vbwmqav1lsljrjjcc1s4207x35jhw";
+        sha256 = "074b38mq1rx3dgg7sf952d4ccywq450zymk7gzn5q9z39f92sa5p";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3731,7 +3731,7 @@ rec {
           }
           {
             name = "idna";
-            packageId = "idna 0.2.0";
+            packageId = "idna 0.2.1";
           }
           {
             name = "lazy_static";
@@ -5103,9 +5103,9 @@ rec {
       };
       "serde_json" = rec {
         crateName = "serde_json";
-        version = "1.0.61";
+        version = "1.0.62";
         edition = "2018";
-        sha256 = "0nijvxvgcncvd1wbn73zx7q14bdxah0gf2789qd8kdjpa1cv5kjg";
+        sha256 = "11hlwc4glh244sk6ncnvj3n01pi538iv2qygyxyfllj5g59n277a";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -5462,9 +5462,9 @@ rec {
       };
       "thread_local" = rec {
         crateName = "thread_local";
-        version = "1.1.2";
+        version = "1.1.3";
         edition = "2018";
-        sha256 = "05b94g3giadny554wpwzlqwclj7wp3952sfpbgfiicqw3qrql86q";
+        sha256 = "1gccp3grndpi6dyhzylz4hkqnkzc1xyri98n0xwwhnn90i7d4640";
         authors = [
           "Amanieu d'Antras <amanieu@gmail.com>"
         ];
@@ -6241,7 +6241,7 @@ rec {
           }
           {
             name = "idna";
-            packageId = "idna 0.2.0";
+            packageId = "idna 0.2.1";
           }
           {
             name = "lazy_static";
@@ -6455,9 +6455,9 @@ rec {
       };
       "unicode-normalization" = rec {
         crateName = "unicode-normalization";
-        version = "0.1.16";
+        version = "0.1.17";
         edition = "2018";
-        sha256 = "01p6mwhrf8c748ad7nd5pf9c6djwsc45874dwpp2mqyvcamn6gm1";
+        sha256 = "1vzajca1hk9plka5d3z3426frmnr7229fd2kidz58zd9r3hzryq7";
         authors = [
           "kwantam <kwantam@gmail.com>"
           "Manish Goregaokar <manishsmail@gmail.com>"
@@ -6566,7 +6566,7 @@ rec {
           }
           {
             name = "idna";
-            packageId = "idna 0.2.0";
+            packageId = "idna 0.2.1";
           }
           {
             name = "matches";
