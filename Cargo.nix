@@ -404,9 +404,9 @@ rec {
       };
       "bumpalo" = rec {
         crateName = "bumpalo";
-        version = "3.6.0";
+        version = "3.6.1";
         edition = "2018";
-        sha256 = "1nfm0nhd7pz4z16v9fcs52zs37j1sc6vixhnj0fp4ja3y5p5k7h9";
+        sha256 = "1gndni6ng6z1v14lq5zgm1k2y9320w4bc2ijzgyz9qwx9f56nfb3";
         authors = [
           "Nick Fitzgerald <fitzgen@gmail.com>"
         ];
@@ -2083,11 +2083,11 @@ rec {
         ];
         
       };
-      "hyper 0.12.35" = rec {
+      "hyper 0.12.36" = rec {
         crateName = "hyper";
-        version = "0.12.35";
+        version = "0.12.36";
         edition = "2015";
-        sha256 = "1xnm8zi4bdjqhlnx3238kx8yjf29jjd1ww54apcql7wf8g8nxglx";
+        sha256 = "0ljcsgxddqaaasran1chafd10kpdz5d20da78j9izz4ncapkr12w";
         authors = [
           "Sean McArthur <sean@seanmonstar.com>"
         ];
@@ -2252,7 +2252,7 @@ rec {
           }
           {
             name = "pin-project";
-            packageId = "pin-project 1.0.5";
+            packageId = "pin-project";
           }
           {
             name = "socket2";
@@ -2386,7 +2386,7 @@ rec {
           }
           {
             name = "hyper";
-            packageId = "hyper 0.12.35";
+            packageId = "hyper 0.12.36";
           }
           {
             name = "native-tls";
@@ -2425,11 +2425,11 @@ rec {
         ];
         
       };
-      "idna 0.2.1" = rec {
+      "idna 0.2.2" = rec {
         crateName = "idna";
-        version = "0.2.1";
+        version = "0.2.2";
         edition = "2018";
-        sha256 = "1500w4f6d3kys0f3hz7mqqfyvdg022wirnz89mf17hvw3x90v4fy";
+        sha256 = "08ccsjp86296ppm4v1m9948vcwwiwdzk7b572j1k8gf2d5frm0l9";
         authors = [
           "The rust-url developers"
         ];
@@ -3483,24 +3483,7 @@ rec {
         ];
         
       };
-      "pin-project 0.4.27" = rec {
-        crateName = "pin-project";
-        version = "0.4.27";
-        edition = "2018";
-        sha256 = "05cfd6sp0ydkdfw7b3c8s1sws0xmhclylam9icnkvsiq9glwiyrg";
-        authors = [
-          "Taiki Endo <te316e89@gmail.com>"
-        ];
-        dependencies = [
-          {
-            name = "pin-project-internal";
-            packageId = "pin-project-internal 0.4.27";
-            usesDefaultFeatures = false;
-          }
-        ];
-        
-      };
-      "pin-project 1.0.5" = rec {
+      "pin-project" = rec {
         crateName = "pin-project";
         version = "1.0.5";
         edition = "2018";
@@ -3511,39 +3494,13 @@ rec {
         dependencies = [
           {
             name = "pin-project-internal";
-            packageId = "pin-project-internal 1.0.5";
+            packageId = "pin-project-internal";
             usesDefaultFeatures = false;
           }
         ];
         
       };
-      "pin-project-internal 0.4.27" = rec {
-        crateName = "pin-project-internal";
-        version = "0.4.27";
-        edition = "2018";
-        sha256 = "158q986q00s1pz1akazdcjkvkbdcbdhfw5azw8g3mgkadgjjmbb5";
-        procMacro = true;
-        authors = [
-          "Taiki Endo <te316e89@gmail.com>"
-        ];
-        dependencies = [
-          {
-            name = "proc-macro2";
-            packageId = "proc-macro2";
-          }
-          {
-            name = "quote";
-            packageId = "quote";
-          }
-          {
-            name = "syn";
-            packageId = "syn";
-            features = [ "full" "visit-mut" ];
-          }
-        ];
-        
-      };
-      "pin-project-internal 1.0.5" = rec {
+      "pin-project-internal" = rec {
         crateName = "pin-project-internal";
         version = "1.0.5";
         edition = "2018";
@@ -3731,7 +3688,7 @@ rec {
           }
           {
             name = "idna";
-            packageId = "idna 0.2.1";
+            packageId = "idna 0.2.2";
           }
           {
             name = "lazy_static";
@@ -3745,7 +3702,7 @@ rec {
           }
           {
             name = "url";
-            packageId = "url 2.2.0";
+            packageId = "url 2.2.1";
           }
         ];
         features = {
@@ -3766,9 +3723,9 @@ rec {
       };
       "quote" = rec {
         crateName = "quote";
-        version = "1.0.8";
+        version = "1.0.9";
         edition = "2018";
-        sha256 = "1pr8dz4pyfbbsqpqw6ygin8m4sz61iir7nl23233cgwsa71k254r";
+        sha256 = "19rjmfqzk26rxbgxy5j2ckqc2v12sw2xw8l4gi8bzpn2bmsbkl63";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -3943,7 +3900,7 @@ rec {
           }
           {
             name = "rand_core";
-            packageId = "rand_core 0.6.1";
+            packageId = "rand_core 0.6.2";
           }
           {
             name = "rand_hc";
@@ -4040,7 +3997,7 @@ rec {
           }
           {
             name = "rand_core";
-            packageId = "rand_core 0.6.1";
+            packageId = "rand_core 0.6.2";
           }
         ];
         features = {
@@ -4108,11 +4065,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "alloc" "getrandom" "std" ];
       };
-      "rand_core 0.6.1" = rec {
+      "rand_core 0.6.2" = rec {
         crateName = "rand_core";
-        version = "0.6.1";
+        version = "0.6.2";
         edition = "2018";
-        sha256 = "1rfjrcyaj7blz2nawv2pypm5kqc59p80n6f5pg691399iggxf9n0";
+        sha256 = "1rvas1afjvd2827b8mf2ilg78h3ksl9npkrdds3wbw9x33mndkrl";
         authors = [
           "The Rand Project Developers"
           "The Rust Project Developers"
@@ -4174,7 +4131,7 @@ rec {
         dependencies = [
           {
             name = "rand_core";
-            packageId = "rand_core 0.6.1";
+            packageId = "rand_core 0.6.2";
           }
         ];
         
@@ -4348,11 +4305,11 @@ rec {
         ];
         
       };
-      "redox_syscall 0.2.4" = rec {
+      "redox_syscall 0.2.5" = rec {
         crateName = "redox_syscall";
-        version = "0.2.4";
+        version = "0.2.5";
         edition = "2018";
-        sha256 = "0w254gyccyinrzhgd562ddrhgcpwswy700mmc9qa6pkc86lqrv05";
+        sha256 = "1n878lpw577avdr5dzbkil02xwbx0a57mr2r3dcnnkz28i71wd4l";
         libName = "syscall";
         authors = [
           "Jeremy Soller <jackpot51@gmail.com>"
@@ -4490,7 +4447,7 @@ rec {
           }
           {
             name = "hyper";
-            packageId = "hyper 0.12.35";
+            packageId = "hyper 0.12.36";
           }
           {
             name = "hyper-tls";
@@ -5370,7 +5327,7 @@ rec {
           }
           {
             name = "redox_syscall";
-            packageId = "redox_syscall 0.2.4";
+            packageId = "redox_syscall 0.2.5";
             target = { target, features }: (target."os" == "redox");
           }
           {
@@ -5421,9 +5378,9 @@ rec {
       };
       "thiserror" = rec {
         crateName = "thiserror";
-        version = "1.0.23";
+        version = "1.0.24";
         edition = "2018";
-        sha256 = "0imiv97kdlba0r0ld6mlizfmw5rpmfzhvk7xw8l8k35zd9n63k3n";
+        sha256 = "13m99wjikivkkwd209fgxhdprjxj17s39ldfvn1l8k89jxasdx70";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -5437,9 +5394,9 @@ rec {
       };
       "thiserror-impl" = rec {
         crateName = "thiserror-impl";
-        version = "1.0.23";
+        version = "1.0.24";
         edition = "2018";
-        sha256 = "1law4wqpc36hxs4vcgc1pjjniy4l6xn7kwvf0k886xf2mqn3mrwv";
+        sha256 = "1h7kh6rr4vsm79dmv8qk8drhh2if3zyxc1lqa921l96q22b1hrbp";
         procMacro = true;
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
@@ -6119,9 +6076,9 @@ rec {
       };
       "tracing" = rec {
         crateName = "tracing";
-        version = "0.1.23";
+        version = "0.1.24";
         edition = "2018";
-        sha256 = "1ww7akgck54yc9a2yrl7qnvqpqgwiz6ab2cd1lq377h2zli0mm7p";
+        sha256 = "04jg8v21b717hsv6w79h66jdw4sqqv2k3wmw5pzrka3cyx13hzgp";
         authors = [
           "Eliza Weisman <eliza@buoyant.io>"
           "Tokio Contributors <team@tokio.rs>"
@@ -6183,9 +6140,9 @@ rec {
       };
       "tracing-futures" = rec {
         crateName = "tracing-futures";
-        version = "0.2.4";
+        version = "0.2.5";
         edition = "2018";
-        sha256 = "0k4vd3jyqz9cx8rbwbp0p93qfp1w6rfk7sc6c1jh1ai18zqvcyxb";
+        sha256 = "1wimg0iwa2ldq7xv98lvivvf3q9ykfminig8r1bs0ig22np9bl4p";
         authors = [
           "Eliza Weisman <eliza@buoyant.io>"
           "Tokio Contributors <team@tokio.rs>"
@@ -6193,7 +6150,7 @@ rec {
         dependencies = [
           {
             name = "pin-project";
-            packageId = "pin-project 0.4.27";
+            packageId = "pin-project";
             optional = true;
           }
           {
@@ -6241,7 +6198,7 @@ rec {
           }
           {
             name = "idna";
-            packageId = "idna 0.2.1";
+            packageId = "idna 0.2.2";
           }
           {
             name = "lazy_static";
@@ -6270,7 +6227,7 @@ rec {
           }
           {
             name = "url";
-            packageId = "url 2.2.0";
+            packageId = "url 2.2.1";
           }
         ];
         devDependencies = [
@@ -6551,11 +6508,11 @@ rec {
           "query_encoding" = [ "encoding" ];
         };
       };
-      "url 2.2.0" = rec {
+      "url 2.2.1" = rec {
         crateName = "url";
-        version = "2.2.0";
+        version = "2.2.1";
         edition = "2018";
-        sha256 = "0vlpd0c7y9yv4x5vmb6qlnkxkj63r20wv2rysyg48l3kh6qg42ar";
+        sha256 = "12qzdzgcvmc5l1fk4psldiipx80423mikb6g4a9qwb322d0rdkcw";
         authors = [
           "The rust-url developers"
         ];
@@ -6566,7 +6523,7 @@ rec {
           }
           {
             name = "idna";
-            packageId = "idna 0.2.1";
+            packageId = "idna 0.2.2";
           }
           {
             name = "matches";
