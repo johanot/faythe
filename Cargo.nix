@@ -165,9 +165,9 @@ rec {
       };
       "adler" = rec {
         crateName = "adler";
-        version = "0.2.3";
+        version = "1.0.1";
         edition = "2015";
-        sha256 = "0zpdsrfq5bd34941gmrlamnzjfbsx0x586afb7b0jqhr8g1lwapf";
+        sha256 = "14shamgp9fb98syji8glqdf717vzzigmrsvjjgxhymdmqz2qkp5y";
         authors = [
           "Jonas Schievink <jonasschievink@gmail.com>"
         ];
@@ -486,10 +486,10 @@ rec {
       };
       "cc" = rec {
         crateName = "cc";
-        version = "1.0.66";
+        version = "1.0.67";
         edition = "2018";
         crateBin = [];
-        sha256 = "0j7d7h4n81z5f22l3v8ggjvvw8m64636nlaqax4x1y44da1rc12c";
+        sha256 = "1z9p27ys80shv09zhknmlal8jjra78agdwg97i6jjd6lg83rpip3";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1032,28 +1032,6 @@ rec {
         };
         resolvedDefaultFeatures = [ "atty" "default" "humantime" "regex" "termcolor" ];
       };
-      "error-chain" = rec {
-        crateName = "error-chain";
-        version = "0.12.4";
-        edition = "2015";
-        sha256 = "1z6y5isg0il93jp287sv7pn10i4wrkik2cpyk376wl61rawhcbrd";
-        authors = [
-          "Brian Anderson <banderson@mozilla.com>"
-          "Paul Colomiets <paul@colomiets.name>"
-          "Colin Kiegel <kiegel@gmx.de>"
-          "Yamakaky <yamakaky@yamaworld.fr>"
-          "Andrew Gauger <andygauge@gmail.com>"
-        ];
-        buildDependencies = [
-          {
-            name = "version_check";
-            packageId = "version_check";
-          }
-        ];
-        features = {
-          "default" = [ "backtrace" "example_generated" ];
-        };
-      };
       "failure" = rec {
         crateName = "failure";
         version = "0.1.8";
@@ -1274,9 +1252,9 @@ rec {
       };
       "form_urlencoded" = rec {
         crateName = "form_urlencoded";
-        version = "1.0.0";
-        edition = "2015";
-        sha256 = "005yi1319k5bz8g5ylbdiakq5jp5jh90yy6k357zm11fr4aqvrpc";
+        version = "1.0.1";
+        edition = "2018";
+        sha256 = "1491fmakavcmsjbm3q6iy0bhmn9l422jasdhzx5hkljgza3mmhjz";
         authors = [
           "The rust-url developers"
         ];
@@ -1332,11 +1310,11 @@ rec {
         ];
         
       };
-      "futures 0.1.30" = rec {
+      "futures 0.1.31" = rec {
         crateName = "futures";
-        version = "0.1.30";
+        version = "0.1.31";
         edition = "2015";
-        sha256 = "1v9f02g6wkn0241kdymfr42bf8b02mlhrknlzvw0ssvl28k4qzjc";
+        sha256 = "0y46qbmhi37dqkch8dlfq5aninqpzqgrr98awkb3rn4fxww1lirs";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1345,11 +1323,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "use_std" "with-deprecated" ];
       };
-      "futures 0.3.12" = rec {
+      "futures 0.3.13" = rec {
         crateName = "futures";
-        version = "0.3.12";
+        version = "0.3.13";
         edition = "2018";
-        sha256 = "0l7i1hcag46k5v34cbn5dk45gwxn5yy5rxcvmbaxhi02lnhm546s";
+        sha256 = "1h8lx9iz3k43lwr63gn49nsfph09qkvnlh3nm0xmj78i35rncmbz";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1406,9 +1384,9 @@ rec {
       };
       "futures-channel" = rec {
         crateName = "futures-channel";
-        version = "0.3.12";
+        version = "0.3.13";
         edition = "2018";
-        sha256 = "0ihq3a3yc6ial3sw536q75hrhixq22xk6wn5qzpnxazgqxz1plzj";
+        sha256 = "0f99mnrg7p66gn0f4zwkh53ri0cc7s7rsb4wnsddnmwvhggx4bcc";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1437,9 +1415,9 @@ rec {
       };
       "futures-core" = rec {
         crateName = "futures-core";
-        version = "0.3.12";
+        version = "0.3.13";
         edition = "2018";
-        sha256 = "0r8ag0mkxx9cd74yrccjk31lph4gr6lhgb9di6rx39wdvrfi9rbr";
+        sha256 = "151c26lzgmk3y67bl407vlhr4hl76ydaa4fzqfyn43mzz9r6lj8m";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1460,7 +1438,7 @@ rec {
         dependencies = [
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
             usesDefaultFeatures = false;
             features = [ "use_std" ];
           }
@@ -1477,9 +1455,9 @@ rec {
       };
       "futures-io" = rec {
         crateName = "futures-io";
-        version = "0.3.12";
+        version = "0.3.13";
         edition = "2018";
-        sha256 = "0005hz30pdxlbdamhd0imixmxcjpwrfxxr27kljxh6i84lshbgi8";
+        sha256 = "0ndshyr6vgnx0z421h2asd7jkhy2cwqj5ha1a8pw613pqmjjq76p";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1490,9 +1468,9 @@ rec {
       };
       "futures-macro" = rec {
         crateName = "futures-macro";
-        version = "0.3.12";
+        version = "0.3.13";
         edition = "2018";
-        sha256 = "1pgyb219ybh3fj3ig0h1c2b7k4cqldy95ifdpnd9yb9jvmdd51y2";
+        sha256 = "1dxzgz1sb0qin9nqsdrqc1aky52j3n9fnarcz2db77qkllb5hh7a";
         procMacro = true;
         authors = [
           "Taylor Cramer <cramertj@google.com>"
@@ -1521,9 +1499,9 @@ rec {
       };
       "futures-sink" = rec {
         crateName = "futures-sink";
-        version = "0.3.12";
+        version = "0.3.13";
         edition = "2018";
-        sha256 = "1mj22d4w6digh7wfp6jkr5fdcl9r138q41fxzm1yg8mx568cdxfa";
+        sha256 = "1cwbbd9dik0p54d53v4kd28lgj2a9bxgprp8ypabfhaqk2c4sxc5";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1535,32 +1513,23 @@ rec {
       };
       "futures-task" = rec {
         crateName = "futures-task";
-        version = "0.3.12";
+        version = "0.3.13";
         edition = "2018";
-        sha256 = "11ldlpl7mis5crys731dj7s7npgigdgrzdm7mi2y86m8ivmhgphk";
+        sha256 = "106zr4rvl3w2h9iibljh4ba0g7pxq7hwyvvscq1fcpn127r9w67s";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
-        dependencies = [
-          {
-            name = "once_cell";
-            packageId = "once_cell";
-            optional = true;
-            usesDefaultFeatures = false;
-            features = [ "std" ];
-          }
-        ];
         features = {
           "default" = [ "std" ];
-          "std" = [ "alloc" "once_cell" ];
+          "std" = [ "alloc" ];
         };
-        resolvedDefaultFeatures = [ "alloc" "once_cell" "std" ];
+        resolvedDefaultFeatures = [ "alloc" "std" ];
       };
       "futures-util" = rec {
         crateName = "futures-util";
-        version = "0.3.12";
+        version = "0.3.13";
         edition = "2018";
-        sha256 = "0jv25s07igmqavigdfzr02yw6j1q0vg8pw2p2vmgvcx4yb88qak3";
+        sha256 = "1lcn7nbar6gb47a2lvmjdarw5g6d78jf2hqsf3rddy7diamwf4hq";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1751,7 +1720,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
           }
           {
             name = "http";
@@ -2007,7 +1976,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
           }
           {
             name = "http";
@@ -2098,7 +2067,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
           }
           {
             name = "futures-cpupool";
@@ -2382,7 +2351,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
           }
           {
             name = "hyper";
@@ -2785,9 +2754,9 @@ rec {
       };
       "miniz_oxide" = rec {
         crateName = "miniz_oxide";
-        version = "0.4.3";
+        version = "0.4.4";
         edition = "2018";
-        sha256 = "17d1xp29v5xgh4vahxld14w1c1hgh38qmxpv7i18wy096gn2cb8g";
+        sha256 = "0jsfv00hl5rmx1nijn59sr9jmjd4rjnjhh4kdjy8d187iklih9d9";
         authors = [
           "Frommi <daniil.liferenko@gmail.com>"
           "oyvindln <oyvindln@users.noreply.github.com>"
@@ -2949,12 +2918,12 @@ rec {
           }
           {
             name = "security-framework";
-            packageId = "security-framework 2.0.0";
+            packageId = "security-framework 2.1.1";
             target = { target, features }: ((target."os" == "macos") || (target."os" == "ios"));
           }
           {
             name = "security-framework-sys";
-            packageId = "security-framework-sys 2.0.0";
+            packageId = "security-framework-sys 2.1.1";
             target = { target, features }: ((target."os" == "macos") || (target."os" == "ios"));
           }
           {
@@ -3281,17 +3250,18 @@ rec {
       };
       "once_cell" = rec {
         crateName = "once_cell";
-        version = "1.5.2";
+        version = "1.7.0";
         edition = "2018";
-        sha256 = "183zs1dbmsv24mkafjypf9qwjrx46an58vb004a162l113sl3g8k";
+        sha256 = "0nky5jq05rl7yckz2swqrxl04rarfxzgk3nhaahv3hagp43zkb0h";
         authors = [
           "Aleksey Kladov <aleksey.kladov@gmail.com>"
         ];
         features = {
+          "alloc" = [ "race" ];
           "default" = [ "std" ];
           "std" = [ "alloc" ];
         };
-        resolvedDefaultFeatures = [ "alloc" "default" "std" ];
+        resolvedDefaultFeatures = [ "alloc" "default" "race" "std" ];
       };
       "openssl" = rec {
         crateName = "openssl";
@@ -3674,31 +3644,16 @@ rec {
       };
       "publicsuffix" = rec {
         crateName = "publicsuffix";
-        version = "1.5.4";
-        edition = "2015";
-        sha256 = "0yvmjpywfyypfr17kxiwy6ssykgv8nmcdhfakas6548pfn8a9fiv";
+        version = "1.5.5";
+        edition = "2018";
+        sha256 = "1nsyqa7816cg8hiwqj38zn7c667whm857k2s05ncvahp868jzrnz";
         authors = [
           "rushmorem <rushmore@webenchanter.com>"
         ];
         dependencies = [
           {
-            name = "error-chain";
-            packageId = "error-chain";
-            usesDefaultFeatures = false;
-          }
-          {
             name = "idna";
             packageId = "idna 0.2.2";
-          }
-          {
-            name = "lazy_static";
-            packageId = "lazy_static";
-          }
-          {
-            name = "regex";
-            packageId = "regex";
-            usesDefaultFeatures = false;
-            features = [ "std" ];
           }
           {
             name = "url";
@@ -4439,7 +4394,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
           }
           {
             name = "http";
@@ -4876,11 +4831,11 @@ rec {
           "OSX_10_9" = [ "security-framework-sys/OSX_10_9" ];
         };
       };
-      "security-framework 2.0.0" = rec {
+      "security-framework 2.1.1" = rec {
         crateName = "security-framework";
-        version = "2.0.0";
+        version = "2.1.1";
         edition = "2018";
-        sha256 = "0scc4vj2mw9k6qpxp26zx8gnqnmw79nwayja91x030457hp9qxf1";
+        sha256 = "0rj11kj7bv325a0pd88f6g8bdnwxy2mxz8cddh4nb6140j0k3z9d";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
           "Kornel <kornel@geekhood.net>"
@@ -4904,7 +4859,7 @@ rec {
           }
           {
             name = "security-framework-sys";
-            packageId = "security-framework-sys 2.0.0";
+            packageId = "security-framework-sys 2.1.1";
             usesDefaultFeatures = false;
           }
         ];
@@ -4944,11 +4899,11 @@ rec {
           "OSX_10_13" = [ "OSX_10_12" ];
         };
       };
-      "security-framework-sys 2.0.0" = rec {
+      "security-framework-sys 2.1.1" = rec {
         crateName = "security-framework-sys";
-        version = "2.0.0";
+        version = "2.1.1";
         edition = "2018";
-        sha256 = "12v7wpf7cbc92xza4lf3w12411wzrkkvlbjgrhrid9yj4rg9v6zr";
+        sha256 = "0b88qqx0mn32vr6qinvf0cab8jhpdrj8z0aj686hn9gdwpfqrr6y";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
           "Kornel <kornel@geekhood.net>"
@@ -5060,9 +5015,9 @@ rec {
       };
       "serde_json" = rec {
         crateName = "serde_json";
-        version = "1.0.62";
+        version = "1.0.63";
         edition = "2018";
-        sha256 = "11hlwc4glh244sk6ncnvj3n01pi538iv2qygyxyfllj5g59n277a";
+        sha256 = "1xhbc83n1pwiw02ddqf98gwynihscg69h2nfq0wajjvsfjwmsls3";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -5513,7 +5468,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
           }
           {
             name = "mio";
@@ -5684,7 +5639,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
           }
         ];
         features = {
@@ -5704,7 +5659,7 @@ rec {
         dependencies = [
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
           }
           {
             name = "tokio-executor";
@@ -5728,7 +5683,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
           }
         ];
         
@@ -5748,7 +5703,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
           }
           {
             name = "log";
@@ -5798,7 +5753,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
           }
           {
             name = "lazy_static";
@@ -5898,7 +5853,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
           }
         ];
         
@@ -5918,7 +5873,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
           }
           {
             name = "iovec";
@@ -5962,7 +5917,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
           }
           {
             name = "lazy_static";
@@ -6002,7 +5957,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
           }
           {
             name = "slab";
@@ -6076,9 +6031,9 @@ rec {
       };
       "tracing" = rec {
         crateName = "tracing";
-        version = "0.1.24";
+        version = "0.1.25";
         edition = "2018";
-        sha256 = "04jg8v21b717hsv6w79h66jdw4sqqv2k3wmw5pzrka3cyx13hzgp";
+        sha256 = "17wmgw7bxqvhh5ls1jww4ach3ri5720cawsvbymv32j9nhmxrsq1";
         authors = [
           "Eliza Weisman <eliza@buoyant.io>"
           "Tokio Contributors <team@tokio.rs>"
@@ -6192,7 +6147,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.3.12";
+            packageId = "futures 0.3.13";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -6233,7 +6188,7 @@ rec {
         devDependencies = [
           {
             name = "futures";
-            packageId = "futures 0.3.12";
+            packageId = "futures 0.3.13";
             usesDefaultFeatures = false;
             features = [ "std" "executor" ];
           }
@@ -6275,7 +6230,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.3.12";
+            packageId = "futures 0.3.13";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -6325,7 +6280,7 @@ rec {
         devDependencies = [
           {
             name = "futures";
-            packageId = "futures 0.3.12";
+            packageId = "futures 0.3.13";
             usesDefaultFeatures = false;
             features = [ "std" "executor" ];
           }
@@ -6662,7 +6617,7 @@ rec {
         dependencies = [
           {
             name = "futures";
-            packageId = "futures 0.1.30";
+            packageId = "futures 0.1.31";
           }
           {
             name = "log";
