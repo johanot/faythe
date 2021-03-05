@@ -165,9 +165,9 @@ rec {
       };
       "adler" = rec {
         crateName = "adler";
-        version = "1.0.1";
+        version = "1.0.2";
         edition = "2015";
-        sha256 = "14shamgp9fb98syji8glqdf717vzzigmrsvjjgxhymdmqz2qkp5y";
+        sha256 = "1zim79cvzd5yrkzl3nyfx0avijwgk9fqv3yrscdy1cc79ih02qpj";
         authors = [
           "Jonas Schievink <jonasschievink@gmail.com>"
         ];
@@ -1577,7 +1577,7 @@ rec {
           }
           {
             name = "pin-project-lite";
-            packageId = "pin-project-lite 0.2.4";
+            packageId = "pin-project-lite 0.2.6";
           }
           {
             name = "pin-utils";
@@ -2509,9 +2509,9 @@ rec {
       };
       "js-sys" = rec {
         crateName = "js-sys";
-        version = "0.3.47";
+        version = "0.3.48";
         edition = "2018";
-        sha256 = "0r8gxxgpgpg7y11jk34ccrvx1w0a20jbv35gglv3lhim3h9p7ysw";
+        sha256 = "0y2dgsfzy52ngi2b1ggwzl5nh5m948ady1h7sr1pikhmn7wq97yw";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -2560,9 +2560,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.86";
+        version = "0.2.87";
         edition = "2015";
-        sha256 = "074b38mq1rx3dgg7sf952d4ccywq450zymk7gzn5q9z39f92sa5p";
+        sha256 = "04r2lkffw4j29yk4pa75xr7dk8pb5w1bidbbjlzhly6n64fpap96";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3250,9 +3250,9 @@ rec {
       };
       "once_cell" = rec {
         crateName = "once_cell";
-        version = "1.7.0";
+        version = "1.7.2";
         edition = "2018";
-        sha256 = "0nky5jq05rl7yckz2swqrxl04rarfxzgk3nhaahv3hagp43zkb0h";
+        sha256 = "18qmpyfigg4ibdhjy5mwcjhzk9adwlgfaqv7nj430ivm86q0i2xg";
         authors = [
           "Aleksey Kladov <aleksey.kladov@gmail.com>"
         ];
@@ -3496,21 +3496,21 @@ rec {
         ];
         
       };
-      "pin-project-lite 0.1.11" = rec {
+      "pin-project-lite 0.1.12" = rec {
         crateName = "pin-project-lite";
-        version = "0.1.11";
+        version = "0.1.12";
         edition = "2018";
-        sha256 = "0srgdb3vkx7ppcww1qr7a67c7n84y01lq35j9g44z4h1z8x145y9";
+        sha256 = "0xx7f3wzc8ydvd1v2mmrxfypjchp52bphrirf08phbq8ba8n8yr5";
         authors = [
           "Taiki Endo <te316e89@gmail.com>"
         ];
         
       };
-      "pin-project-lite 0.2.4" = rec {
+      "pin-project-lite 0.2.6" = rec {
         crateName = "pin-project-lite";
-        version = "0.2.4";
+        version = "0.2.6";
         edition = "2018";
-        sha256 = "09x8chns8apal89pndqdrr0c2nv8jw6nmi8hl38acjbc6sprg5j3";
+        sha256 = "01g96zxghb33s1vsjmjpn9l3a2nxdqj7glf9lhq7q5wjkhjiy3nw";
         authors = [
           "Taiki Endo <te316e89@gmail.com>"
         ];
@@ -3644,9 +3644,9 @@ rec {
       };
       "publicsuffix" = rec {
         crateName = "publicsuffix";
-        version = "1.5.5";
+        version = "1.5.6";
         edition = "2018";
-        sha256 = "1nsyqa7816cg8hiwqj38zn7c667whm857k2s05ncvahp868jzrnz";
+        sha256 = "0gr1k9ngl18iix80vab5y193fa32h7srr171ilydj9qazwqwxd4m";
         authors = [
           "rushmorem <rushmore@webenchanter.com>"
         ];
@@ -5015,9 +5015,9 @@ rec {
       };
       "serde_json" = rec {
         crateName = "serde_json";
-        version = "1.0.63";
+        version = "1.0.64";
         edition = "2018";
-        sha256 = "1xhbc83n1pwiw02ddqf98gwynihscg69h2nfq0wajjvsfjwmsls3";
+        sha256 = "0y9gk3yikncrc0zajmwc0pidr7zfwafawb4gidf6mqyskzf9g7kr";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -5188,9 +5188,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.60";
+        version = "1.0.61";
         edition = "2018";
-        sha256 = "1080gw6mlja7yl26crya3k403wjdp7v3wx9mxcmpcnlar9z5j067";
+        sha256 = "1i893ipqcvyn82jyzprhpdnbkkssksn86hhgc6kj6jkk1q5bj8pd";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -5583,7 +5583,7 @@ rec {
           }
           {
             name = "pin-project-lite";
-            packageId = "pin-project-lite 0.1.11";
+            packageId = "pin-project-lite 0.1.12";
           }
           {
             name = "slab";
@@ -5997,7 +5997,7 @@ rec {
           }
           {
             name = "pin-project-lite";
-            packageId = "pin-project-lite 0.1.11";
+            packageId = "pin-project-lite 0.1.12";
           }
           {
             name = "tokio";
@@ -6050,7 +6050,7 @@ rec {
           }
           {
             name = "pin-project-lite";
-            packageId = "pin-project-lite 0.2.4";
+            packageId = "pin-project-lite 0.2.6";
           }
           {
             name = "tracing-core";
@@ -6680,9 +6680,9 @@ rec {
       };
       "wasm-bindgen" = rec {
         crateName = "wasm-bindgen";
-        version = "0.2.70";
+        version = "0.2.71";
         edition = "2018";
-        sha256 = "1gikjjsm85wvpqmjbxg2s6f386bv9rhzs03xkfmhskz77l9ggh2m";
+        sha256 = "19qssg8ifass5qv60hpicl1hp9ilizh164q7l3b63i5p8012iqby";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6708,9 +6708,9 @@ rec {
       };
       "wasm-bindgen-backend" = rec {
         crateName = "wasm-bindgen-backend";
-        version = "0.2.70";
+        version = "0.2.71";
         edition = "2018";
-        sha256 = "1iv4fzabql4625q4cw7d43lnrpf3pimn63vjclykymyly13m9i3v";
+        sha256 = "1a1apjim8rq9kpjiaxi4zbk7v8lmh2wpkz3k1sdkmfxq89lqnzav";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6752,9 +6752,9 @@ rec {
       };
       "wasm-bindgen-macro" = rec {
         crateName = "wasm-bindgen-macro";
-        version = "0.2.70";
+        version = "0.2.71";
         edition = "2018";
-        sha256 = "0b5srgzjmi5j7gv27li683l68nl6r5px4k8pshx5jfgg5s45721v";
+        sha256 = "0fqdrsbb9zxscpgazh6723z8w0l91crdih1n1wgnc5ppivd3ib75";
         procMacro = true;
         authors = [
           "The wasm-bindgen Developers"
@@ -6777,9 +6777,9 @@ rec {
       };
       "wasm-bindgen-macro-support" = rec {
         crateName = "wasm-bindgen-macro-support";
-        version = "0.2.70";
+        version = "0.2.71";
         edition = "2018";
-        sha256 = "118kl12vcp19zbd8fzpn3jkhb2h34plra5is7d0zlcd5ybkvacs1";
+        sha256 = "07j0xchgxlxpllxxm1xsjp5mmzbgnfmyhkipp63z4ka59p3kw1fc";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6814,9 +6814,9 @@ rec {
       };
       "wasm-bindgen-shared" = rec {
         crateName = "wasm-bindgen-shared";
-        version = "0.2.70";
+        version = "0.2.71";
         edition = "2018";
-        sha256 = "0r7xlkba8r5gfpp4w8bi9gfym08ybf5b6qirq4ajvq1sjkj4ajfx";
+        sha256 = "1cc3cc7lr1051avi24jwadh91kaandzq9991ybsp3p929328wvvx";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6824,9 +6824,9 @@ rec {
       };
       "web-sys" = rec {
         crateName = "web-sys";
-        version = "0.3.47";
+        version = "0.3.48";
         edition = "2018";
-        sha256 = "1cw0aqbyzhya0f02jwd95la9hmn12dqxlf3wh6x3w028zj8wc3f4";
+        sha256 = "0ayrqjk57bvs16rxfhvgc7pizkvdfnk0lanyvz74ha9v48k0nq7c";
         authors = [
           "The wasm-bindgen Developers"
         ];
