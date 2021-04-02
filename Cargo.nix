@@ -923,9 +923,9 @@ rec {
       };
       "dtoa" = rec {
         crateName = "dtoa";
-        version = "0.4.7";
+        version = "0.4.8";
         edition = "2015";
-        sha256 = "0kpagin5jx9khw1ylardzm9hp1g8k0i87qrkgsrwchfp6hlyvmw8";
+        sha256 = "1c5j0wz118dhrczx6spc5za7dnbfxablr4adyahg9aknrsc9i2an";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -2509,9 +2509,9 @@ rec {
       };
       "js-sys" = rec {
         crateName = "js-sys";
-        version = "0.3.49";
+        version = "0.3.50";
         edition = "2018";
-        sha256 = "08f8avgmlwb44jqjmw4gjhx6rzw1adpl3flm1kv7al0jja9y65fw";
+        sha256 = "0k526bcp63ma05pwxjwzfmn9zhmiqfxlqnzg8vw6g3sbx3izk69d";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -2560,9 +2560,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.91";
+        version = "0.2.92";
         edition = "2015";
-        sha256 = "1rq2clij7a22p2ik62486whd2shmgkicxv4gav30w4qprbvb25l9";
+        sha256 = "0537k32dhh6248ajrhmibjbqf49crm8235hg9hs9pfxgkw35bn2n";
         authors = [
           "The Rust Project Developers"
         ];
@@ -2918,12 +2918,12 @@ rec {
           }
           {
             name = "security-framework";
-            packageId = "security-framework 2.1.2";
+            packageId = "security-framework 2.2.0";
             target = { target, features }: ((target."os" == "macos") || (target."os" == "ios"));
           }
           {
             name = "security-framework-sys";
-            packageId = "security-framework-sys 2.1.1";
+            packageId = "security-framework-sys 2.2.0";
             target = { target, features }: ((target."os" == "macos") || (target."os" == "ios"));
           }
           {
@@ -3573,9 +3573,9 @@ rec {
       };
       "proc-macro2" = rec {
         crateName = "proc-macro2";
-        version = "1.0.24";
+        version = "1.0.26";
         edition = "2018";
-        sha256 = "0wcabxzrddcjmryndw8fpyxcq6rw63m701vx86xxf03y3bp081qy";
+        sha256 = "1v4w5jchgsssr727iyv986r8jaw6z80bzlhqgrbp78nw2lr02lm1";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -4826,11 +4826,11 @@ rec {
           "OSX_10_9" = [ "security-framework-sys/OSX_10_9" ];
         };
       };
-      "security-framework 2.1.2" = rec {
+      "security-framework 2.2.0" = rec {
         crateName = "security-framework";
-        version = "2.1.2";
+        version = "2.2.0";
         edition = "2018";
-        sha256 = "17gnpxjds6awsw7is6wc1rjkpcgrj0gk0cwgrmib1pq2kvrwb4yl";
+        sha256 = "115xn71aa7qimk1rrg9zxai6mh76mdxas7n75ccls27nzp9b2w1n";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
           "Kornel <kornel@geekhood.net>"
@@ -4854,7 +4854,7 @@ rec {
           }
           {
             name = "security-framework-sys";
-            packageId = "security-framework-sys 2.1.1";
+            packageId = "security-framework-sys 2.2.0";
             usesDefaultFeatures = false;
           }
         ];
@@ -4863,7 +4863,7 @@ rec {
           "OSX_10_11" = [ "OSX_10_10" "security-framework-sys/OSX_10_11" ];
           "OSX_10_12" = [ "OSX_10_11" "security-framework-sys/OSX_10_12" ];
           "OSX_10_13" = [ "OSX_10_12" "security-framework-sys/OSX_10_13" "alpn" "session-tickets" ];
-          "OSX_10_14" = [ "OSX_10_13" ];
+          "OSX_10_14" = [ "OSX_10_13" "security-framework-sys/OSX_10_14" ];
           "OSX_10_9" = [ "security-framework-sys/OSX_10_9" ];
           "default" = [ "OSX_10_9" ];
         };
@@ -4895,11 +4895,11 @@ rec {
           "OSX_10_13" = [ "OSX_10_12" ];
         };
       };
-      "security-framework-sys 2.1.1" = rec {
+      "security-framework-sys 2.2.0" = rec {
         crateName = "security-framework-sys";
-        version = "2.1.1";
+        version = "2.2.0";
         edition = "2018";
-        sha256 = "0b88qqx0mn32vr6qinvf0cab8jhpdrj8z0aj686hn9gdwpfqrr6y";
+        sha256 = "0fb3q4d0z7zbfdip85xvwkipr14dg4w31klrxjhckqngsf7jaxin";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
           "Kornel <kornel@geekhood.net>"
@@ -4919,6 +4919,7 @@ rec {
           "OSX_10_11" = [ "OSX_10_10" ];
           "OSX_10_12" = [ "OSX_10_11" ];
           "OSX_10_13" = [ "OSX_10_12" ];
+          "OSX_10_14" = [ "OSX_10_13" ];
           "default" = [ "OSX_10_9" ];
         };
         resolvedDefaultFeatures = [ "OSX_10_9" "default" ];
@@ -5184,9 +5185,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.64";
+        version = "1.0.68";
         edition = "2018";
-        sha256 = "0vsx3448kyym7s5kybrl0qixgya33gzjxaidahya00k1jzlx3n9z";
+        sha256 = "11zxx242fk12l3hxfhfvas96p2xmbbpxc5j7mkpgi8laxp9mvq9w";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -6662,9 +6663,9 @@ rec {
       };
       "wasm-bindgen" = rec {
         crateName = "wasm-bindgen";
-        version = "0.2.72";
+        version = "0.2.73";
         edition = "2018";
-        sha256 = "1ghgmhxv7yj0v472qp84w7aix1k619xdqcl19md68pcfp8fzds4g";
+        sha256 = "1n93yq72c7bd2464gg48405yzgvwakwc0cqzz647864xcm4ha943";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6690,9 +6691,9 @@ rec {
       };
       "wasm-bindgen-backend" = rec {
         crateName = "wasm-bindgen-backend";
-        version = "0.2.72";
+        version = "0.2.73";
         edition = "2018";
-        sha256 = "1lqzvkdzw66wdhm7wgs80aih0zx349dvmd3w5h3xlqphiyjynv04";
+        sha256 = "1bkxxkmxfy182aav9qqkcq7mz48yxgmx61kdr8ak55fa24j64w5f";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6734,9 +6735,9 @@ rec {
       };
       "wasm-bindgen-macro" = rec {
         crateName = "wasm-bindgen-macro";
-        version = "0.2.72";
+        version = "0.2.73";
         edition = "2018";
-        sha256 = "16w1frwyqcaqaj6pm6b3rk4ibipkyngramvwg5ph9nkcsc0smy8f";
+        sha256 = "0vqgbnbnh6zs339v6g9w3j9idi8m3s1dws8rnkypn5rz8j8lswry";
         procMacro = true;
         authors = [
           "The wasm-bindgen Developers"
@@ -6759,9 +6760,9 @@ rec {
       };
       "wasm-bindgen-macro-support" = rec {
         crateName = "wasm-bindgen-macro-support";
-        version = "0.2.72";
+        version = "0.2.73";
         edition = "2018";
-        sha256 = "0pbknfjlh57zyzvk9aslxgvqnhan72sxp4ish5d58czfnb0lbswn";
+        sha256 = "0b0vcb8pvg03cmq9sg5b94a0p05bp1rc6m6dvc7qp9n813zkjdym";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6796,9 +6797,9 @@ rec {
       };
       "wasm-bindgen-shared" = rec {
         crateName = "wasm-bindgen-shared";
-        version = "0.2.72";
+        version = "0.2.73";
         edition = "2018";
-        sha256 = "1yjzil4mndy1bzvm1xr1pbmw86ianjzhp9pa8sin0jgvjr38y55p";
+        sha256 = "12a4kq5wvy3znkqlqn6ib25ips1k9apxjpknpca3s8xacsp479fr";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6806,9 +6807,9 @@ rec {
       };
       "web-sys" = rec {
         crateName = "web-sys";
-        version = "0.3.49";
+        version = "0.3.50";
         edition = "2018";
-        sha256 = "0413s7f96k5xdk55cpap04warrfaz89p4xs6dqzw1b2x1zbikzjr";
+        sha256 = "1gl1akzrzprc3hc16h1lcai2f3dm1xkr6cvd8ihqiv4g91zda1d9";
         authors = [
           "The wasm-bindgen Developers"
         ];
