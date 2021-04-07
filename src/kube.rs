@@ -288,7 +288,7 @@ pub enum KubeError {
 
 impl std::convert::From<exec::ExecErrorInfo> for KubeError {
     fn from(err: ExecErrorInfo) -> Self {
-        log::error("Failed to exec kubectl command", (&err).to_log_data());
+        log::error("Failed to exec kubectl command", &err);
         KubeError::Exec
     }
 }

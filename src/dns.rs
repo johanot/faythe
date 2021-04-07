@@ -121,7 +121,7 @@ impl From<std::string::FromUtf8Error> for DNSError {
 
 impl std::convert::From<ExecErrorInfo> for DNSError {
     fn from(err: ExecErrorInfo) -> Self {
-        log::error("Failed to exec dns command", (&err).to_log_data());
+        log::error("Failed to exec dns command", &err);
         DNSError::Exec(err)
     }
 }
