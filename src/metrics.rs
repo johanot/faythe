@@ -43,7 +43,7 @@ pub fn new_event(cert_name: &str, event_type: MetricsType) {
 #[tokio::main]
 pub async fn serve(port: u16) {
   let addr = ([0, 0, 0, 0], port).into();
-  log::event(&format!("starting metrics server on port: {}", port));
+  log::info(&format!("starting metrics server on port: {}", port));
 
   render_prometheus(addr, MyOptions::default(), |_request, _options| {
     async move {

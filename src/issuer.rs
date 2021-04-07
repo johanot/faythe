@@ -30,7 +30,7 @@ pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
     let mut queue: VecDeque<IssueOrder> = VecDeque::new();
     RESOLVERS.with(|r| r.write().unwrap().inner = init_resolvers(&faythe_config));
 
-    log::event("processing-started");
+    log::info("processing-started");
     loop {
         let res = rx.try_recv();
         match res {
@@ -39,7 +39,7 @@ pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
                     match setup_challenge(&faythe_config, &cert_spec) {
                         Ok(order) => queue.push_back(order),
                         Err(e) => {
-                            log::event(format!("failed to setup challenge for host: {host}, error: {error:?}", host = cert_spec.cn, error = e).as_str());
+                            log::info(format!("failed to setup challenge for host: {host}, error: {error:?}", host = cert_spec.cn, error = e).as_str());
                             metrics::new_event(&cert_spec.name, MetricsType::Failure);
                         }
                     };
@@ -53,8 +53,8 @@ pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
 
         let queue_check = check_queue(&mut queue);
         if queue_check.is_err() {
-            log::event("check queue err");
-            log::event(&format!("{:?}", queue_check));
+            log::info("check queue err");
+            log::info(&format!("{:?}", queue_check));
         }
         thread::sleep(Duration::from_millis(5000));
     }
@@ -111,7 +111,7 @@ fn validate_challenge(order: &IssueOrder) -> Result<(), IssuerError> {
 
         RESOLVERS.with(|r| -> Result<(), DNSError> {
             // TODO: Proper retry logic
-            log::event("Validating internally after 20s");
+            log::info("Validating internally after 20s");
 
             log::data("Validating auth_dns_servers internally", &log_data);
             for d in &order.auth_dns_servers {

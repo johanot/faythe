@@ -24,7 +24,7 @@ use crate::metrics;
 use crate::metrics::MetricsType;
 
 pub fn monitor_k8s(config: ConfigContainer, tx: Sender<CertSpec>) {
-    log::event("k8s monitoring-started");
+    log::info("k8s monitoring-started");
     let monitor_config = config.get_kube_monitor_config().unwrap();
     loop {
         let _ = || -> Result<(), KubeError> {
@@ -38,7 +38,7 @@ pub fn monitor_k8s(config: ConfigContainer, tx: Sender<CertSpec>) {
 }
 
 pub fn monitor_files(config: ConfigContainer, tx: Sender<CertSpec>) {
-    log::event("file monitoring-started");
+    log::info("file monitoring-started");
     let monitor_config = config.get_file_monitor_config().unwrap();
     loop {
         let _ = || -> Result<(), FileError> {
