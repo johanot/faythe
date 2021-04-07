@@ -13,12 +13,10 @@ use crate::config::{FaytheConfig, ConfigContainer, MonitorConfig};
 
 mod common;
 mod config;
-mod exec;
 mod monitor;
 mod issuer;
 mod kube;
 mod file;
-mod log;
 mod dns;
 mod metrics;
 

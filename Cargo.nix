@@ -521,6 +521,53 @@ rec {
           "rustc-dep-of-std" = [ "core" "compiler_builtins" ];
         };
       };
+      "chrono" = rec {
+        crateName = "chrono";
+        version = "0.4.19";
+        edition = "2015";
+        sha256 = "0wyfl6c00vhfl562spnfcna3zkw8jqvcp652m9iskhl8j26dc2k7";
+        authors = [
+          "Kang Seonghoon <public+rust@mearie.org>"
+          "Brandon W Maister <quodlibetor@gmail.com>"
+        ];
+        dependencies = [
+          {
+            name = "libc";
+            packageId = "libc";
+            optional = true;
+          }
+          {
+            name = "num-integer";
+            packageId = "num-integer";
+            usesDefaultFeatures = false;
+          }
+          {
+            name = "num-traits";
+            packageId = "num-traits";
+            usesDefaultFeatures = false;
+          }
+          {
+            name = "time";
+            packageId = "time";
+            optional = true;
+          }
+          {
+            name = "winapi";
+            packageId = "winapi 0.3.9";
+            optional = true;
+            target = { target, features }: (target."windows" or false);
+            features = [ "std" "minwinbase" "minwindef" "timezoneapi" ];
+          }
+        ];
+        features = {
+          "clock" = [ "libc" "std" "winapi" ];
+          "default" = [ "clock" "std" "oldtime" ];
+          "oldtime" = [ "time" ];
+          "unstable-locales" = [ "pure-rust-locales" "alloc" ];
+          "wasmbind" = [ "wasm-bindgen" "js-sys" ];
+        };
+        resolvedDefaultFeatures = [ "clock" "default" "libc" "oldtime" "std" "time" "winapi" ];
+      };
       "clap" = rec {
         crateName = "clap";
         version = "2.33.3";
@@ -921,6 +968,61 @@ rec {
         ];
 
       };
+      "dbc-rust-modules" = rec {
+        crateName = "dbc-rust-modules";
+        version = "0.1.0";
+        edition = "2018";
+        workspace_member = null;
+        src = pkgs.fetchgit {
+          url = "https://github.com/dbcdk/rust-modules";
+          rev = "60e5be137e6de19f2189e2bdaf9ed70bbd49d886";
+          sha256 = "18hs085hnsvsmxzhrg7gqknifklmlwnf9cprkkqv8f746b7jn0qm";
+        };
+        dependencies = [
+          {
+            name = "chrono";
+            packageId = "chrono";
+            optional = true;
+          }
+          {
+            name = "erased-serde";
+            packageId = "erased-serde";
+            optional = true;
+          }
+          {
+            name = "once_cell";
+            packageId = "once_cell";
+            optional = true;
+          }
+          {
+            name = "serde";
+            packageId = "serde";
+            optional = true;
+          }
+          {
+            name = "serde_derive";
+            packageId = "serde_derive";
+            optional = true;
+          }
+          {
+            name = "serde_json";
+            packageId = "serde_json";
+            optional = true;
+          }
+          {
+            name = "uuid";
+            packageId = "uuid 0.8.2";
+            optional = true;
+            features = [ "v4" ];
+          }
+        ];
+        features = {
+          "default" = [ "exec" "log" ];
+          "exec" = [ "serde" "serde_derive" "serde_json" ];
+          "log" = [ "chrono" "erased-serde" "once_cell" "serde" "serde_derive" "serde_json" "uuid" ];
+        };
+        resolvedDefaultFeatures = [ "chrono" "default" "erased-serde" "exec" "log" "once_cell" "serde" "serde_derive" "serde_json" "uuid" ];
+      };
       "dtoa" = rec {
         crateName = "dtoa";
         version = "0.4.8";
@@ -1032,6 +1134,28 @@ rec {
         };
         resolvedDefaultFeatures = [ "atty" "default" "humantime" "regex" "termcolor" ];
       };
+      "erased-serde" = rec {
+        crateName = "erased-serde";
+        version = "0.3.13";
+        edition = "2018";
+        sha256 = "033pma9qgrhk993hya43977z3q9if4vslnj6r1aj9yn1ihd9fr84";
+        authors = [
+          "David Tolnay <dtolnay@gmail.com>"
+        ];
+        dependencies = [
+          {
+            name = "serde";
+            packageId = "serde";
+            usesDefaultFeatures = false;
+          }
+        ];
+        features = {
+          "alloc" = [ "serde/alloc" ];
+          "default" = [ "std" ];
+          "std" = [ "serde/std" ];
+        };
+        resolvedDefaultFeatures = [ "default" "std" ];
+      };
       "failure" = rec {
         crateName = "failure";
         version = "0.1.8";
@@ -1112,6 +1236,10 @@ rec {
           {
             name = "clap";
             packageId = "clap";
+          }
+          {
+            name = "dbc-rust-modules";
+            packageId = "dbc-rust-modules";
           }
           {
             name = "env_logger";
@@ -4465,7 +4593,7 @@ rec {
           }
           {
             name = "uuid";
-            packageId = "uuid";
+            packageId = "uuid 0.7.4";
             features = [ "v4" ];
           }
           {
@@ -6474,7 +6602,7 @@ rec {
         ];
 
       };
-      "uuid" = rec {
+      "uuid 0.7.4" = rec {
         crateName = "uuid";
         version = "0.7.4";
         edition = "2015";
@@ -6504,6 +6632,35 @@ rec {
           "wasm-bindgen" = [ "rand/wasm-bindgen" ];
         };
         resolvedDefaultFeatures = [ "default" "rand" "std" "v4" ];
+      };
+      "uuid 0.8.2" = rec {
+        crateName = "uuid";
+        version = "0.8.2";
+        edition = "2018";
+        sha256 = "1dy4ldcp7rnzjy56dxh7d2sgrcvn4q77y0a8r0a48946h66zjp5w";
+        authors = [
+          "Ashley Mannix<ashleymannix@live.com.au>"
+          "Christopher Armstrong"
+          "Dylan DPC<dylan.dpc@gmail.com>"
+          "Hunar Roop Kahlon<hunar.roop@gmail.com>"
+        ];
+        dependencies = [
+          {
+            name = "getrandom";
+            packageId = "getrandom 0.2.2";
+            optional = true;
+          }
+        ];
+        features = {
+          "default" = [ "std" ];
+          "guid" = [ "winapi" ];
+          "stdweb" = [ "getrandom" "getrandom/js" ];
+          "v3" = [ "md5" ];
+          "v4" = [ "getrandom" ];
+          "v5" = [ "sha1" ];
+          "wasm-bindgen" = [ "getrandom" "getrandom/js" ];
+        };
+        resolvedDefaultFeatures = [ "default" "getrandom" "std" "v4" ];
       };
       "vcpkg" = rec {
         crateName = "vcpkg";
