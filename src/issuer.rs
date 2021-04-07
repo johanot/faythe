@@ -44,7 +44,7 @@ pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
                         }
                     };
                 } else {
-                    log::info("similar cert-spec is already in the issuing queue", &cert_spec)
+                    log::data("similar cert-spec is already in the issuing queue", &cert_spec)
                 }
             },
             Err(TryRecvError::Disconnected) => panic!("channel disconnected"),
@@ -80,12 +80,12 @@ fn check_queue(queue: &mut VecDeque<IssueOrder>) -> Result<(), IssuerError> {
                 },
                 Err(e) => match e {
                     IssuerError::DNS(dns::DNSError::WrongAnswer(domain)) => {
-                        log::info("Wrong DNS answer", &domain);
+                        log::data("Wrong DNS answer", &domain);
                         // Retry for two hours. Propagation on gratisdns is pretty slow.
                         if time::now_utc() < order.challenge_time + time::Duration::minutes(120) {
                             queue.push_back(order);
                         } else {
-                            log::info("giving up validating dns challenge for spec", &order.spec);
+                            log::data("giving up validating dns challenge for spec", &order.spec);
                             metrics::new_event(&order.spec.name, MetricsType::Failure);
                         }
                         Ok(())
@@ -113,17 +113,17 @@ fn validate_challenge(order: &IssueOrder) -> Result<(), IssuerError> {
             // TODO: Proper retry logic
             log::event("Validating internally after 20s");
 
-            log::info("Validating auth_dns_servers internally", &log_data);
+            log::data("Validating auth_dns_servers internally", &log_data);
             for d in &order.auth_dns_servers {
                 dns::query(r.read().unwrap().get(&d).unwrap(), &domain, &proof)?;
             }
-            log::info("Validating val_dns_servers internally", &log_data);
+            log::data("Validating val_dns_servers internally", &log_data);
             for d in &order.val_dns_servers {
                 dns::query(r.read().unwrap().get(&d).unwrap(), &domain, &proof)?;
             }
             Ok(())
         })?;
-        log::info("Asking LE to validate", &log_data);
+        log::data("Asking LE to validate", &log_data);
         challenge.validate(5000)?;
     }
     Ok(())
@@ -186,7 +186,7 @@ struct IssueOrder {
 
 impl IssueOrder {
     fn issue(&self) -> Result<(), IssuerError> {
-        log::info("Issuing", &self.spec);
+        log::data("Issuing", &self.spec);
 
         let pkey_pri = create_rsa_key(2048);
         let ord_csr = match self.inner.confirm_validations() {

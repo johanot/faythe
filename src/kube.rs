@@ -60,7 +60,7 @@ pub fn get_secrets(config: &KubeMonitorConfig) -> Result<HashMap<CertName, Secre
                 key: key_raw
             });
         } else {
-            log::info("dropping secret due to invalid cert", &name);
+            log::data("dropping secret due to invalid cert", &name);
         }
     };
 
