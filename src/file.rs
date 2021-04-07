@@ -30,7 +30,7 @@ pub fn read_certs(config: &FileMonitorConfig) -> Result<HashMap<CertName, FileCe
                 cert: cert.unwrap()
             });
         } else {
-            log::info("dropping secret due to invalid cert", &names.cert);
+            log::data("dropping secret due to invalid cert", &names.cert);
         }
     }
     if config.prune {
@@ -48,7 +48,7 @@ fn prune(config: &FileMonitorConfig, wanted_files: &HashSet<PathBuf>) {
     for f in unwanted {
         let path = f.path();
         match fs::remove_file(&path) {
-            Ok(_) => log::info("Pruned file", &path),
+            Ok(_) => log::data("Pruned file", &path),
             Err(e) => log::error(&format!("failed to prune file: {}", &path.display()), &e)
         }
     }
@@ -65,7 +65,7 @@ fn prune(config: &FileMonitorConfig, wanted_files: &HashSet<PathBuf>) {
         let path = d.path();
         if path.read_dir().unwrap().next().is_none() {
             match fs::remove_dir(&path) {
-                Ok(_) => log::info("Removed directory", &path),
+                Ok(_) => log::data("Removed directory", &path),
                 Err(e) => log::error(&format!("failed to remove directory: {}", &path.display()), &e)
             }
         }
@@ -234,7 +234,7 @@ pub fn persist(spec: &FilePersistSpec, cert: &Certificate) -> Result<(), Persist
 }
 
 fn chgrp(group: &str, path: &Path) -> Result<(), PersistError> {
-    log::info("changing group for", &path.as_os_str());
+    log::data("changing group for", &path.as_os_str());
 
     let mut cmd = Command::new("chgrp");
     match cmd.arg("-R")

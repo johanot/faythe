@@ -60,7 +60,7 @@ pub fn get_secrets(config: &KubeMonitorConfig) -> Result<HashMap<CertName, Secre
                 key: key_raw
             });
         } else {
-            log::info("dropping secret due to invalid cert", &name);
+            log::data("dropping secret due to invalid cert", &name);
         }
     };
 
@@ -288,7 +288,7 @@ pub enum KubeError {
 
 impl std::convert::From<exec::ExecErrorInfo> for KubeError {
     fn from(err: ExecErrorInfo) -> Self {
-        log::error("Failed to exec kubectl command", (&err).to_log_data());
+        log::error("Failed to exec kubectl command", &err);
         KubeError::Exec
     }
 }

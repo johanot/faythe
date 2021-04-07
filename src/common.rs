@@ -19,7 +19,7 @@ use std::collections::HashSet;
 
 pub type CertName = String;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct CertSpec {
     pub name: CertName,
     pub cn: DNSName,
@@ -155,7 +155,7 @@ pub trait Persistable {
     fn persist(&self, cert: Certificate) -> Result<(), PersistError>;
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct KubernetesPersistSpec {
     pub name: String,
     pub namespace: String,
@@ -163,13 +163,13 @@ pub struct KubernetesPersistSpec {
     pub host_label_value: String
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct FilePersistSpec {
     pub private_key_path: PathBuf,
     pub public_key_path: PathBuf
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub enum PersistSpec {
     KUBERNETES(KubernetesPersistSpec),
     FILE(FilePersistSpec),
@@ -278,7 +278,7 @@ impl Cert {
             _ => state
         };
 
-        log::info(&format!("State for cert: {}", &self.cn), &state);
+        log::data(&format!("State for cert: {}", &self.cn), &state);
         state
     }
 
@@ -294,7 +294,7 @@ pub enum PersistError {
     File(FileError)
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub enum CertState {
     Empty,
     ParseError,

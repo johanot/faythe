@@ -11,14 +11,14 @@ use std::sync::mpsc;
 use crate::common::CertSpec;
 use crate::config::{FaytheConfig, ConfigContainer, MonitorConfig};
 
+use dbc_rust_modules::{log, exec};
+
 mod common;
 mod config;
-mod exec;
 mod monitor;
 mod issuer;
 mod kube;
 mod file;
-mod log;
 mod dns;
 mod metrics;
 

@@ -30,7 +30,7 @@ pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
     let mut queue: VecDeque<IssueOrder> = VecDeque::new();
     RESOLVERS.with(|r| r.write().unwrap().inner = init_resolvers(&faythe_config));
 
-    log::event("processing-started");
+    log::info("processing-started");
     loop {
         let res = rx.try_recv();
         match res {
@@ -39,12 +39,12 @@ pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
                     match setup_challenge(&faythe_config, &cert_spec) {
                         Ok(order) => queue.push_back(order),
                         Err(e) => {
-                            log::event(format!("failed to setup challenge for host: {host}, error: {error:?}", host = cert_spec.cn, error = e).as_str());
+                            log::info(format!("failed to setup challenge for host: {host}, error: {error:?}", host = cert_spec.cn, error = e).as_str());
                             metrics::new_event(&cert_spec.name, MetricsType::Failure);
                         }
                     };
                 } else {
-                    log::info("similar cert-spec is already in the issuing queue", &cert_spec)
+                    log::data("similar cert-spec is already in the issuing queue", &cert_spec)
                 }
             },
             Err(TryRecvError::Disconnected) => panic!("channel disconnected"),
@@ -53,8 +53,8 @@ pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
 
         let queue_check = check_queue(&mut queue);
         if queue_check.is_err() {
-            log::event("check queue err");
-            log::event(&format!("{:?}", queue_check));
+            log::info("check queue err");
+            log::info(&format!("{:?}", queue_check));
         }
         thread::sleep(Duration::from_millis(5000));
     }
@@ -80,12 +80,12 @@ fn check_queue(queue: &mut VecDeque<IssueOrder>) -> Result<(), IssuerError> {
                 },
                 Err(e) => match e {
                     IssuerError::DNS(dns::DNSError::WrongAnswer(domain)) => {
-                        log::info("Wrong DNS answer", &domain);
+                        log::data("Wrong DNS answer", &domain);
                         // Retry for two hours. Propagation on gratisdns is pretty slow.
                         if time::now_utc() < order.challenge_time + time::Duration::minutes(120) {
                             queue.push_back(order);
                         } else {
-                            log::info("giving up validating dns challenge for spec", &order.spec);
+                            log::data("giving up validating dns challenge for spec", &order.spec);
                             metrics::new_event(&order.spec.name, MetricsType::Failure);
                         }
                         Ok(())
@@ -111,19 +111,19 @@ fn validate_challenge(order: &IssueOrder) -> Result<(), IssuerError> {
 
         RESOLVERS.with(|r| -> Result<(), DNSError> {
             // TODO: Proper retry logic
-            log::event("Validating internally after 20s");
+            log::info("Validating internally after 20s");
 
-            log::info("Validating auth_dns_servers internally", &log_data);
+            log::data("Validating auth_dns_servers internally", &log_data);
             for d in &order.auth_dns_servers {
                 dns::query(r.read().unwrap().get(&d).unwrap(), &domain, &proof)?;
             }
-            log::info("Validating val_dns_servers internally", &log_data);
+            log::data("Validating val_dns_servers internally", &log_data);
             for d in &order.val_dns_servers {
                 dns::query(r.read().unwrap().get(&d).unwrap(), &domain, &proof)?;
             }
             Ok(())
         })?;
-        log::info("Asking LE to validate", &log_data);
+        log::data("Asking LE to validate", &log_data);
         challenge.validate(5000)?;
     }
     Ok(())
@@ -186,7 +186,7 @@ struct IssueOrder {
 
 impl IssueOrder {
     fn issue(&self) -> Result<(), IssuerError> {
-        log::info("Issuing", &self.spec);
+        log::data("Issuing", &self.spec);
 
         let pkey_pri = create_rsa_key(2048);
         let ord_csr = match self.inner.confirm_validations() {

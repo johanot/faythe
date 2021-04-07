@@ -24,7 +24,7 @@ use crate::metrics;
 use crate::metrics::MetricsType;
 
 pub fn monitor_k8s(config: ConfigContainer, tx: Sender<CertSpec>) {
-    log::event("k8s monitoring-started");
+    log::info("k8s monitoring-started");
     let monitor_config = config.get_kube_monitor_config().unwrap();
     loop {
         let _ = || -> Result<(), KubeError> {
@@ -38,7 +38,7 @@ pub fn monitor_k8s(config: ConfigContainer, tx: Sender<CertSpec>) {
 }
 
 pub fn monitor_files(config: ConfigContainer, tx: Sender<CertSpec>) {
-    log::event("file monitoring-started");
+    log::info("file monitoring-started");
     let monitor_config = config.get_file_monitor_config().unwrap();
     loop {
         let _ = || -> Result<(), FileError> {
@@ -64,16 +64,16 @@ fn inspect<CS, VV>(config: &ConfigContainer, tx: &Sender<CertSpec>, objects: &Ve
                 let should_issue = match certs.get(&spec.name) {
                     Some(cert) => !cert.is_valid(&faythe_config, &spec),
                     None => {
-                        log::info("no matching cert found for, first-time issue", &spec.name);
+                        log::data("no matching cert found for, first-time issue", &spec.name);
                         true
                     }
                 };
 
                 match o.touch(&config) {
                     Ok(_) => {
-                        log::info("touched", &spec.name); //TODO: improve logging
+                        log::data("touched", &spec.name); //TODO: improve logging
                         if should_issue {
-                            log::info("(re-)issuing", &spec.name); //TODO: improve logging
+                            log::data("(re-)issuing", &spec.name); //TODO: improve logging
                             tx.send(spec.to_owned()).unwrap()
                         }
                     },
