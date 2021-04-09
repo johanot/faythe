@@ -1913,7 +1913,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.3";
+            packageId = "http 0.2.4";
           }
           {
             name = "indexmap";
@@ -2063,11 +2063,11 @@ rec {
         ];
 
       };
-      "http 0.2.3" = rec {
+      "http 0.2.4" = rec {
         crateName = "http";
-        version = "0.2.3";
+        version = "0.2.4";
         edition = "2018";
-        sha256 = "0iq75yw9i73kzm43fw82z2mvpsnlkgvfmaf8qc42cyfc95scsibj";
+        sha256 = "04fcnqbnqmrsnphz5lbca2plascsm8bib5csd518bqj7qyd8qzjj";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
           "Carl Lerche <me@carllerche.com>"
@@ -2135,16 +2135,16 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.3";
+            packageId = "http 0.2.4";
           }
         ];
 
       };
       "httparse" = rec {
         crateName = "httparse";
-        version = "1.3.5";
+        version = "1.3.6";
         edition = "2015";
-        sha256 = "14anx05yjiwxd72kvmhxi085zvgl6m9r1k1csl9v6q1i5jzalp31";
+        sha256 = "12cmrxq1vdgx4z93r68l3q8249w9qwjx89wsrxsc2gnrp6awjddw";
         authors = [
           "Sean McArthur <sean@seanmonstar.com>"
         ];
@@ -2329,7 +2329,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.3";
+            packageId = "http 0.2.4";
           }
           {
             name = "http-body";
@@ -2688,9 +2688,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.92";
+        version = "0.2.93";
         edition = "2015";
-        sha256 = "0537k32dhh6248ajrhmibjbqf49crm8235hg9hs9pfxgkw35bn2n";
+        sha256 = "0hcd6xzln31gmi8bpydrbikgq3pj7s9cnqaslqd28nqhyrmzd1ck";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3742,7 +3742,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.3";
+            packageId = "http 0.2.4";
           }
           {
             name = "hyper";
@@ -5313,9 +5313,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.68";
+        version = "1.0.69";
         edition = "2018";
-        sha256 = "11zxx242fk12l3hxfhfvas96p2xmbbpxc5j7mkpgi8laxp9mvq9w";
+        sha256 = "1ywgmchw8cxsafmpvb415j89v46y88c0gk0bi4vcc74bpp39kzj8";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -5533,9 +5533,9 @@ rec {
       };
       "tinyvec" = rec {
         crateName = "tinyvec";
-        version = "1.1.1";
+        version = "1.2.0";
         edition = "2018";
-        sha256 = "08qhf0a9vxf85bj1hd38i8qzwiwm6v4vvwd11k7c728f59bwlz1i";
+        sha256 = "0hn3fkpb9nca9nf9znz2dxlp4ccv37hnbh67aczpzpmpbgq20ljv";
         authors = [
           "Lokathor <zefria@gmail.com>"
         ];
@@ -6457,9 +6457,9 @@ rec {
       };
       "unicode-bidi" = rec {
         crateName = "unicode-bidi";
-        version = "0.3.4";
-        edition = "2015";
-        sha256 = "1malx8ljgm7v1gbaazkn7iicy5wj0bwcyadj3l727a38ch6bvwj9";
+        version = "0.3.5";
+        edition = "2018";
+        sha256 = "1q07h5kp9jszwf0bkrpa1v5wmv04dv920x3w2xy6pjdikchbxf7f";
         libName = "unicode_bidi";
         authors = [
           "The Servo Project Developers"
