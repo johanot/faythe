@@ -220,9 +220,9 @@ rec {
       };
       "async-trait" = rec {
         crateName = "async-trait";
-        version = "0.1.48";
+        version = "0.1.49";
         edition = "2018";
-        sha256 = "1pvaay9kpq90pgckbzy53qhxdhsyl4w3c5ac814jqwqhirs5dsin";
+        sha256 = "0j3vv30ky9mfxaxjjw6bvf8b40jp892y2fybgqg5scybgk7555jq";
         procMacro = true;
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
@@ -1451,11 +1451,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "use_std" "with-deprecated" ];
       };
-      "futures 0.3.13" = rec {
+      "futures 0.3.14" = rec {
         crateName = "futures";
-        version = "0.3.13";
+        version = "0.3.14";
         edition = "2018";
-        sha256 = "1h8lx9iz3k43lwr63gn49nsfph09qkvnlh3nm0xmj78i35rncmbz";
+        sha256 = "0lyjglxqdm91wdy646x9qrys9wfpk9g93ydzl4yasng48lsq3md9";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1512,9 +1512,9 @@ rec {
       };
       "futures-channel" = rec {
         crateName = "futures-channel";
-        version = "0.3.13";
+        version = "0.3.14";
         edition = "2018";
-        sha256 = "0f99mnrg7p66gn0f4zwkh53ri0cc7s7rsb4wnsddnmwvhggx4bcc";
+        sha256 = "09gc57djz490yljh3ihvgxfwx3v81v7y0q9h06k3g4995ajwcyff";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1543,9 +1543,9 @@ rec {
       };
       "futures-core" = rec {
         crateName = "futures-core";
-        version = "0.3.13";
+        version = "0.3.14";
         edition = "2018";
-        sha256 = "151c26lzgmk3y67bl407vlhr4hl76ydaa4fzqfyn43mzz9r6lj8m";
+        sha256 = "058qmyvpvhzkw9aykm6ls20k3dsy4jaafdqs1xjh3jm6vp3d3309";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1583,9 +1583,9 @@ rec {
       };
       "futures-io" = rec {
         crateName = "futures-io";
-        version = "0.3.13";
+        version = "0.3.14";
         edition = "2018";
-        sha256 = "0ndshyr6vgnx0z421h2asd7jkhy2cwqj5ha1a8pw613pqmjjq76p";
+        sha256 = "016b6pfcsaavwcpx22psh6n36s13ymc23nqghcxc188fncgilnin";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1596,9 +1596,9 @@ rec {
       };
       "futures-macro" = rec {
         crateName = "futures-macro";
-        version = "0.3.13";
+        version = "0.3.14";
         edition = "2018";
-        sha256 = "1dxzgz1sb0qin9nqsdrqc1aky52j3n9fnarcz2db77qkllb5hh7a";
+        sha256 = "12xvq5rsgi6jyynbxkrvbf1j620jy8xvmrqx9zmpvkc2l4rng336";
         procMacro = true;
         authors = [
           "Taylor Cramer <cramertj@google.com>"
@@ -1627,9 +1627,9 @@ rec {
       };
       "futures-sink" = rec {
         crateName = "futures-sink";
-        version = "0.3.13";
+        version = "0.3.14";
         edition = "2018";
-        sha256 = "1cwbbd9dik0p54d53v4kd28lgj2a9bxgprp8ypabfhaqk2c4sxc5";
+        sha256 = "08vc88majhvizpxpr44h0c240k2ag7is99v153cf6pam7i1jjmjw";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1641,9 +1641,9 @@ rec {
       };
       "futures-task" = rec {
         crateName = "futures-task";
-        version = "0.3.13";
+        version = "0.3.14";
         edition = "2018";
-        sha256 = "106zr4rvl3w2h9iibljh4ba0g7pxq7hwyvvscq1fcpn127r9w67s";
+        sha256 = "1g41ymlqvfjm7l1x4w2xamgwcpnh9gvh5xx1v6k3nvq7jl8aayms";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1655,9 +1655,9 @@ rec {
       };
       "futures-util" = rec {
         crateName = "futures-util";
-        version = "0.3.13";
+        version = "0.3.14";
         edition = "2018";
-        sha256 = "1lcn7nbar6gb47a2lvmjdarw5g6d78jf2hqsf3rddy7diamwf4hq";
+        sha256 = "09f0x4nisa9m9rgdcnh09yv7h4i7whbdidm6y0kkkwk09pall51w";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -4389,11 +4389,11 @@ rec {
         ];
 
       };
-      "redox_syscall 0.2.5" = rec {
+      "redox_syscall 0.2.6" = rec {
         crateName = "redox_syscall";
-        version = "0.2.5";
+        version = "0.2.6";
         edition = "2018";
-        sha256 = "1n878lpw577avdr5dzbkil02xwbx0a57mr2r3dcnnkz28i71wd4l";
+        sha256 = "0hchadrvdfvsrxg7zxz808nj521bnzq552apgs753sycbi5k2w42";
         libName = "syscall";
         authors = [
           "Jeremy Soller <jackpot51@gmail.com>"
@@ -4897,9 +4897,9 @@ rec {
       };
       "sct" = rec {
         crateName = "sct";
-        version = "0.6.0";
+        version = "0.6.1";
         edition = "2018";
-        sha256 = "0g4dz7las43kcpi9vqv9c6l1afjkdv3g3w3s7d2w7a7w77wjl173";
+        sha256 = "1ki8qa7yf4d9i4ynsfvwwkpnnqw0m8ayx0jva4w9zrp0k0wbhqmk";
         authors = [
           "Joseph Birr-Pixton <jpixton@gmail.com>"
         ];
@@ -5407,7 +5407,7 @@ rec {
           }
           {
             name = "redox_syscall";
-            packageId = "redox_syscall 0.2.5";
+            packageId = "redox_syscall 0.2.6";
             target = { target, features }: (target."os" == "redox");
           }
           {
@@ -6261,7 +6261,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.3.13";
+            packageId = "futures 0.3.14";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -6302,7 +6302,7 @@ rec {
         devDependencies = [
           {
             name = "futures";
-            packageId = "futures 0.3.13";
+            packageId = "futures 0.3.14";
             usesDefaultFeatures = false;
             features = [ "std" "executor" ];
           }
@@ -6340,7 +6340,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.3.13";
+            packageId = "futures 0.3.14";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -6390,7 +6390,7 @@ rec {
         devDependencies = [
           {
             name = "futures";
-            packageId = "futures 0.3.13";
+            packageId = "futures 0.3.14";
             usesDefaultFeatures = false;
             features = [ "std" "executor" ];
           }
