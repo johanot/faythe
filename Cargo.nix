@@ -8,7 +8,7 @@
 , lib ? pkgs.lib
 , stdenv ? pkgs.stdenv
 , buildRustCrateForPkgs ? if buildRustCrate != null
-    then lib.warn "`buildRustCrate` is deprecated, use `buildRustCrateForPkgs` instead" (_: buildRustCrate)
+    then lib.warn "crate2nix: Passing `buildRustCrate` as argument to Cargo.nix is deprecated. If you don't customize `buildRustCrate`, replace `callPackage ./Cargo.nix {}` by `import ./Cargo.nix { inherit pkgs; }`, and if you need to customize `buildRustCrate`, use `buildRustCrateForPkgs` instead." (_: buildRustCrate)
     else pkgs: pkgs.buildRustCrate
   # Deprecated
 , buildRustCrate ? null
@@ -220,9 +220,9 @@ rec {
       };
       "async-trait" = rec {
         crateName = "async-trait";
-        version = "0.1.49";
+        version = "0.1.50";
         edition = "2018";
-        sha256 = "0j3vv30ky9mfxaxjjw6bvf8b40jp892y2fybgqg5scybgk7555jq";
+        sha256 = "08m7xim7dvcjw5cx2ryz3wndxc0vib2s02qrvabxvg2cpd5yi60b";
         procMacro = true;
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
@@ -295,9 +295,9 @@ rec {
       };
       "backtrace" = rec {
         crateName = "backtrace";
-        version = "0.3.56";
+        version = "0.3.57";
         edition = "2018";
-        sha256 = "1g716jmrik0fx29va3js4gw8hwk5jlsmvqaa9ryp1c9qyh07c4cx";
+        sha256 = "13fb5pdgzd68izzb7vg1kf14kpc9yn079yxkc8n292x6kcxj1vbq";
         authors = [
           "The Rust Project Developers"
         ];
@@ -975,8 +975,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "60e5be137e6de19f2189e2bdaf9ed70bbd49d886";
-          sha256 = "18hs085hnsvsmxzhrg7gqknifklmlwnf9cprkkqv8f746b7jn0qm";
+          rev = "1624c3812889fb60581864d7489f932d07303dbf";
+          sha256 = "1381408kqh3gw1708rgqpz32944n18rab3731phqyib12mn017nz";
         };
         dependencies = [
           {
@@ -2142,9 +2142,9 @@ rec {
       };
       "httparse" = rec {
         crateName = "httparse";
-        version = "1.3.6";
+        version = "1.4.0";
         edition = "2015";
-        sha256 = "12cmrxq1vdgx4z93r68l3q8249w9qwjx89wsrxsc2gnrp6awjddw";
+        sha256 = "0ds4grlxbbqnji8c30gr3yhrnhnc7mf31izxqa3lhxn9dw6y872a";
         authors = [
           "Sean McArthur <sean@seanmonstar.com>"
         ];
@@ -2522,11 +2522,11 @@ rec {
         ];
 
       };
-      "idna 0.2.2" = rec {
+      "idna 0.2.3" = rec {
         crateName = "idna";
-        version = "0.2.2";
+        version = "0.2.3";
         edition = "2018";
-        sha256 = "08ccsjp86296ppm4v1m9948vcwwiwdzk7b572j1k8gf2d5frm0l9";
+        sha256 = "1y7ca2w5qp9msgl57n03zqp78gq1bk2crqzg6kv7a542mdphm2j1";
         authors = [
           "The rust-url developers"
         ];
@@ -3584,9 +3584,9 @@ rec {
       };
       "pin-project" = rec {
         crateName = "pin-project";
-        version = "1.0.6";
+        version = "1.0.7";
         edition = "2018";
-        sha256 = "19hva0wx1zm1v4n5vp4qdbljj6n9jpd7l63mwldfj1l8frclh5xw";
+        sha256 = "1964rh32hiy5v2ircli8wv8fxq9h2nkgfalda6j407040v0rql67";
         authors = [
           "Taiki Endo <te316e89@gmail.com>"
         ];
@@ -3601,9 +3601,9 @@ rec {
       };
       "pin-project-internal" = rec {
         crateName = "pin-project-internal";
-        version = "1.0.6";
+        version = "1.0.7";
         edition = "2018";
-        sha256 = "1ra9j3q9yiwz3agfmr07chrlz31dzqxlw91z10dysmp832ck5454";
+        sha256 = "0vs289my2262ziwxj60mnzr2k41ibga73z8yddah1dc34l9m1ja8";
         procMacro = true;
         authors = [
           "Taiki Endo <te316e89@gmail.com>"
@@ -3782,7 +3782,7 @@ rec {
         dependencies = [
           {
             name = "idna";
-            packageId = "idna 0.2.2";
+            packageId = "idna 0.2.3";
           }
           {
             name = "url";
@@ -4408,9 +4408,9 @@ rec {
       };
       "regex" = rec {
         crateName = "regex";
-        version = "1.4.5";
+        version = "1.4.6";
         edition = "2015";
-        sha256 = "06awg9164h7w4pmbchmj9pkrqn78sa8y252ijqk1pfmyvpn5cw4m";
+        sha256 = "0nf7gj6b7qzrq8b11srnwva2amx6b4v3lnrki1jxajspid0sy9ia";
         authors = [
           "The Rust Project Developers"
         ];
@@ -5201,13 +5201,16 @@ rec {
       };
       "slab" = rec {
         crateName = "slab";
-        version = "0.4.2";
+        version = "0.4.3";
         edition = "2015";
-        sha256 = "1y59xsa27jk84sxzswjk60xcjf8b4fm5960jwpznrrcmasyva4f1";
+        sha256 = "09v57dmy9gnfcj3c6gywp7wi09zywxf0ppj07w02hfvy38ysqwzi";
         authors = [
           "Carl Lerche <me@carllerche.com>"
         ];
-
+        features = {
+          "default" = [ "std" ];
+        };
+        resolvedDefaultFeatures = [ "default" "std" ];
       };
       "smallvec 0.6.14" = rec {
         crateName = "smallvec";
@@ -5313,9 +5316,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.69";
+        version = "1.0.70";
         edition = "2018";
-        sha256 = "1ywgmchw8cxsafmpvb415j89v46y88c0gk0bi4vcc74bpp39kzj8";
+        sha256 = "10r8z3bv25h1hmdfwn5drvd1zflfghsswxvgnj7anaw7ghq5yl5r";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -6267,7 +6270,7 @@ rec {
           }
           {
             name = "idna";
-            packageId = "idna 0.2.2";
+            packageId = "idna 0.2.3";
           }
           {
             name = "lazy_static";
@@ -6589,7 +6592,7 @@ rec {
           }
           {
             name = "idna";
-            packageId = "idna 0.2.2";
+            packageId = "idna 0.2.3";
           }
           {
             name = "matches";
@@ -6664,9 +6667,9 @@ rec {
       };
       "vcpkg" = rec {
         crateName = "vcpkg";
-        version = "0.2.11";
+        version = "0.2.12";
         edition = "2015";
-        sha256 = "1yvrd2b97j4hv5bfhcj3al0dpkbzkdsr6dclxqz3zqm50rhwl2xh";
+        sha256 = "0p9ypqvv55cq2rl0s7g5ca2bkvwn62cdrdb0hm8j0hd2crigznyb";
         authors = [
           "Jim McGrath <jimmc2@gmail.com>"
         ];
