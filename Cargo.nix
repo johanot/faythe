@@ -295,9 +295,9 @@ rec {
       };
       "backtrace" = rec {
         crateName = "backtrace";
-        version = "0.3.57";
+        version = "0.3.58";
         edition = "2018";
-        sha256 = "13fb5pdgzd68izzb7vg1kf14kpc9yn079yxkc8n292x6kcxj1vbq";
+        sha256 = "10jxl7xg8h17gigmvrg1dlsviwcscc45d4q0cyfzsi3bbmw5myw8";
         authors = [
           "The Rust Project Developers"
         ];
@@ -333,6 +333,12 @@ rec {
           {
             name = "rustc-demangle";
             packageId = "rustc-demangle";
+          }
+        ];
+        buildDependencies = [
+          {
+            name = "cc";
+            packageId = "cc";
           }
         ];
         features = {
@@ -2688,9 +2694,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.93";
+        version = "0.2.94";
         edition = "2015";
-        sha256 = "0hcd6xzln31gmi8bpydrbikgq3pj7s9cnqaslqd28nqhyrmzd1ck";
+        sha256 = "0phs3ivwq2hmwgwd9nwy3b5jbqcipbgr6pdmj3vj34xjsn54ly8q";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3393,9 +3399,9 @@ rec {
       };
       "openssl" = rec {
         crateName = "openssl";
-        version = "0.10.33";
+        version = "0.10.34";
         edition = "2018";
-        sha256 = "0xx5g2v2s9vna36f136ijv73baj0v4v7bphmk2igbzi35av7a456";
+        sha256 = "1j74rfaicl4n9ff25l01jdrnpiv9ixrp76qx1wy9g8ynd8l30y3d";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
         ];
@@ -3442,9 +3448,9 @@ rec {
       };
       "openssl-sys" = rec {
         crateName = "openssl-sys";
-        version = "0.9.61";
+        version = "0.9.62";
         edition = "2015";
-        sha256 = "0zr76vap4i3g379wx3c66mvvxw6y7lcgmq89gs1pds0r6lwm4dri";
+        sha256 = "1gb93fi4nqsq8jkjgdnqwqaxdzjs6niw7dq4sl47cbps8l6iclps";
         build = "build/main.rs";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
@@ -4389,11 +4395,11 @@ rec {
         ];
 
       };
-      "redox_syscall 0.2.6" = rec {
+      "redox_syscall 0.2.7" = rec {
         crateName = "redox_syscall";
-        version = "0.2.6";
+        version = "0.2.7";
         edition = "2018";
-        sha256 = "0hchadrvdfvsrxg7zxz808nj521bnzq552apgs753sycbi5k2w42";
+        sha256 = "1why6kw3mbilpnca2xmxn6qh8byiydvizq8i75imqdgphvjr5pc5";
         libName = "syscall";
         authors = [
           "Jeremy Soller <jackpot51@gmail.com>"
@@ -5316,9 +5322,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.70";
+        version = "1.0.71";
         edition = "2018";
-        sha256 = "10r8z3bv25h1hmdfwn5drvd1zflfghsswxvgnj7anaw7ghq5yl5r";
+        sha256 = "0wsk7p1havw4ngwm41d4kf0ihx1hjziby5v8mjr1g48g8z4lq65d";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -5410,7 +5416,7 @@ rec {
           }
           {
             name = "redox_syscall";
-            packageId = "redox_syscall 0.2.6";
+            packageId = "redox_syscall 0.2.7";
             target = { target, features }: (target."os" == "redox");
           }
           {
@@ -6528,12 +6534,13 @@ rec {
       };
       "unicode-xid" = rec {
         crateName = "unicode-xid";
-        version = "0.2.1";
+        version = "0.2.2";
         edition = "2015";
-        sha256 = "0r6mknipyy9vpz8mwmxvkx65ff2ha1n2pxqjj6f46lcn8yrhpzpp";
+        sha256 = "1wrkgcw557v311dkdb6n2hrix9dm2qdsb1zpw7pn79l03zb85jwc";
         authors = [
           "erick.tryzelaar <erick.tryzelaar@gmail.com>"
           "kwantam <kwantam@gmail.com>"
+          "Manish Goregaokar <manishsmail@gmail.com>"
         ];
         features = {
         };
