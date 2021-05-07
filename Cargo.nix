@@ -178,9 +178,9 @@ rec {
       };
       "aho-corasick" = rec {
         crateName = "aho-corasick";
-        version = "0.7.15";
-        edition = "2015";
-        sha256 = "1rb8gzhljl8r87dpf2n5pnqnkl694casgns4ma0sqzd4zazzw13l";
+        version = "0.7.18";
+        edition = "2018";
+        sha256 = "0vv50b3nvkhyy7x7ip19qnsq11bqlnffkmj2yx2xlyk5wzawydqy";
         libName = "aho_corasick";
         authors = [
           "Andrew Gallant <jamslam@gmail.com>"
@@ -194,7 +194,7 @@ rec {
         ];
         features = {
           "default" = [ "std" ];
-          "std" = [ "memchr/use_std" ];
+          "std" = [ "memchr/std" ];
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
@@ -2816,9 +2816,9 @@ rec {
       };
       "memchr" = rec {
         crateName = "memchr";
-        version = "2.3.4";
-        edition = "2015";
-        sha256 = "098m9clfs495illlw00hv2gg67mhm7jflld3msyclvi5m9xc9q8f";
+        version = "2.4.0";
+        edition = "2018";
+        sha256 = "1p478fqf4nia2ma0kv4npb8x1hli0zz6k16517ikb51jkryx8sxi";
         authors = [
           "Andrew Gallant <jamslam@gmail.com>"
           "bluss"
@@ -2827,7 +2827,7 @@ rec {
           "default" = [ "std" ];
           "use_std" = [ "std" ];
         };
-        resolvedDefaultFeatures = [ "default" "std" "use_std" ];
+        resolvedDefaultFeatures = [ "default" "std" ];
       };
       "memoffset" = rec {
         crateName = "memoffset";
@@ -3448,9 +3448,9 @@ rec {
       };
       "openssl-sys" = rec {
         crateName = "openssl-sys";
-        version = "0.9.62";
+        version = "0.9.63";
         edition = "2015";
-        sha256 = "1gb93fi4nqsq8jkjgdnqwqaxdzjs6niw7dq4sl47cbps8l6iclps";
+        sha256 = "166bhkcnpfqraa9jgpxgn0pspdg20pk19c7wgmhpgy40gpxxdc5n";
         build = "build/main.rs";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
@@ -4395,11 +4395,11 @@ rec {
         ];
 
       };
-      "redox_syscall 0.2.7" = rec {
+      "redox_syscall 0.2.8" = rec {
         crateName = "redox_syscall";
-        version = "0.2.7";
+        version = "0.2.8";
         edition = "2018";
-        sha256 = "1why6kw3mbilpnca2xmxn6qh8byiydvizq8i75imqdgphvjr5pc5";
+        sha256 = "1z27f6rzm0lcpszbr2dmfyna7qmpmx4yb98yhzg1956l3kj3j9vl";
         libName = "syscall";
         authors = [
           "Jeremy Soller <jackpot51@gmail.com>"
@@ -4414,9 +4414,9 @@ rec {
       };
       "regex" = rec {
         crateName = "regex";
-        version = "1.4.6";
-        edition = "2015";
-        sha256 = "0nf7gj6b7qzrq8b11srnwva2amx6b4v3lnrki1jxajspid0sy9ia";
+        version = "1.5.4";
+        edition = "2018";
+        sha256 = "0qf479kjbmb582h4d1d6gfl75h0j8aq2nrdi5wg6zdcy6llqcynh";
         authors = [
           "The Rust Project Developers"
         ];
@@ -4456,9 +4456,9 @@ rec {
       };
       "regex-syntax" = rec {
         crateName = "regex-syntax";
-        version = "0.6.23";
-        edition = "2015";
-        sha256 = "0j25v3pbfaprpr1k7h8smw5xrs6j5kzznddq50nzcq1f2n4z1m94";
+        version = "0.6.25";
+        edition = "2018";
+        sha256 = "16y87hz1bxmmz6kk360cxwfm3jnbsxb3x4zw9x1gzz7khic2i5zl";
         authors = [
           "The Rust Project Developers"
         ];
@@ -4739,9 +4739,9 @@ rec {
       };
       "rustc-demangle" = rec {
         crateName = "rustc-demangle";
-        version = "0.1.18";
+        version = "0.1.19";
         edition = "2015";
-        sha256 = "0cn2hdq0glr875hvpi0hvb19xj3y9gfnk0lnsw3wl538wc7asfvf";
+        sha256 = "1kkhizz8nj94qlprypsxj5hc9rpl9fnnnm6rqlklb95k7k7pl3s1";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -5322,9 +5322,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.71";
+        version = "1.0.72";
         edition = "2018";
-        sha256 = "0wsk7p1havw4ngwm41d4kf0ihx1hjziby5v8mjr1g48g8z4lq65d";
+        sha256 = "10mb1cqmq2vpl5v6qjgqqyvhgs9yf9xv9f0dbskababrzfzcvs51";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -5416,7 +5416,7 @@ rec {
           }
           {
             name = "redox_syscall";
-            packageId = "redox_syscall 0.2.7";
+            packageId = "redox_syscall 0.2.8";
             target = { target, features }: (target."os" == "redox");
           }
           {
@@ -6149,9 +6149,9 @@ rec {
       };
       "tracing" = rec {
         crateName = "tracing";
-        version = "0.1.25";
+        version = "0.1.26";
         edition = "2018";
-        sha256 = "17wmgw7bxqvhh5ls1jww4ach3ri5720cawsvbymv32j9nhmxrsq1";
+        sha256 = "17dqjhixmnbrk0c99ydb3b9pygjnzfb7yhlasb6134s4jy6fpb89";
         authors = [
           "Eliza Weisman <eliza@buoyant.io>"
           "Tokio Contributors <team@tokio.rs>"
@@ -6192,9 +6192,9 @@ rec {
       };
       "tracing-core" = rec {
         crateName = "tracing-core";
-        version = "0.1.17";
+        version = "0.1.18";
         edition = "2018";
-        sha256 = "0pvbgv301vw6dq4krc14yqbyyixb42lcs4s57xw05llkgy9f63gm";
+        sha256 = "0lm0li6lx75jgbbgxsb45439257sqb0j7828caf2hjqsigwi9zx9";
         authors = [
           "Tokio Contributors <team@tokio.rs>"
         ];
@@ -8034,10 +8034,11 @@ rec {
       let
         crateConfig = crateConfigs."${packageId}" or (builtins.throw "Package not found: ${packageId}");
         expandedFeatures = expandFeatures (crateConfig.features or { }) features;
+        enabledFeatures = enableFeatures (crateConfig.dependencies or [ ]) expandedFeatures;
         depWithResolvedFeatures = dependency:
           let
             packageId = dependency.packageId;
-            features = dependencyFeatures expandedFeatures dependency;
+            features = dependencyFeatures enabledFeatures dependency;
           in
           { inherit packageId features; };
         resolveDependencies = cache: path: dependencies:
@@ -8046,7 +8047,7 @@ rec {
           let
             enabledDependencies = filterEnabledDependencies {
               inherit dependencies target;
-              features = expandedFeatures;
+              features = enabledFeatures;
             };
             directDependencies = map depWithResolvedFeatures enabledDependencies;
             foldOverCache = op: lib.foldl op cache directDependencies;
@@ -8070,7 +8071,7 @@ rec {
         cacheWithSelf =
           let
             cacheFeatures = featuresByPackageId.${packageId} or [ ];
-            combinedFeatures = sortedUnique (cacheFeatures ++ expandedFeatures);
+            combinedFeatures = sortedUnique (cacheFeatures ++ enabledFeatures);
           in
           featuresByPackageId // {
             "${packageId}" = combinedFeatures;
@@ -8137,6 +8138,28 @@ rec {
       outFeatures = lib.concatMap expandFeature inputFeatures;
     in
     sortedUnique outFeatures;
+
+  /* This function adds optional dependencies as features if they are enabled
+     indirectly by dependency features. This function mimics Cargo's behavior
+     described in a note at:
+     https://doc.rust-lang.org/nightly/cargo/reference/features.html#dependency-features
+  */
+  enableFeatures = dependencies: features:
+    assert (builtins.isList features);
+    assert (builtins.isList dependencies);
+    let
+      additionalFeatures = lib.concatMap
+        (
+          dependency:
+            assert (builtins.isAttrs dependency);
+            let
+              enabled = builtins.any (doesFeatureEnableDependency dependency) features;
+            in
+            if (dependency.optional or false) && enabled then [ dependency.name ] else [ ]
+        )
+        dependencies;
+    in
+    sortedUnique (features ++ additionalFeatures);
 
   /*
      Returns the actual features for the given dependency.
