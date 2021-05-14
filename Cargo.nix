@@ -139,9 +139,9 @@ rec {
       };
       "addr2line" = rec {
         crateName = "addr2line";
-        version = "0.14.1";
+        version = "0.15.1";
         edition = "2015";
-        sha256 = "1xs5bsi40zpyxbbylyaysya5h36ykcbg91i82415sxw5wk7q4px5";
+        sha256 = "0npvsn4hg8mvy10lig4j9sanscdclv7nqrczdmmphgcgmyc5wd03";
         authors = [
           "Nick Fitzgerald <fitzgen@gmail.com>"
           "Philip Craig <philipjcraig@gmail.com>"
@@ -295,9 +295,9 @@ rec {
       };
       "backtrace" = rec {
         crateName = "backtrace";
-        version = "0.3.58";
+        version = "0.3.59";
         edition = "2018";
-        sha256 = "10jxl7xg8h17gigmvrg1dlsviwcscc45d4q0cyfzsi3bbmw5myw8";
+        sha256 = "0i570lldf0ijdq9vn7s83vwfirvshd8kjigq93ys0qd6zb5wy5s7";
         authors = [
           "The Rust Project Developers"
         ];
@@ -305,7 +305,6 @@ rec {
           {
             name = "addr2line";
             packageId = "addr2line";
-            optional = true;
             usesDefaultFeatures = false;
           }
           {
@@ -320,13 +319,11 @@ rec {
           {
             name = "miniz_oxide";
             packageId = "miniz_oxide";
-            optional = true;
             usesDefaultFeatures = false;
           }
           {
             name = "object";
             packageId = "object";
-            optional = true;
             usesDefaultFeatures = false;
             features = [ "read_core" "elf" "macho" "pe" "unaligned" "archive" ];
           }
@@ -342,14 +339,12 @@ rec {
           }
         ];
         features = {
-          "default" = [ "std" "gimli-symbolize" ];
-          "gimli-symbolize" = [ "addr2line" "miniz_oxide" "object" ];
-          "libbacktrace" = [ "backtrace-sys/backtrace-sys" ];
+          "default" = [ "std" ];
           "serialize-rustc" = [ "rustc-serialize" ];
           "serialize-serde" = [ "serde" ];
           "verify-winapi" = [ "winapi/dbghelp" "winapi/handleapi" "winapi/libloaderapi" "winapi/memoryapi" "winapi/minwindef" "winapi/processthreadsapi" "winapi/synchapi" "winapi/tlhelp32" "winapi/winbase" "winapi/winnt" ];
         };
-        resolvedDefaultFeatures = [ "addr2line" "default" "gimli-symbolize" "miniz_oxide" "object" "std" ];
+        resolvedDefaultFeatures = [ "default" "std" ];
       };
       "base64 0.10.1" = rec {
         crateName = "base64";
@@ -1457,11 +1452,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "use_std" "with-deprecated" ];
       };
-      "futures 0.3.14" = rec {
+      "futures 0.3.15" = rec {
         crateName = "futures";
-        version = "0.3.14";
+        version = "0.3.15";
         edition = "2018";
-        sha256 = "0lyjglxqdm91wdy646x9qrys9wfpk9g93ydzl4yasng48lsq3md9";
+        sha256 = "09zwmmfi8d1glhi0bz2didagjyqz3q9gxa7nq4vzmqns0fl46zhf";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1503,7 +1498,6 @@ rec {
           "alloc" = [ "futures-core/alloc" "futures-task/alloc" "futures-sink/alloc" "futures-channel/alloc" "futures-util/alloc" ];
           "async-await" = [ "futures-util/async-await" "futures-util/async-await-macro" ];
           "bilock" = [ "futures-util/bilock" ];
-          "cfg-target-has-atomic" = [ "futures-core/cfg-target-has-atomic" "futures-task/cfg-target-has-atomic" "futures-channel/cfg-target-has-atomic" "futures-util/cfg-target-has-atomic" ];
           "compat" = [ "std" "futures-util/compat" ];
           "default" = [ "std" "async-await" "executor" ];
           "executor" = [ "std" "futures-executor/std" ];
@@ -1518,9 +1512,9 @@ rec {
       };
       "futures-channel" = rec {
         crateName = "futures-channel";
-        version = "0.3.14";
+        version = "0.3.15";
         edition = "2018";
-        sha256 = "09gc57djz490yljh3ihvgxfwx3v81v7y0q9h06k3g4995ajwcyff";
+        sha256 = "1qki53g079ymjkgdxg3rlh5yivys8qvdqhy18l2xz0m8565sd0p6";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1539,19 +1533,17 @@ rec {
         ];
         features = {
           "alloc" = [ "futures-core/alloc" ];
-          "cfg-target-has-atomic" = [ "futures-core/cfg-target-has-atomic" ];
           "default" = [ "std" ];
           "sink" = [ "futures-sink" ];
           "std" = [ "alloc" "futures-core/std" ];
-          "unstable" = [ "futures-core/unstable" ];
         };
         resolvedDefaultFeatures = [ "alloc" "default" "futures-sink" "sink" "std" ];
       };
       "futures-core" = rec {
         crateName = "futures-core";
-        version = "0.3.14";
+        version = "0.3.15";
         edition = "2018";
-        sha256 = "058qmyvpvhzkw9aykm6ls20k3dsy4jaafdqs1xjh3jm6vp3d3309";
+        sha256 = "1lbrw5087ndaqvbjrckbz9ld4ya67k72d6w87c22d6m8v1jzf0h4";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1589,9 +1581,9 @@ rec {
       };
       "futures-io" = rec {
         crateName = "futures-io";
-        version = "0.3.14";
+        version = "0.3.15";
         edition = "2018";
-        sha256 = "016b6pfcsaavwcpx22psh6n36s13ymc23nqghcxc188fncgilnin";
+        sha256 = "1899vd5yri6zv88by53pzxb1h4x96mc42riziy6qyd1vzgg9ki5c";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1602,9 +1594,9 @@ rec {
       };
       "futures-macro" = rec {
         crateName = "futures-macro";
-        version = "0.3.14";
+        version = "0.3.15";
         edition = "2018";
-        sha256 = "12xvq5rsgi6jyynbxkrvbf1j620jy8xvmrqx9zmpvkc2l4rng336";
+        sha256 = "08fixp6b34lr58cs85kacp3h599bi63njvfd03655pvc92c05i54";
         procMacro = true;
         authors = [
           "Taylor Cramer <cramertj@google.com>"
@@ -1629,13 +1621,19 @@ rec {
             features = [ "full" ];
           }
         ];
+        buildDependencies = [
+          {
+            name = "autocfg";
+            packageId = "autocfg 1.0.1";
+          }
+        ];
 
       };
       "futures-sink" = rec {
         crateName = "futures-sink";
-        version = "0.3.14";
+        version = "0.3.15";
         edition = "2018";
-        sha256 = "08vc88majhvizpxpr44h0c240k2ag7is99v153cf6pam7i1jjmjw";
+        sha256 = "10j21j3k358512qyglqpfyxj309kr6bcspj6izg6s3gzrv8flyx5";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1647,9 +1645,9 @@ rec {
       };
       "futures-task" = rec {
         crateName = "futures-task";
-        version = "0.3.14";
+        version = "0.3.15";
         edition = "2018";
-        sha256 = "1g41ymlqvfjm7l1x4w2xamgwcpnh9gvh5xx1v6k3nvq7jl8aayms";
+        sha256 = "1bixscylw61w61dizqxhrdlnb8mv7yg9h775pssxsk8szkwvw5la";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1661,9 +1659,9 @@ rec {
       };
       "futures-util" = rec {
         crateName = "futures-util";
-        version = "0.3.14";
+        version = "0.3.15";
         edition = "2018";
-        sha256 = "09f0x4nisa9m9rgdcnh09yv7h4i7whbdidm6y0kkkwk09pall51w";
+        sha256 = "0rqr36zy4na270kn9fwk866adx1xkv1b49zxzm7zjavys8wc5dgy";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1733,10 +1731,15 @@ rec {
             optional = true;
           }
         ];
+        buildDependencies = [
+          {
+            name = "autocfg";
+            packageId = "autocfg 1.0.1";
+          }
+        ];
         features = {
           "alloc" = [ "futures-core/alloc" "futures-task/alloc" ];
           "async-await-macro" = [ "async-await" "futures-macro" "proc-macro-hack" "proc-macro-nested" ];
-          "cfg-target-has-atomic" = [ "futures-core/cfg-target-has-atomic" "futures-task/cfg-target-has-atomic" ];
           "channel" = [ "std" "futures-channel" ];
           "compat" = [ "std" "futures_01" ];
           "default" = [ "std" "async-await" "async-await-macro" ];
@@ -1815,9 +1818,9 @@ rec {
       };
       "gimli" = rec {
         crateName = "gimli";
-        version = "0.23.0";
+        version = "0.24.0";
         edition = "2018";
-        sha256 = "1km657nwcrb0pnv7v0ldhgl9y8s889y2j9jckmws8k2i8bhkyl7n";
+        sha256 = "12c1arfrzvw0lxy487wm66xb3vn7wy0r1v5hvn32fri6cqw7ah0f";
         authors = [
           "Nick Fitzgerald <fitzgen@gmail.com>"
           "Philip Craig <philipjcraig@gmail.com>"
@@ -2148,9 +2151,9 @@ rec {
       };
       "httparse" = rec {
         crateName = "httparse";
-        version = "1.4.0";
+        version = "1.4.1";
         edition = "2015";
-        sha256 = "0ds4grlxbbqnji8c30gr3yhrnhnc7mf31izxqa3lhxn9dw6y872a";
+        sha256 = "0s2y7ki3sxyf1ynp0mm2k3mgafigy23d7g0rzci3rs9pdrhppa7k";
         authors = [
           "Sean McArthur <sean@seanmonstar.com>"
         ];
@@ -2643,9 +2646,9 @@ rec {
       };
       "js-sys" = rec {
         crateName = "js-sys";
-        version = "0.3.50";
+        version = "0.3.51";
         edition = "2018";
-        sha256 = "0k526bcp63ma05pwxjwzfmn9zhmiqfxlqnzg8vw6g3sbx3izk69d";
+        sha256 = "0qkhnsidcx4vkgacn4hhl6bf6lxhc3lljfzpad11ms50wfngpgc3";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -3362,9 +3365,9 @@ rec {
       };
       "object" = rec {
         crateName = "object";
-        version = "0.23.0";
+        version = "0.24.0";
         edition = "2018";
-        sha256 = "1m658q2ci9hk8csbl17zwcg1hpvcxm2sspjb9bzg0kc1cifsp9x9";
+        sha256 = "0w21hp41mixzaavsdpjylbylh44z2b5d2wbnf5ipkvkjq38ksnqs";
         authors = [
           "Nick Fitzgerald <fitzgen@gmail.com>"
           "Philip Craig <philipjcraig@gmail.com>"
@@ -3374,7 +3377,7 @@ rec {
           "compression" = [ "flate2" "std" ];
           "default" = [ "read" "compression" ];
           "pe" = [ "coff" ];
-          "read" = [ "read_core" "archive" "coff" "elf" "macho" "pe" "wasm" "unaligned" ];
+          "read" = [ "read_core" "archive" "coff" "elf" "macho" "pe" "unaligned" ];
           "rustc-dep-of-std" = [ "core" "compiler_builtins" "alloc" ];
           "wasm" = [ "wasmparser" ];
           "write" = [ "write_core" "coff" "elf" "macho" ];
@@ -3438,9 +3441,9 @@ rec {
       };
       "openssl-probe" = rec {
         crateName = "openssl-probe";
-        version = "0.1.2";
+        version = "0.1.4";
         edition = "2015";
-        sha256 = "1pijrdifgsdwd45b08c2g0dsmnhz7c3kmagb70839ngrd7d29bvp";
+        sha256 = "0nmrvlrza9ya23kgzmsgfc17f9pxajdxk25cwsk9aq5p5a3qv618";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -3792,7 +3795,7 @@ rec {
           }
           {
             name = "url";
-            packageId = "url 2.2.1";
+            packageId = "url 2.2.2";
           }
         ];
         features = {
@@ -5090,9 +5093,9 @@ rec {
       };
       "serde" = rec {
         crateName = "serde";
-        version = "1.0.125";
+        version = "1.0.126";
         edition = "2015";
-        sha256 = "0w8i0f4wsq4zd9vz1k6lq00066rjrgzlxkm25h8sfpss387cb3am";
+        sha256 = "00vdk7y3j8h2xv28a2i2ad1d19g5iwrdknbq8yp79v6axamhaxgc";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -5118,9 +5121,9 @@ rec {
       };
       "serde_derive" = rec {
         crateName = "serde_derive";
-        version = "1.0.125";
+        version = "1.0.126";
         edition = "2015";
-        sha256 = "0vfhndim4sa1i1x38dyvrxyq5v8zxjs0av05ldfkn82qpfibg4xh";
+        sha256 = "0hsdh39qj0g187nwndfzg67q4qajbm5g6x0fr5xarblmk2y7sfln";
         procMacro = true;
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
@@ -6270,7 +6273,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.3.14";
+            packageId = "futures 0.3.15";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -6305,13 +6308,13 @@ rec {
           }
           {
             name = "url";
-            packageId = "url 2.2.1";
+            packageId = "url 2.2.2";
           }
         ];
         devDependencies = [
           {
             name = "futures";
-            packageId = "futures 0.3.14";
+            packageId = "futures 0.3.15";
             usesDefaultFeatures = false;
             features = [ "std" "executor" ];
           }
@@ -6349,7 +6352,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.3.14";
+            packageId = "futures 0.3.15";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -6399,7 +6402,7 @@ rec {
         devDependencies = [
           {
             name = "futures";
-            packageId = "futures 0.3.14";
+            packageId = "futures 0.3.15";
             usesDefaultFeatures = false;
             features = [ "std" "executor" ];
           }
@@ -6584,11 +6587,11 @@ rec {
           "query_encoding" = [ "encoding" ];
         };
       };
-      "url 2.2.1" = rec {
+      "url 2.2.2" = rec {
         crateName = "url";
-        version = "2.2.1";
+        version = "2.2.2";
         edition = "2018";
-        sha256 = "12qzdzgcvmc5l1fk4psldiipx80423mikb6g4a9qwb322d0rdkcw";
+        sha256 = "132pzpvfvpw33gjlzqd55n5iag9qddzffq8qbp1myfykna1w61x5";
         authors = [
           "The rust-url developers"
         ];
@@ -6830,9 +6833,9 @@ rec {
       };
       "wasm-bindgen" = rec {
         crateName = "wasm-bindgen";
-        version = "0.2.73";
+        version = "0.2.74";
         edition = "2018";
-        sha256 = "1n93yq72c7bd2464gg48405yzgvwakwc0cqzz647864xcm4ha943";
+        sha256 = "1zcp57mwb47vdw3r594cl7vbj6pwd503xrkq8a3phvs8xpaf2knm";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6858,9 +6861,9 @@ rec {
       };
       "wasm-bindgen-backend" = rec {
         crateName = "wasm-bindgen-backend";
-        version = "0.2.73";
+        version = "0.2.74";
         edition = "2018";
-        sha256 = "1bkxxkmxfy182aav9qqkcq7mz48yxgmx61kdr8ak55fa24j64w5f";
+        sha256 = "005ra6jc8pm1y2wi6swkvn34r2is3knv5f2dv59ymkscd6hgccrv";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6902,9 +6905,9 @@ rec {
       };
       "wasm-bindgen-macro" = rec {
         crateName = "wasm-bindgen-macro";
-        version = "0.2.73";
+        version = "0.2.74";
         edition = "2018";
-        sha256 = "0vqgbnbnh6zs339v6g9w3j9idi8m3s1dws8rnkypn5rz8j8lswry";
+        sha256 = "1m4bn6wlzc2rkp693zgnn7kh05r5fm4w55l0igjy23s3c756k088";
         procMacro = true;
         authors = [
           "The wasm-bindgen Developers"
@@ -6927,9 +6930,9 @@ rec {
       };
       "wasm-bindgen-macro-support" = rec {
         crateName = "wasm-bindgen-macro-support";
-        version = "0.2.73";
+        version = "0.2.74";
         edition = "2018";
-        sha256 = "0b0vcb8pvg03cmq9sg5b94a0p05bp1rc6m6dvc7qp9n813zkjdym";
+        sha256 = "15vsk3q4jfk8ax4walc8vy3fgvrpkg86vjz2ym0z5ngk5xa428my";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6964,9 +6967,9 @@ rec {
       };
       "wasm-bindgen-shared" = rec {
         crateName = "wasm-bindgen-shared";
-        version = "0.2.73";
+        version = "0.2.74";
         edition = "2018";
-        sha256 = "12a4kq5wvy3znkqlqn6ib25ips1k9apxjpknpca3s8xacsp479fr";
+        sha256 = "0ksbnhjzvnsmzc1n18bs98swnrzrwxjrpx3clrsyv3pip1vgikyp";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6974,9 +6977,9 @@ rec {
       };
       "web-sys" = rec {
         crateName = "web-sys";
-        version = "0.3.50";
+        version = "0.3.51";
         edition = "2018";
-        sha256 = "1gl1akzrzprc3hc16h1lcai2f3dm1xkr6cvd8ihqiv4g91zda1d9";
+        sha256 = "10p514z7zmwzxqll0z0zqhlswv3hadbrwais3l8zfgcz6xxl2a78";
         authors = [
           "The wasm-bindgen Developers"
         ];
