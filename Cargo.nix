@@ -1785,11 +1785,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "std" ];
       };
-      "getrandom 0.2.2" = rec {
+      "getrandom 0.2.3" = rec {
         crateName = "getrandom";
-        version = "0.2.2";
+        version = "0.2.3";
         edition = "2018";
-        sha256 = "1j1jcwahnkn45kapq9i5nvw2s5hcfmp1zpjx0fzl0wcy4w2mfjf9";
+        sha256 = "0lr7mnkvnzdh1xxmwmhhbm4gwg29k3m2rzhpjmjm4k2jcfa9kkbz";
         authors = [
           "The Rand Project Developers"
         ];
@@ -3710,9 +3710,9 @@ rec {
       };
       "proc-macro2" = rec {
         crateName = "proc-macro2";
-        version = "1.0.26";
+        version = "1.0.27";
         edition = "2018";
-        sha256 = "1v4w5jchgsssr727iyv986r8jaw6z80bzlhqgrbp78nw2lr02lm1";
+        sha256 = "0f3h0zl5w5090ajmmvpmhkpr4iwqnn5rip3afacabhc657vwmn7h";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -4170,7 +4170,7 @@ rec {
         dependencies = [
           {
             name = "getrandom";
-            packageId = "getrandom 0.2.2";
+            packageId = "getrandom 0.2.3";
             optional = true;
           }
         ];
@@ -6660,7 +6660,7 @@ rec {
         dependencies = [
           {
             name = "getrandom";
-            packageId = "getrandom 0.2.2";
+            packageId = "getrandom 0.2.3";
             optional = true;
           }
         ];
