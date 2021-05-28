@@ -487,10 +487,10 @@ rec {
       };
       "cc" = rec {
         crateName = "cc";
-        version = "1.0.67";
+        version = "1.0.68";
         edition = "2018";
         crateBin = [];
-        sha256 = "1z9p27ys80shv09zhknmlal8jjra78agdwg97i6jjd6lg83rpip3";
+        sha256 = "11ypa8b7iwhjf5fg5j3hvbn2116h9g8v67vyd9s7ljgzq52c4wja";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -1137,9 +1137,9 @@ rec {
       };
       "erased-serde" = rec {
         crateName = "erased-serde";
-        version = "0.3.13";
+        version = "0.3.15";
         edition = "2018";
-        sha256 = "033pma9qgrhk993hya43977z3q9if4vslnj6r1aj9yn1ihd9fr84";
+        sha256 = "1kgg0y06gkk8yw44vmack1dihkfzcwgh7ill93s97wwm49pnxcz5";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -2697,9 +2697,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.94";
+        version = "0.2.95";
         edition = "2015";
-        sha256 = "0phs3ivwq2hmwgwd9nwy3b5jbqcipbgr6pdmj3vj34xjsn54ly8q";
+        sha256 = "0dlam5y9c1kvnndk3hx10n306v6plhi57z2s2zz6z1hv7zcsd7bq";
         authors = [
           "The Rust Project Developers"
         ];
@@ -5470,9 +5470,9 @@ rec {
       };
       "thiserror" = rec {
         crateName = "thiserror";
-        version = "1.0.24";
+        version = "1.0.25";
         edition = "2018";
-        sha256 = "13m99wjikivkkwd209fgxhdprjxj17s39ldfvn1l8k89jxasdx70";
+        sha256 = "1ip9j8riar3xffp261yls4phpasz768xhnafxdz4qlargx2pcvzs";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -5486,9 +5486,9 @@ rec {
       };
       "thiserror-impl" = rec {
         crateName = "thiserror-impl";
-        version = "1.0.24";
+        version = "1.0.25";
         edition = "2018";
-        sha256 = "1h7kh6rr4vsm79dmv8qk8drhh2if3zyxc1lqa921l96q22b1hrbp";
+        sha256 = "139i3bxidyncjd1sphkn4c577nkba8lzmphhr9gb26xz1y67cdla";
         procMacro = true;
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
@@ -6677,9 +6677,9 @@ rec {
       };
       "vcpkg" = rec {
         crateName = "vcpkg";
-        version = "0.2.12";
+        version = "0.2.13";
         edition = "2015";
-        sha256 = "0p9ypqvv55cq2rl0s7g5ca2bkvwn62cdrdb0hm8j0hd2crigznyb";
+        sha256 = "1ajg5vqyhd4n72y6048bpdrmb3ppvsaabhavipjhf6by005f8p02";
         authors = [
           "Jim McGrath <jimmc2@gmail.com>"
         ];
