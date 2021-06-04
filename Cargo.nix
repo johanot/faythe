@@ -295,9 +295,9 @@ rec {
       };
       "backtrace" = rec {
         crateName = "backtrace";
-        version = "0.3.59";
+        version = "0.3.60";
         edition = "2018";
-        sha256 = "0i570lldf0ijdq9vn7s83vwfirvshd8kjigq93ys0qd6zb5wy5s7";
+        sha256 = "10kjrb4b3kjx6g4mkmcwjg4dimmzpsn7iq3225wix0jd9sjmx0dp";
         authors = [
           "The Rust Project Developers"
         ];
@@ -405,9 +405,9 @@ rec {
       };
       "bumpalo" = rec {
         crateName = "bumpalo";
-        version = "3.6.1";
+        version = "3.7.0";
         edition = "2018";
-        sha256 = "1gndni6ng6z1v14lq5zgm1k2y9320w4bc2ijzgyz9qwx9f56nfb3";
+        sha256 = "0ccn025n0x1gc0ijjlabin2xs7dkx5yfagkskr93yw9c06pyfncw";
         authors = [
           "Nick Fitzgerald <fitzgen@gmail.com>"
         ];
@@ -1982,9 +1982,9 @@ rec {
       };
       "heck" = rec {
         crateName = "heck";
-        version = "0.3.2";
+        version = "0.3.3";
         edition = "2018";
-        sha256 = "1b56s2c1ymdd0qmy31bw0ndhm31hcdamnhg3npp7ssrmc1ag9jw7";
+        sha256 = "0b0kkr790p66lvzn9nsmfjvydrbmh9z5gb664jchwgw64vxiwqkd";
         authors = [
           "Without Boats <woboats@gmail.com>"
         ];
@@ -3365,12 +3365,19 @@ rec {
       };
       "object" = rec {
         crateName = "object";
-        version = "0.24.0";
+        version = "0.25.1";
         edition = "2018";
-        sha256 = "0w21hp41mixzaavsdpjylbylh44z2b5d2wbnf5ipkvkjq38ksnqs";
+        sha256 = "1md0c1jabj26xdplrld7jcpqcjf0pjwwwbvz7h3pycivjz0c28wh";
         authors = [
           "Nick Fitzgerald <fitzgen@gmail.com>"
           "Philip Craig <philipjcraig@gmail.com>"
+        ];
+        dependencies = [
+          {
+            name = "memchr";
+            packageId = "memchr";
+            usesDefaultFeatures = false;
+          }
         ];
         features = {
           "all" = [ "read" "write" "std" "compression" "default" ];
@@ -3379,6 +3386,7 @@ rec {
           "pe" = [ "coff" ];
           "read" = [ "read_core" "archive" "coff" "elf" "macho" "pe" "unaligned" ];
           "rustc-dep-of-std" = [ "core" "compiler_builtins" "alloc" ];
+          "std" = [ "memchr/std" ];
           "wasm" = [ "wasmparser" ];
           "write" = [ "write_core" "coff" "elf" "macho" ];
           "write_core" = [ "crc32fast" "indexmap" "std" ];
@@ -6490,9 +6498,9 @@ rec {
       };
       "unicode-normalization" = rec {
         crateName = "unicode-normalization";
-        version = "0.1.17";
+        version = "0.1.19";
         edition = "2018";
-        sha256 = "1vzajca1hk9plka5d3z3426frmnr7229fd2kidz58zd9r3hzryq7";
+        sha256 = "1yabhmg8zlcksda3ajly9hpbzqgbhknxwch8dwkfkaa1569r0ifm";
         authors = [
           "kwantam <kwantam@gmail.com>"
           "Manish Goregaokar <manishsmail@gmail.com>"
