@@ -139,9 +139,9 @@ rec {
       };
       "addr2line" = rec {
         crateName = "addr2line";
-        version = "0.15.1";
+        version = "0.15.2";
         edition = "2015";
-        sha256 = "0npvsn4hg8mvy10lig4j9sanscdclv7nqrczdmmphgcgmyc5wd03";
+        sha256 = "0fkz8sgwp9lbhzfch89wimn4qx16a8l62vfx07hrw85y3xxf98p7";
         authors = [
           "Nick Fitzgerald <fitzgen@gmail.com>"
           "Philip Craig <philipjcraig@gmail.com>"
@@ -2697,9 +2697,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.95";
+        version = "0.2.96";
         edition = "2015";
-        sha256 = "0dlam5y9c1kvnndk3hx10n306v6plhi57z2s2zz6z1hv7zcsd7bq";
+        sha256 = "1z5l4rdk44sx1vaq69x1mbwi5zh75q46p2hkl90ihhn5xzkb802n";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3055,12 +3055,12 @@ rec {
           }
           {
             name = "security-framework";
-            packageId = "security-framework 2.2.0";
+            packageId = "security-framework 2.3.1";
             target = { target, features }: ((target."os" == "macos") || (target."os" == "ios"));
           }
           {
             name = "security-framework-sys";
-            packageId = "security-framework-sys 2.2.0";
+            packageId = "security-framework-sys 2.3.0";
             target = { target, features }: ((target."os" == "macos") || (target."os" == "ios"));
           }
           {
@@ -3365,9 +3365,9 @@ rec {
       };
       "object" = rec {
         crateName = "object";
-        version = "0.25.1";
+        version = "0.25.2";
         edition = "2018";
-        sha256 = "1md0c1jabj26xdplrld7jcpqcjf0pjwwwbvz7h3pycivjz0c28wh";
+        sha256 = "0ppv9zyr33cwxji6aa0gpx8ibwrw32brxj9rz7q3dwvw0i11vg7q";
         authors = [
           "Nick Fitzgerald <fitzgen@gmail.com>"
           "Philip Craig <philipjcraig@gmail.com>"
@@ -3994,7 +3994,7 @@ rec {
           }
           {
             name = "rand_chacha";
-            packageId = "rand_chacha 0.3.0";
+            packageId = "rand_chacha 0.3.1";
             optional = true;
             usesDefaultFeatures = false;
             target = { target, features }: (!(target."os" == "emscripten"));
@@ -4079,11 +4079,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "std" ];
       };
-      "rand_chacha 0.3.0" = rec {
+      "rand_chacha 0.3.1" = rec {
         crateName = "rand_chacha";
-        version = "0.3.0";
+        version = "0.3.1";
         edition = "2018";
-        sha256 = "03df2xh5nbdvwr17qm3sviaxa95r8yhm1nil2pr0pqf90p7ka9z1";
+        sha256 = "123x2adin558xbhvqb8w4f6syjsdkmqff8cxwhmjacpsl1ihmhg6";
         authors = [
           "The Rand Project Developers"
           "The Rust Project Developers"
@@ -4103,6 +4103,7 @@ rec {
         ];
         features = {
           "default" = [ "std" ];
+          "serde1" = [ "serde" ];
           "std" = [ "ppv-lite86/std" ];
         };
         resolvedDefaultFeatures = [ "std" ];
@@ -4971,11 +4972,11 @@ rec {
           "OSX_10_9" = [ "security-framework-sys/OSX_10_9" ];
         };
       };
-      "security-framework 2.2.0" = rec {
+      "security-framework 2.3.1" = rec {
         crateName = "security-framework";
-        version = "2.2.0";
+        version = "2.3.1";
         edition = "2018";
-        sha256 = "115xn71aa7qimk1rrg9zxai6mh76mdxas7n75ccls27nzp9b2w1n";
+        sha256 = "0rz4xhcz70718iww6qa4zbmjzff0dqbcf6yggvbi2fks2j2sr8i3";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
           "Kornel <kornel@geekhood.net>"
@@ -4999,7 +5000,7 @@ rec {
           }
           {
             name = "security-framework-sys";
-            packageId = "security-framework-sys 2.2.0";
+            packageId = "security-framework-sys 2.3.0";
             usesDefaultFeatures = false;
           }
         ];
@@ -5040,11 +5041,11 @@ rec {
           "OSX_10_13" = [ "OSX_10_12" ];
         };
       };
-      "security-framework-sys 2.2.0" = rec {
+      "security-framework-sys 2.3.0" = rec {
         crateName = "security-framework-sys";
-        version = "2.2.0";
+        version = "2.3.0";
         edition = "2018";
-        sha256 = "0fb3q4d0z7zbfdip85xvwkipr14dg4w31klrxjhckqngsf7jaxin";
+        sha256 = "1172fsfk37jxh33qbx3bivzph0hnxrn0nrrfffvnz2sb3fwzykky";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
           "Kornel <kornel@geekhood.net>"
@@ -5333,9 +5334,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.72";
+        version = "1.0.73";
         edition = "2018";
-        sha256 = "10mb1cqmq2vpl5v6qjgqqyvhgs9yf9xv9f0dbskababrzfzcvs51";
+        sha256 = "1ixw4lscc7009ibaic8g5bvnc94hdcr62ksjk3jjl38363zqj57p";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
