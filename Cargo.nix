@@ -2697,9 +2697,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.96";
+        version = "0.2.97";
         edition = "2015";
-        sha256 = "1z5l4rdk44sx1vaq69x1mbwi5zh75q46p2hkl90ihhn5xzkb802n";
+        sha256 = "1dlgdziv6nkabx287jjmghnlgc5dqv6fgpvh9n7ibpr0synsvf0j";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3365,9 +3365,9 @@ rec {
       };
       "object" = rec {
         crateName = "object";
-        version = "0.25.2";
+        version = "0.25.3";
         edition = "2018";
-        sha256 = "0ppv9zyr33cwxji6aa0gpx8ibwrw32brxj9rz7q3dwvw0i11vg7q";
+        sha256 = "1irb91bk41kfd4bpr1ypda8hv1qn9js43zvl003b8mvsd7ijp3x3";
         authors = [
           "Nick Fitzgerald <fitzgen@gmail.com>"
           "Philip Craig <philipjcraig@gmail.com>"
@@ -3395,9 +3395,9 @@ rec {
       };
       "once_cell" = rec {
         crateName = "once_cell";
-        version = "1.7.2";
+        version = "1.8.0";
         edition = "2018";
-        sha256 = "18qmpyfigg4ibdhjy5mwcjhzk9adwlgfaqv7nj430ivm86q0i2xg";
+        sha256 = "0mkbbxg6416z11r2yzsq91cqrkj9w1iyx5hakq15h5sbnriwnbv9";
         authors = [
           "Aleksey Kladov <aleksey.kladov@gmail.com>"
         ];
@@ -3975,11 +3975,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "alloc" "default" "getrandom" "getrandom_package" "libc" "std" ];
       };
-      "rand 0.8.3" = rec {
+      "rand 0.8.4" = rec {
         crateName = "rand";
-        version = "0.8.3";
+        version = "0.8.4";
         edition = "2018";
-        sha256 = "0zldxfx4gi551n2fna4zz9ab22zsnzw1mj5hzi5nfs24dgkfgy8f";
+        sha256 = "1n5wska2fbfj4dsfz8mc0pd0dgjlrb6c9anpk5mwym345rip6x9f";
         authors = [
           "The Rand Project Developers"
           "The Rust Project Developers"
@@ -4001,11 +4001,11 @@ rec {
           }
           {
             name = "rand_core";
-            packageId = "rand_core 0.6.2";
+            packageId = "rand_core 0.6.3";
           }
           {
             name = "rand_hc";
-            packageId = "rand_hc 0.3.0";
+            packageId = "rand_hc 0.3.1";
             optional = true;
             target = { target, features }: (target."os" == "emscripten");
           }
@@ -4013,14 +4013,14 @@ rec {
         devDependencies = [
           {
             name = "rand_hc";
-            packageId = "rand_hc 0.3.0";
+            packageId = "rand_hc 0.3.1";
           }
         ];
         features = {
           "alloc" = [ "rand_core/alloc" ];
           "default" = [ "std" "std_rng" ];
           "getrandom" = [ "rand_core/getrandom" ];
-          "serde1" = [ "serde" ];
+          "serde1" = [ "serde" "rand_core/serde1" ];
           "simd_support" = [ "packed_simd" ];
           "std" = [ "rand_core/std" "rand_chacha/std" "alloc" "getrandom" "libc" ];
           "std_rng" = [ "rand_chacha" "rand_hc" ];
@@ -4098,7 +4098,7 @@ rec {
           }
           {
             name = "rand_core";
-            packageId = "rand_core 0.6.2";
+            packageId = "rand_core 0.6.3";
           }
         ];
         features = {
@@ -4167,11 +4167,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "alloc" "getrandom" "std" ];
       };
-      "rand_core 0.6.2" = rec {
+      "rand_core 0.6.3" = rec {
         crateName = "rand_core";
-        version = "0.6.2";
+        version = "0.6.3";
         edition = "2018";
-        sha256 = "1rvas1afjvd2827b8mf2ilg78h3ksl9npkrdds3wbw9x33mndkrl";
+        sha256 = "1rxlxc3bpzgwphcg9c9yasvv9idipcg2z2y4j0vlb52jyl418kyk";
         authors = [
           "The Rand Project Developers"
           "The Rust Project Developers"
@@ -4222,18 +4222,18 @@ rec {
         ];
 
       };
-      "rand_hc 0.3.0" = rec {
+      "rand_hc 0.3.1" = rec {
         crateName = "rand_hc";
-        version = "0.3.0";
+        version = "0.3.1";
         edition = "2018";
-        sha256 = "0wra6ar22zdjkry9dsq1mg620m4h3qb9s8rfykkz4im4crqfz41i";
+        sha256 = "1rwpykyvhkxs4jvqdja3mzp9dqaqamzn113cxaigs9z2dmcry7nm";
         authors = [
           "The Rand Project Developers"
         ];
         dependencies = [
           {
             name = "rand_core";
-            packageId = "rand_core 0.6.2";
+            packageId = "rand_core 0.6.3";
           }
         ];
 
@@ -4407,11 +4407,11 @@ rec {
         ];
 
       };
-      "redox_syscall 0.2.8" = rec {
+      "redox_syscall 0.2.9" = rec {
         crateName = "redox_syscall";
-        version = "0.2.8";
+        version = "0.2.9";
         edition = "2018";
-        sha256 = "1z27f6rzm0lcpszbr2dmfyna7qmpmx4yb98yhzg1956l3kj3j9vl";
+        sha256 = "1vpyfnfrw5ki262720yks8m7vn1a2mg89s4rqi5ir7izvyx9md2s";
         libName = "syscall";
         authors = [
           "Jeremy Soller <jackpot51@gmail.com>"
@@ -5424,11 +5424,11 @@ rec {
           }
           {
             name = "rand";
-            packageId = "rand 0.8.3";
+            packageId = "rand 0.8.4";
           }
           {
             name = "redox_syscall";
-            packageId = "redox_syscall 0.2.8";
+            packageId = "redox_syscall 0.2.9";
             target = { target, features }: (target."os" == "redox");
           }
           {
@@ -6686,9 +6686,9 @@ rec {
       };
       "vcpkg" = rec {
         crateName = "vcpkg";
-        version = "0.2.13";
+        version = "0.2.14";
         edition = "2015";
-        sha256 = "1ajg5vqyhd4n72y6048bpdrmb3ppvsaabhavipjhf6by005f8p02";
+        sha256 = "169kihgyij8jff0ymql2ss8c60q3xgql7r4j19cbzsglzpr5sibh";
         authors = [
           "Jim McGrath <jimmc2@gmail.com>"
         ];
@@ -7676,9 +7676,11 @@ rec {
      testCrateFlags: list of flags to pass to the test exectuable
      testInputs: list of packages that should be available during test execution
   */
-  crateWithTest = { crate, testCrate, testCrateFlags, testInputs }:
+  crateWithTest = { crate, testCrate, testCrateFlags, testInputs, testPreRun, testPostRun }:
     assert builtins.typeOf testCrateFlags == "list";
     assert builtins.typeOf testInputs == "list";
+    assert builtins.typeOf testPreRun == "string";
+    assert builtins.typeOf testPostRun == "string";
     let
       # override the `crate` so that it will build and execute tests instead of
       # building the actual lib and bin targets We just have to pass `--test`
@@ -7692,6 +7694,15 @@ rec {
                 buildTests = true;
               }
             );
+          # If the user hasn't set any pre/post commands, we don't want to
+          # insert empty lines. This means that any existing users of crate2nix
+          # don't get a spurious rebuild unless they set these explicitly.
+          testCommand = pkgs.lib.concatStringsSep "\n"
+            (pkgs.lib.filter (s: s != "") [
+              testPreRun
+              "$f $testCrateFlags 2>&1 | tee -a $out"
+              testPostRun
+            ]);
         in
         pkgs.runCommand "run-tests-${testCrate.name}"
           {
@@ -7725,7 +7736,7 @@ rec {
           for file in ${drv}/tests/*; do
             f=$testRoot/$(basename $file)-$hash
             cp $file $f
-            $f $testCrateFlags 2>&1 | tee -a $out
+            ${testCommand}
           done
         '';
     in
@@ -7749,6 +7760,10 @@ rec {
     , runTests ? false
     , testCrateFlags ? [ ]
     , testInputs ? [ ]
+      # Any command to run immediatelly before a test is executed.
+    , testPreRun ? ""
+      # Any command run immediatelly after a test is executed.
+    , testPostRun ? ""
     }:
     lib.makeOverridable
       (
@@ -7757,6 +7772,8 @@ rec {
         , runTests
         , testCrateFlags
         , testInputs
+        , testPreRun
+        , testPostRun
         }:
         let
           buildRustCrateForPkgsFuncOverriden =
@@ -7789,13 +7806,13 @@ rec {
                 {
                   crate = drv;
                   testCrate = testDrv;
-                  inherit testCrateFlags testInputs;
+                  inherit testCrateFlags testInputs testPreRun testPostRun;
                 }
             else drv;
         in
         derivation
       )
-      { inherit features crateOverrides runTests testCrateFlags testInputs; };
+      { inherit features crateOverrides runTests testCrateFlags testInputs testPreRun testPostRun; };
 
   /* Returns an attr set with packageId mapped to the result of buildRustCrateForPkgsFunc
      for the corresponding crate.
