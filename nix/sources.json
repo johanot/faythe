@@ -30,15 +30,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
-        "branch": "nixos-20.09",
+        "branch": "nixos-unstable",
         "description": "Nix Packages collection",
         "homepage": "",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "34cb7885a61c344a22f262520186921843bc7636",
-        "sha256": "0fg3c76rdzaacybci046p4q1gzkj9s68virv4hbi6kfyn6k4cw11",
+        "rev": "d2b489b24ae30278ad31e06801c3853b0edbbd9d",
+        "sha256": "1c9k3589fyn510by0dvb8c4r8p8f5vrlabf2q342g64yxsar4h2m",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/34cb7885a61c344a22f262520186921843bc7636.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/d2b489b24ae30278ad31e06801c3853b0edbbd9d.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
