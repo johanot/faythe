@@ -35,8 +35,12 @@ macro_rules! set {
     };
 }
 
+const APP_NAME: &str = env!("CARGO_PKG_NAME");
+
 fn main() {
     env_logger::init();
+    log::init(APP_NAME.to_string()).unwrap();
+
     let args = clap::App::new("faythe")
          .arg(clap::Arg::with_name("config-check")
              .long("config-check")
