@@ -976,8 +976,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "1624c3812889fb60581864d7489f932d07303dbf";
-          sha256 = "1381408kqh3gw1708rgqpz32944n18rab3731phqyib12mn017nz";
+          rev = "dcd85580806b41cff078b2e7cad795e8e6aa748a";
+          sha256 = "1p2sp5qfw0kj3s5d5vnpp17y0iq34ni41p8svzzii1ch1p2ykmw9";
         };
         dependencies = [
           {
@@ -2697,9 +2697,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.97";
+        version = "0.2.98";
         edition = "2015";
-        sha256 = "1dlgdziv6nkabx287jjmghnlgc5dqv6fgpvh9n7ibpr0synsvf0j";
+        sha256 = "144728k6d98k3hplzklqn18a134nq6nw0jzdxy1s98sx2xvzw31j";
         authors = [
           "The Rust Project Developers"
         ];
@@ -5479,9 +5479,9 @@ rec {
       };
       "thiserror" = rec {
         crateName = "thiserror";
-        version = "1.0.25";
+        version = "1.0.26";
         edition = "2018";
-        sha256 = "1ip9j8riar3xffp261yls4phpasz768xhnafxdz4qlargx2pcvzs";
+        sha256 = "1qmz542pq4wmz3p0s4kavsqv09h0x99klkf3k33ydjy1x97rw4ck";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -5495,9 +5495,9 @@ rec {
       };
       "thiserror-impl" = rec {
         crateName = "thiserror-impl";
-        version = "1.0.25";
+        version = "1.0.26";
         edition = "2018";
-        sha256 = "139i3bxidyncjd1sphkn4c577nkba8lzmphhr9gb26xz1y67cdla";
+        sha256 = "0ia72qiynlws5avb8f1xqlazp4g6bqgzjbwy5vs6nyg7myh6j386";
         procMacro = true;
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
