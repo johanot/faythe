@@ -487,10 +487,10 @@ rec {
       };
       "cc" = rec {
         crateName = "cc";
-        version = "1.0.68";
+        version = "1.0.69";
         edition = "2018";
         crateBin = [];
-        sha256 = "11ypa8b7iwhjf5fg5j3hvbn2116h9g8v67vyd9s7ljgzq52c4wja";
+        sha256 = "1cly36mskqby2yqiygls7myd0qjcfrvxcyw2cf4qdqbc5kvc4377";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -976,8 +976,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "dcd85580806b41cff078b2e7cad795e8e6aa748a";
-          sha256 = "1p2sp5qfw0kj3s5d5vnpp17y0iq34ni41p8svzzii1ch1p2ykmw9";
+          rev = "ca32fec2ec27f9985bbe3820d35b2c9dc33a4894";
+          sha256 = "1kq2imzm721xvjvswaqxj9lvdqjhyx39v5b4id0cp4d0iqy1azcw";
         };
         dependencies = [
           {
@@ -5367,9 +5367,9 @@ rec {
       };
       "synstructure" = rec {
         crateName = "synstructure";
-        version = "0.12.4";
+        version = "0.12.5";
         edition = "2018";
-        sha256 = "00c72ij813xsilssgya6m6f73d0s5zzsld1y26bvhk3kdzbg4d5q";
+        sha256 = "1yplh90imfrp1rycnl18rg8l9d19xbmak1bq1g2065mady9aljj7";
         authors = [
           "Nika Layzell <nika@thelayzells.com>"
         ];
