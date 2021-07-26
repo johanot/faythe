@@ -1,0 +1,139 @@
+{
+  "nodes": {
+    "ci": {
+      "inputs": {
+        "gomod2nix": "gomod2nix",
+        "nixpkgs": [
+          "facts",
+          "nixpkgs-default"
+        ]
+      },
+      "locked": {
+        "lastModified": 1627295259,
+        "narHash": "sha256-t7RQ3T2UetPI7B2OMAz02wjtO05hIMaiodXKoOBCDLQ=",
+        "ref": "master",
+        "rev": "564b449a68153be5700daa3c81d1400ff9199ccb",
+        "revCount": 13,
+        "type": "git",
+        "url": "https://gitlab.dbc.dk/platform/bump-o-matic.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitlab.dbc.dk/platform/bump-o-matic.git"
+      }
+    },
+    "facts": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2",
+        "nixpkgs-default": "nixpkgs-default"
+      },
+      "locked": {
+        "lastModified": 1627046971,
+        "narHash": "sha256-7i+6w2gHSfj6V06yC7W5F1UQXPnj063n+Ojub+MsJrM=",
+        "ref": "master",
+        "rev": "c7d99ef9707f66f97c729ff8d539023ab74702ae",
+        "revCount": 256,
+        "type": "git",
+        "url": "https://gitlab.dbc.dk/it/facts.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitlab.dbc.dk/it/facts.git"
+      }
+    },
+    "gomod2nix": {
+      "inputs": {
+        "nixpkgs": "nixpkgs",
+        "utils": "utils"
+      },
+      "locked": {
+        "lastModified": 1617032337,
+        "narHash": "sha256-BTmMxdIJyjOvOpNOaExcyvmJKI9OuhpWyXfOK164Epc=",
+        "owner": "tweag",
+        "repo": "gomod2nix",
+        "rev": "c78d7b9f15a24eba95fbc228509f513c83709d8b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tweag",
+        "repo": "gomod2nix",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1603758576,
+        "narHash": "sha256-xKFmWVx+rFInBao3gtmvXcd0LjHD1+0c1Ef5PJDrbuM=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "1dc37370c489b610f8b91d7fdd40633163ffbafd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-default": {
+      "locked": {
+        "lastModified": 1626679483,
+        "narHash": "sha256-+BziIOkCKGqEvT8Xl59hym6CcB0hakqqxigKSuuBXmM=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "4181644d09b96af0f92c2f025d3463f9d19c7790",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-21.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1614989413,
+        "narHash": "sha256-g503bGSdVhLu2cKR5sHG8XetLFrVUzAL3+mrnQJpmdY=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "102eb68ceecbbd32ab1906a53ef5a7269dc9794a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "ci": "ci",
+        "facts": "facts",
+        "nixpkgs": [
+          "facts",
+          "nixpkgs-default"
+        ]
+      }
+    },
+    "utils": {
+      "locked": {
+        "lastModified": 1601282935,
+        "narHash": "sha256-WQAFV6sGGQxrRs3a+/Yj9xUYvhTpukQJIcMbIi7LCJ4=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "588973065fce51f4763287f0fda87a174d78bf48",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

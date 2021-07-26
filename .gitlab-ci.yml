@@ -1,2 +1,2 @@
 include:
-  remote: https://gitlab.dbc.dk/platform/detached-ci/raw/master/rust-ci/rust-ci.yml
+  remote: https://gitlab.dbc.dk/platform/bump-o-matic/raw/master/rust/ci.yml
