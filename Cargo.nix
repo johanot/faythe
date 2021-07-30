@@ -139,15 +139,9 @@ rec {
       };
       "addr2line" = rec {
         crateName = "addr2line";
-        version = "0.15.2";
+        version = "0.16.0";
         edition = "2015";
-        sha256 = "0fkz8sgwp9lbhzfch89wimn4qx16a8l62vfx07hrw85y3xxf98p7";
-        authors = [
-          "Nick Fitzgerald <fitzgen@gmail.com>"
-          "Philip Craig <philipjcraig@gmail.com>"
-          "Jon Gjengset <jon@thesquareplanet.com>"
-          "Noah Bergbauer <noah.bergbauer@tum.de>"
-        ];
+        sha256 = "1kday4xm4ky46ihsys3ch1vf5cv3lfjclfi610mpsb1xz6vz4q9y";
         dependencies = [
           {
             name = "gimli";
@@ -220,9 +214,9 @@ rec {
       };
       "async-trait" = rec {
         crateName = "async-trait";
-        version = "0.1.50";
+        version = "0.1.51";
         edition = "2018";
-        sha256 = "08m7xim7dvcjw5cx2ryz3wndxc0vib2s02qrvabxvg2cpd5yi60b";
+        sha256 = "0pis4f9k7nhphp24rkm5lkbnhcz5p78qz6nyh6l1b0gndmvqwca4";
         procMacro = true;
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
@@ -295,9 +289,9 @@ rec {
       };
       "backtrace" = rec {
         crateName = "backtrace";
-        version = "0.3.60";
+        version = "0.3.61";
         edition = "2018";
-        sha256 = "10kjrb4b3kjx6g4mkmcwjg4dimmzpsn7iq3225wix0jd9sjmx0dp";
+        sha256 = "00cv8523igvh3salpxhqacmy5z4s9g0khrw9kqrylkkkjbc0bag7";
         authors = [
           "The Rust Project Developers"
         ];
@@ -1818,13 +1812,9 @@ rec {
       };
       "gimli" = rec {
         crateName = "gimli";
-        version = "0.24.0";
+        version = "0.25.0";
         edition = "2018";
-        sha256 = "12c1arfrzvw0lxy487wm66xb3vn7wy0r1v5hvn32fri6cqw7ah0f";
-        authors = [
-          "Nick Fitzgerald <fitzgen@gmail.com>"
-          "Philip Craig <philipjcraig@gmail.com>"
-        ];
+        sha256 = "1rwgmjp94ivk872xd2s9lfb7wpz6rj1s9bzqnhnkn6l4jw21x87h";
         features = {
           "default" = [ "read" "write" "std" "fallible-iterator" "endian-reader" ];
           "endian-reader" = [ "stable_deref_trait" ];
@@ -3365,13 +3355,9 @@ rec {
       };
       "object" = rec {
         crateName = "object";
-        version = "0.25.3";
+        version = "0.26.0";
         edition = "2018";
-        sha256 = "1irb91bk41kfd4bpr1ypda8hv1qn9js43zvl003b8mvsd7ijp3x3";
-        authors = [
-          "Nick Fitzgerald <fitzgen@gmail.com>"
-          "Philip Craig <philipjcraig@gmail.com>"
-        ];
+        sha256 = "11mk7swplzi32wq8ja4q2dplv1yj6x1a2j4q94i8ih5lgwqjfn65";
         dependencies = [
           {
             name = "memchr";
@@ -3380,7 +3366,7 @@ rec {
           }
         ];
         features = {
-          "all" = [ "read" "write" "std" "compression" "default" ];
+          "all" = [ "read" "write" "std" "compression" "wasm" ];
           "compression" = [ "flate2" "std" ];
           "default" = [ "read" "compression" ];
           "pe" = [ "coff" ];
@@ -5158,9 +5144,9 @@ rec {
       };
       "serde_json" = rec {
         crateName = "serde_json";
-        version = "1.0.64";
+        version = "1.0.66";
         edition = "2018";
-        sha256 = "0y9gk3yikncrc0zajmwc0pidr7zfwafawb4gidf6mqyskzf9g7kr";
+        sha256 = "09r1ld450g6hbx5xs2j7bcp40ibawayhx1wxnnad0am137d10srk";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
