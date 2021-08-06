@@ -813,9 +813,9 @@ rec {
       };
       "crossbeam-deque" = rec {
         crateName = "crossbeam-deque";
-        version = "0.7.3";
+        version = "0.7.4";
         edition = "2015";
-        sha256 = "11c2c0x5grdba3ah3g94yn6b8s47xi8qwm85h8hq5vmf9nbsy0lz";
+        sha256 = "1v99xcdjk4zixvxnq7pssip670mlyhw1ma3qc88ca11jxnfz43y2";
         authors = [
           "The Crossbeam Project Developers"
         ];
@@ -970,8 +970,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "22592d4465b46653a89d3bd9d34eae26c27ea410";
-          sha256 = "0s82a43lw95r5z9h2s89rw4ypcvi1h1bp0p3vy9hmxx6vddi7d4z";
+          rev = "3c12380da63c9b0be140f04a1320af75c80a53ae";
+          sha256 = "1c1n9wxlfk7bgr8pjbj4rbrys0wx4w21l0x5r3nsadfmj1v98r7m";
         };
         dependencies = [
           {
@@ -2636,9 +2636,9 @@ rec {
       };
       "js-sys" = rec {
         crateName = "js-sys";
-        version = "0.3.51";
+        version = "0.3.52";
         edition = "2018";
-        sha256 = "0qkhnsidcx4vkgacn4hhl6bf6lxhc3lljfzpad11ms50wfngpgc3";
+        sha256 = "0lk7c7n9q71dlvpvh41v7gmp3n2nqy7hcvh5pr2sx2k3lry1nyff";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -5088,9 +5088,9 @@ rec {
       };
       "serde" = rec {
         crateName = "serde";
-        version = "1.0.126";
+        version = "1.0.127";
         edition = "2015";
-        sha256 = "00vdk7y3j8h2xv28a2i2ad1d19g5iwrdknbq8yp79v6axamhaxgc";
+        sha256 = "1s7s8vqwf6lgmddcqjpcrx907afgn83lzwnkg5klxlgnmdw9hfzh";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -5116,9 +5116,9 @@ rec {
       };
       "serde_derive" = rec {
         crateName = "serde_derive";
-        version = "1.0.126";
+        version = "1.0.127";
         edition = "2015";
-        sha256 = "0hsdh39qj0g187nwndfzg67q4qajbm5g6x0fr5xarblmk2y7sfln";
+        sha256 = "1k2ywp5qg490x5kxv7xljfj5a4x54krf15w56836cl9j6inr4950";
         procMacro = true;
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
@@ -6828,9 +6828,9 @@ rec {
       };
       "wasm-bindgen" = rec {
         crateName = "wasm-bindgen";
-        version = "0.2.74";
+        version = "0.2.75";
         edition = "2018";
-        sha256 = "1zcp57mwb47vdw3r594cl7vbj6pwd503xrkq8a3phvs8xpaf2knm";
+        sha256 = "11i5v9zr4bpvlmpm30rxmz5d832zmg68xl9f1rlfi3qryk4fq25n";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6856,9 +6856,9 @@ rec {
       };
       "wasm-bindgen-backend" = rec {
         crateName = "wasm-bindgen-backend";
-        version = "0.2.74";
+        version = "0.2.75";
         edition = "2018";
-        sha256 = "005ra6jc8pm1y2wi6swkvn34r2is3knv5f2dv59ymkscd6hgccrv";
+        sha256 = "17s75vhjlxd4zi9c7rnw64z3ckyb2cnpw9kbbfn3mlk33als62jq";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6900,9 +6900,9 @@ rec {
       };
       "wasm-bindgen-macro" = rec {
         crateName = "wasm-bindgen-macro";
-        version = "0.2.74";
+        version = "0.2.75";
         edition = "2018";
-        sha256 = "1m4bn6wlzc2rkp693zgnn7kh05r5fm4w55l0igjy23s3c756k088";
+        sha256 = "177hwmvq49ib3y8dhhnsvf4klsxdcvkz4cfbvw88hig1v47by7hp";
         procMacro = true;
         authors = [
           "The wasm-bindgen Developers"
@@ -6925,9 +6925,9 @@ rec {
       };
       "wasm-bindgen-macro-support" = rec {
         crateName = "wasm-bindgen-macro-support";
-        version = "0.2.74";
+        version = "0.2.75";
         edition = "2018";
-        sha256 = "15vsk3q4jfk8ax4walc8vy3fgvrpkg86vjz2ym0z5ngk5xa428my";
+        sha256 = "17sqziz87sikg4a0w8mxrr440fm132pcc9cwclmal0rz77fmf9kc";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6962,9 +6962,9 @@ rec {
       };
       "wasm-bindgen-shared" = rec {
         crateName = "wasm-bindgen-shared";
-        version = "0.2.74";
+        version = "0.2.75";
         edition = "2018";
-        sha256 = "0ksbnhjzvnsmzc1n18bs98swnrzrwxjrpx3clrsyv3pip1vgikyp";
+        sha256 = "1hmwidww6s80kgr3k9jr389s8jzsg8frdpjfbza655ih79s4l31f";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6972,9 +6972,9 @@ rec {
       };
       "web-sys" = rec {
         crateName = "web-sys";
-        version = "0.3.51";
+        version = "0.3.52";
         edition = "2018";
-        sha256 = "10p514z7zmwzxqll0z0zqhlswv3hadbrwais3l8zfgcz6xxl2a78";
+        sha256 = "15i6gpfv9smjq9vzca2n39gh91a66jhx8wn7g289gja2v210miq1";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -7087,6 +7087,10 @@ rec {
           "GpuDevice" = [ "EventTarget" ];
           "GpuUncapturedErrorEvent" = [ "Event" ];
           "HashChangeEvent" = [ "Event" ];
+          "Hid" = [ "EventTarget" ];
+          "HidConnectionEvent" = [ "Event" ];
+          "HidDevice" = [ "EventTarget" ];
+          "HidInputReportEvent" = [ "Event" ];
           "HtmlAnchorElement" = [ "Element" "EventTarget" "HtmlElement" "Node" ];
           "HtmlAreaElement" = [ "Element" "EventTarget" "HtmlElement" "Node" ];
           "HtmlAudioElement" = [ "Element" "EventTarget" "HtmlElement" "HtmlMediaElement" "Node" ];
@@ -7383,6 +7387,7 @@ rec {
           "VideoTrackList" = [ "EventTarget" ];
           "VrDisplay" = [ "EventTarget" ];
           "VttCue" = [ "EventTarget" "TextTrackCue" ];
+          "WakeLockSentinel" = [ "EventTarget" ];
           "WaveShaperNode" = [ "AudioNode" "EventTarget" ];
           "WebGlContextEvent" = [ "Event" ];
           "WebKitCssMatrix" = [ "DomMatrix" "DomMatrixReadOnly" ];
