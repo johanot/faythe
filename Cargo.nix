@@ -387,13 +387,14 @@ rec {
       };
       "bitflags" = rec {
         crateName = "bitflags";
-        version = "1.2.1";
-        edition = "2015";
-        sha256 = "14qnd5nq8p2almk79m4m8ydqhd413yaxsyjp5xd19g3mikzf47fg";
+        version = "1.3.1";
+        edition = "2018";
+        sha256 = "1w8ssbq6dvlnhrnm9q9sm731rkr9jl8ws3hki2y5zgmdfmnrg89d";
         authors = [
           "The Rust Project Developers"
         ];
         features = {
+          "rustc-dep-of-std" = [ "core" "compiler_builtins" ];
         };
         resolvedDefaultFeatures = [ "default" ];
       };
@@ -2687,9 +2688,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.98";
+        version = "0.2.99";
         edition = "2015";
-        sha256 = "144728k6d98k3hplzklqn18a134nq6nw0jzdxy1s98sx2xvzw31j";
+        sha256 = "0rdpvskll0lkih3fl565dsbfbabv7i7azd133vgj82py878j7y57";
         authors = [
           "The Rust Project Developers"
         ];
@@ -2787,9 +2788,9 @@ rec {
       };
       "matches" = rec {
         crateName = "matches";
-        version = "0.1.8";
+        version = "0.1.9";
         edition = "2015";
-        sha256 = "020axl4q7rk9vz90phs7f8jas4imxal9y9kxl4z4v7a6719mrz3z";
+        sha256 = "0gw5ib38jfgyyah8nyyxr036grqv1arkf1srgfa4h386dav7iqx3";
         libPath = "lib.rs";
         authors = [
           "Simon Sapin <simon.sapin@exyr.org>"
@@ -3001,9 +3002,9 @@ rec {
       };
       "native-tls" = rec {
         crateName = "native-tls";
-        version = "0.2.7";
+        version = "0.2.8";
         edition = "2015";
-        sha256 = "1m6v16xl8h4pm32pw6yhrvgwznf60bqhj2qhb1yrb8wd3hp6pndq";
+        sha256 = "0kdj0drgp8cqk3v430c5ac7dfpzvhm1621w96cpz985m35vrzfj8";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
         ];
@@ -4393,11 +4394,11 @@ rec {
         ];
 
       };
-      "redox_syscall 0.2.9" = rec {
+      "redox_syscall 0.2.10" = rec {
         crateName = "redox_syscall";
-        version = "0.2.9";
+        version = "0.2.10";
         edition = "2018";
-        sha256 = "1vpyfnfrw5ki262720yks8m7vn1a2mg89s4rqi5ir7izvyx9md2s";
+        sha256 = "1zq36bhw4c6xig340ja1jmr36iy0d3djp8smsabxx71676bg70w3";
         libName = "syscall";
         authors = [
           "Jeremy Soller <jackpot51@gmail.com>"
@@ -5205,9 +5206,9 @@ rec {
       };
       "slab" = rec {
         crateName = "slab";
-        version = "0.4.3";
-        edition = "2015";
-        sha256 = "09v57dmy9gnfcj3c6gywp7wi09zywxf0ppj07w02hfvy38ysqwzi";
+        version = "0.4.4";
+        edition = "2018";
+        sha256 = "1465rj4y59qjvzxik0v2m0mp71q50m9xfigxqww7yhsw3hna61y3";
         authors = [
           "Carl Lerche <me@carllerche.com>"
         ];
@@ -5414,7 +5415,7 @@ rec {
           }
           {
             name = "redox_syscall";
-            packageId = "redox_syscall 0.2.9";
+            packageId = "redox_syscall 0.2.10";
             target = { target, features }: (target."os" == "redox");
           }
           {
