@@ -9,11 +9,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1627295259,
-        "narHash": "sha256-t7RQ3T2UetPI7B2OMAz02wjtO05hIMaiodXKoOBCDLQ=",
+        "lastModified": 1630058711,
+        "narHash": "sha256-5qvn8k4iG7XdWSb0djrEVEdJAYtftu91xJk8BkY+8TI=",
         "ref": "master",
-        "rev": "564b449a68153be5700daa3c81d1400ff9199ccb",
-        "revCount": 13,
+        "rev": "69fad3a17bc4b38cf9dd008165426f76ac4e4bff",
+        "revCount": 16,
         "type": "git",
         "url": "https://gitlab.dbc.dk/platform/bump-o-matic.git"
       },
@@ -28,11 +28,11 @@
         "nixpkgs-default": "nixpkgs-default"
       },
       "locked": {
-        "lastModified": 1629354133,
-        "narHash": "sha256-9o3BewjoR7l19inU4Na8unU0iLKQQwDvh/YQnAqmdFM=",
+        "lastModified": 1629720278,
+        "narHash": "sha256-2wiODJsUyhEiEQ11EgMyevygXcp0X4zQOxxbTXd2PCI=",
         "ref": "master",
-        "rev": "a85ae35c6451caeaa04d01f5352ebff101dbc3e6",
-        "revCount": 292,
+        "rev": "1e6474a8842929b0884918c9c2e7277800614916",
+        "revCount": 297,
         "type": "git",
         "url": "https://gitlab.dbc.dk/it/facts.git"
       },

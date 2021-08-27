@@ -466,11 +466,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
-      "bytes 1.0.1" = rec {
+      "bytes 1.1.0" = rec {
         crateName = "bytes";
-        version = "1.0.1";
+        version = "1.1.0";
         edition = "2018";
-        sha256 = "0h6h1c8g3yj2b4k8g25gr3246mq985y0kl3z685cs784fr1ww05p";
+        sha256 = "1y70b249m02lfp0j6565b29kviapj4xsl9whamcqwddnp9kjv1y4";
         authors = [
           "Carl Lerche <me@carllerche.com>"
           "Sean McArthur <sean@seanmonstar.com>"
@@ -971,8 +971,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "16be1cdd3049776d5ee514acfd82f2b7e78fe19f";
-          sha256 = "1x81ss6c4bpd0hq19rl20ij79z9qd1sw86y6fbrbpg23yw2qjiy5";
+          rev = "aa4b370ec99f7daa1f6383281f731c7a295cf4c9";
+          sha256 = "0skn1q71bfl9z0p96mgczczg9l1k4y5kkg62asxx39vv2ydcdvy2";
         };
         dependencies = [
           {
@@ -2076,7 +2076,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes 1.0.1";
+            packageId = "bytes 1.1.0";
           }
           {
             name = "fnv";
@@ -2624,9 +2624,9 @@ rec {
       };
       "itoa" = rec {
         crateName = "itoa";
-        version = "0.4.7";
+        version = "0.4.8";
         edition = "2015";
-        sha256 = "0di7fggbknwfjcw8cgzm1dnm3ik32l2m1f7nmyh8ipmh45h069fx";
+        sha256 = "1m1dairwyx8kfxi7ab3b5jc71z1vigh9w4shnhiajji9avzr26dp";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -2688,9 +2688,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.99";
+        version = "0.2.101";
         edition = "2015";
-        sha256 = "0rdpvskll0lkih3fl565dsbfbabv7i7azd133vgj82py878j7y57";
+        sha256 = "08dsmvn397ph8gnj552k12gmpp2rk6p60jyliqnfvr8vhwv07c1w";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3047,12 +3047,12 @@ rec {
           }
           {
             name = "security-framework";
-            packageId = "security-framework 2.3.1";
+            packageId = "security-framework 2.4.0";
             target = { target, features }: ((target."os" == "macos") || (target."os" == "ios"));
           }
           {
             name = "security-framework-sys";
-            packageId = "security-framework-sys 2.3.0";
+            packageId = "security-framework-sys 2.4.0";
             target = { target, features }: ((target."os" == "macos") || (target."os" == "ios"));
           }
           {
@@ -3102,7 +3102,7 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "duration" ];
       };
-      "num" = rec {
+      "num 0.2.1" = rec {
         crateName = "num";
         version = "0.2.1";
         edition = "2015";
@@ -3113,13 +3113,13 @@ rec {
         dependencies = [
           {
             name = "num-bigint";
-            packageId = "num-bigint";
+            packageId = "num-bigint 0.2.6";
             optional = true;
             usesDefaultFeatures = false;
           }
           {
             name = "num-complex";
-            packageId = "num-complex";
+            packageId = "num-complex 0.2.4";
             usesDefaultFeatures = false;
           }
           {
@@ -3134,7 +3134,7 @@ rec {
           }
           {
             name = "num-rational";
-            packageId = "num-rational";
+            packageId = "num-rational 0.2.4";
             usesDefaultFeatures = false;
           }
           {
@@ -3152,7 +3152,61 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "num-bigint" "std" ];
       };
-      "num-bigint" = rec {
+      "num 0.4.0" = rec {
+        crateName = "num";
+        version = "0.4.0";
+        edition = "2018";
+        sha256 = "01j6k8kjad0a96297j3qjhdhrc6cgmzhf52i0sd7yd0d2z8ndns3";
+        authors = [
+          "The Rust Project Developers"
+        ];
+        dependencies = [
+          {
+            name = "num-bigint";
+            packageId = "num-bigint 0.4.0";
+            optional = true;
+            usesDefaultFeatures = false;
+          }
+          {
+            name = "num-complex";
+            packageId = "num-complex 0.4.0";
+            usesDefaultFeatures = false;
+          }
+          {
+            name = "num-integer";
+            packageId = "num-integer";
+            usesDefaultFeatures = false;
+            features = [ "i128" ];
+          }
+          {
+            name = "num-iter";
+            packageId = "num-iter";
+            usesDefaultFeatures = false;
+            features = [ "i128" ];
+          }
+          {
+            name = "num-rational";
+            packageId = "num-rational 0.4.0";
+            usesDefaultFeatures = false;
+          }
+          {
+            name = "num-traits";
+            packageId = "num-traits";
+            usesDefaultFeatures = false;
+            features = [ "i128" ];
+          }
+        ];
+        features = {
+          "alloc" = [ "num-bigint" "num-rational/num-bigint" ];
+          "default" = [ "std" ];
+          "libm" = [ "num-complex/libm" "num-traits/libm" ];
+          "rand" = [ "num-bigint/rand" "num-complex/rand" ];
+          "serde" = [ "num-bigint/serde" "num-complex/serde" "num-rational/serde" ];
+          "std" = [ "num-bigint/std" "num-complex/std" "num-integer/std" "num-iter/std" "num-rational/std" "num-rational/num-bigint-std" "num-traits/std" ];
+        };
+        resolvedDefaultFeatures = [ "default" "num-bigint" "std" ];
+      };
+      "num-bigint 0.2.6" = rec {
         crateName = "num-bigint";
         version = "0.2.6";
         edition = "2015";
@@ -3185,7 +3239,41 @@ rec {
         };
         resolvedDefaultFeatures = [ "std" ];
       };
-      "num-complex" = rec {
+      "num-bigint 0.4.0" = rec {
+        crateName = "num-bigint";
+        version = "0.4.0";
+        edition = "2018";
+        sha256 = "04k5xh7d0nxay4yfb02rj841y9g5jh45d320avi53ak221y083af";
+        authors = [
+          "The Rust Project Developers"
+        ];
+        dependencies = [
+          {
+            name = "num-integer";
+            packageId = "num-integer";
+            usesDefaultFeatures = false;
+            features = [ "i128" ];
+          }
+          {
+            name = "num-traits";
+            packageId = "num-traits";
+            usesDefaultFeatures = false;
+            features = [ "i128" ];
+          }
+        ];
+        buildDependencies = [
+          {
+            name = "autocfg";
+            packageId = "autocfg 1.0.1";
+          }
+        ];
+        features = {
+          "default" = [ "std" ];
+          "std" = [ "num-integer/std" "num-traits/std" ];
+        };
+        resolvedDefaultFeatures = [ "std" ];
+      };
+      "num-complex 0.2.4" = rec {
         crateName = "num-complex";
         version = "0.2.4";
         edition = "2015";
@@ -3209,6 +3297,29 @@ rec {
         features = {
           "default" = [ "std" ];
           "i128" = [ "num-traits/i128" ];
+          "std" = [ "num-traits/std" ];
+        };
+        resolvedDefaultFeatures = [ "std" ];
+      };
+      "num-complex 0.4.0" = rec {
+        crateName = "num-complex";
+        version = "0.4.0";
+        edition = "2018";
+        sha256 = "11ahq51ibf7x30rsabgp3a29zw6d6bfilz53sj152z5vpdkkd1r6";
+        authors = [
+          "The Rust Project Developers"
+        ];
+        dependencies = [
+          {
+            name = "num-traits";
+            packageId = "num-traits";
+            usesDefaultFeatures = false;
+            features = [ "i128" ];
+          }
+        ];
+        features = {
+          "default" = [ "std" ];
+          "libm" = [ "num-traits/libm" ];
           "std" = [ "num-traits/std" ];
         };
         resolvedDefaultFeatures = [ "std" ];
@@ -3239,7 +3350,7 @@ rec {
           "i128" = [ "num-traits/i128" ];
           "std" = [ "num-traits/std" ];
         };
-        resolvedDefaultFeatures = [ "std" ];
+        resolvedDefaultFeatures = [ "i128" "std" ];
       };
       "num-iter" = rec {
         crateName = "num-iter";
@@ -3272,9 +3383,9 @@ rec {
           "i128" = [ "num-integer/i128" "num-traits/i128" ];
           "std" = [ "num-integer/std" "num-traits/std" ];
         };
-        resolvedDefaultFeatures = [ "std" ];
+        resolvedDefaultFeatures = [ "i128" "std" ];
       };
-      "num-rational" = rec {
+      "num-rational 0.2.4" = rec {
         crateName = "num-rational";
         version = "0.2.4";
         edition = "2015";
@@ -3285,7 +3396,7 @@ rec {
         dependencies = [
           {
             name = "num-bigint";
-            packageId = "num-bigint";
+            packageId = "num-bigint 0.2.6";
             optional = true;
             usesDefaultFeatures = false;
           }
@@ -3315,6 +3426,47 @@ rec {
         };
         resolvedDefaultFeatures = [ "bigint" "num-bigint" "std" ];
       };
+      "num-rational 0.4.0" = rec {
+        crateName = "num-rational";
+        version = "0.4.0";
+        edition = "2018";
+        sha256 = "0ska19zb05f84b1cki7vyzy5wjqs26y82hiq1d9gabbw2syh45yl";
+        authors = [
+          "The Rust Project Developers"
+        ];
+        dependencies = [
+          {
+            name = "num-bigint";
+            packageId = "num-bigint 0.4.0";
+            optional = true;
+            usesDefaultFeatures = false;
+          }
+          {
+            name = "num-integer";
+            packageId = "num-integer";
+            usesDefaultFeatures = false;
+            features = [ "i128" ];
+          }
+          {
+            name = "num-traits";
+            packageId = "num-traits";
+            usesDefaultFeatures = false;
+            features = [ "i128" ];
+          }
+        ];
+        buildDependencies = [
+          {
+            name = "autocfg";
+            packageId = "autocfg 1.0.1";
+          }
+        ];
+        features = {
+          "default" = [ "num-bigint-std" "std" ];
+          "num-bigint-std" = [ "num-bigint/std" ];
+          "std" = [ "num-integer/std" "num-traits/std" ];
+        };
+        resolvedDefaultFeatures = [ "num-bigint" "num-bigint-std" "std" ];
+      };
       "num-traits" = rec {
         crateName = "num-traits";
         version = "0.2.14";
@@ -3332,7 +3484,7 @@ rec {
         features = {
           "default" = [ "std" ];
         };
-        resolvedDefaultFeatures = [ "std" ];
+        resolvedDefaultFeatures = [ "i128" "std" ];
       };
       "num_cpus" = rec {
         crateName = "num_cpus";
@@ -3763,7 +3915,7 @@ rec {
           }
           {
             name = "num";
-            packageId = "num";
+            packageId = "num 0.2.1";
           }
           {
             name = "serde";
@@ -4739,9 +4891,9 @@ rec {
       };
       "rustc-demangle" = rec {
         crateName = "rustc-demangle";
-        version = "0.1.20";
+        version = "0.1.21";
         edition = "2015";
-        sha256 = "0jcdh4zanli1r4pcfj5ah1xcbxv87vh02syb9f0rqgp0nnq71bfy";
+        sha256 = "0hn3xyd2n3bg3jnc5a5jbzll32n4r5a65bqzs287l30m5c53xw3y";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -4960,11 +5112,11 @@ rec {
           "OSX_10_9" = [ "security-framework-sys/OSX_10_9" ];
         };
       };
-      "security-framework 2.3.1" = rec {
+      "security-framework 2.4.0" = rec {
         crateName = "security-framework";
-        version = "2.3.1";
+        version = "2.4.0";
         edition = "2018";
-        sha256 = "0rz4xhcz70718iww6qa4zbmjzff0dqbcf6yggvbi2fks2j2sr8i3";
+        sha256 = "19cjniqcs8jgkikcxlmz1cwlxks0z5c11ibi9yq7b27vvyfd56sv";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
           "Kornel <kornel@geekhood.net>"
@@ -4987,8 +5139,12 @@ rec {
             packageId = "libc";
           }
           {
+            name = "num";
+            packageId = "num 0.4.0";
+          }
+          {
             name = "security-framework-sys";
-            packageId = "security-framework-sys 2.3.0";
+            packageId = "security-framework-sys 2.4.0";
             usesDefaultFeatures = false;
           }
         ];
@@ -5029,11 +5185,11 @@ rec {
           "OSX_10_13" = [ "OSX_10_12" ];
         };
       };
-      "security-framework-sys 2.3.0" = rec {
+      "security-framework-sys 2.4.0" = rec {
         crateName = "security-framework-sys";
-        version = "2.3.0";
+        version = "2.4.0";
         edition = "2018";
-        sha256 = "1172fsfk37jxh33qbx3bivzph0hnxrn0nrrfffvnz2sb3fwzykky";
+        sha256 = "1y56rva4ly5x3zbzjmavsjz4gzdiriv4cp0n3hqw6k29dql3l4qr";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
           "Kornel <kornel@geekhood.net>"
@@ -5090,9 +5246,9 @@ rec {
       };
       "serde" = rec {
         crateName = "serde";
-        version = "1.0.127";
+        version = "1.0.129";
         edition = "2015";
-        sha256 = "1s7s8vqwf6lgmddcqjpcrx907afgn83lzwnkg5klxlgnmdw9hfzh";
+        sha256 = "1wgqi7j6szk736wj61gjvbplx3lx7cx4gnlf2x9khxdas8v2ixyi";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -5118,9 +5274,9 @@ rec {
       };
       "serde_derive" = rec {
         crateName = "serde_derive";
-        version = "1.0.127";
+        version = "1.0.129";
         edition = "2015";
-        sha256 = "1k2ywp5qg490x5kxv7xljfj5a4x54krf15w56836cl9j6inr4950";
+        sha256 = "1ws9lbqbn36wn22vyyil9rhq7hns19nm32sm4xjabn9ksmxfhyp5";
         procMacro = true;
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
@@ -5322,9 +5478,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.74";
+        version = "1.0.75";
         edition = "2018";
-        sha256 = "175j336afigixhzixxs821sgw2xh38v023y2vg1qhi8dalrdhwqq";
+        sha256 = "19vfj2l02g170nyhfx1d9cz97n8va6zsldy4zv2hj05airz8zxdp";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
