@@ -9,11 +9,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1630058711,
-        "narHash": "sha256-5qvn8k4iG7XdWSb0djrEVEdJAYtftu91xJk8BkY+8TI=",
+        "lastModified": 1630320221,
+        "narHash": "sha256-sdMLlx8d4nN7zlbKzPBQp6BrPfliZvlulScqbloImnY=",
         "ref": "master",
-        "rev": "69fad3a17bc4b38cf9dd008165426f76ac4e4bff",
-        "revCount": 16,
+        "rev": "082921f6f3805286021dfcf69864c31a31af9ab5",
+        "revCount": 20,
         "type": "git",
         "url": "https://gitlab.dbc.dk/platform/bump-o-matic.git"
       },
@@ -28,11 +28,11 @@
         "nixpkgs-default": "nixpkgs-default"
       },
       "locked": {
-        "lastModified": 1629720278,
-        "narHash": "sha256-2wiODJsUyhEiEQ11EgMyevygXcp0X4zQOxxbTXd2PCI=",
+        "lastModified": 1630510566,
+        "narHash": "sha256-yltfU1icCo0nxgaqPoiBa37LDJ0J9tPk6IaHdFs7NP4=",
         "ref": "master",
-        "rev": "1e6474a8842929b0884918c9c2e7277800614916",
-        "revCount": 297,
+        "rev": "d1b98306226a66d84fad67d83fb7a4190cff3c42",
+        "revCount": 313,
         "type": "git",
         "url": "https://gitlab.dbc.dk/it/facts.git"
       },
@@ -78,11 +78,11 @@
     },
     "nixpkgs-default": {
       "locked": {
-        "lastModified": 1626679483,
-        "narHash": "sha256-+BziIOkCKGqEvT8Xl59hym6CcB0hakqqxigKSuuBXmM=",
+        "lastModified": 1630076329,
+        "narHash": "sha256-mkxPL5pXZv8cfHgjSW0oWfZRGSSlGwXy/7KR+2Mgf3M=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "4181644d09b96af0f92c2f025d3463f9d19c7790",
+        "rev": "74d017edb6717ad76d38edc02ad3210d4ad66b96",
         "type": "github"
       },
       "original": {
@@ -94,11 +94,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1627391865,
-        "narHash": "sha256-tPoWBO9Nzu3wuX37WcnctzL6LoDCErJLnfLGqqmXCm4=",
+        "lastModified": 1630074300,
+        "narHash": "sha256-BFM7OiXRs0RvSUZd6NCGAKWVPn3VodgYQ4TUQXxbMBU=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "8ecc61c91a596df7d3293603a9c2384190c1b89a",
+        "rev": "21c937f8cb1e6adcfeb36dfd6c90d9d9bfab1d28",
         "type": "github"
       },
       "original": {
