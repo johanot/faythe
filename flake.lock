@@ -28,11 +28,11 @@
         "nixpkgs-default": "nixpkgs-default"
       },
       "locked": {
-        "lastModified": 1631723126,
-        "narHash": "sha256-tXbFihE32Xk1LkkGomt/EG6GGaKKL9Gpznwr5pL/y14=",
+        "lastModified": 1632382149,
+        "narHash": "sha256-KdA2WLpXNChS/CxstzWmlbQVEUPA7QySwCmVBW66KVs=",
         "ref": "master",
-        "rev": "24fb256edf63216d74047368a521337012c9eb14",
-        "revCount": 322,
+        "rev": "22c89bb7f68426b88db8efd9d0894d3bdb39937f",
+        "revCount": 330,
         "type": "git",
         "url": "https://gitlab.dbc.dk/it/facts.git"
       },
