@@ -400,9 +400,9 @@ rec {
       };
       "bumpalo" = rec {
         crateName = "bumpalo";
-        version = "3.7.0";
+        version = "3.7.1";
         edition = "2018";
-        sha256 = "0ccn025n0x1gc0ijjlabin2xs7dkx5yfagkskr93yw9c06pyfncw";
+        sha256 = "0f55q7915m5dx5cgn5cli72z0gk18nf2757rd63lky4ypzvngpyr";
         authors = [
           "Nick Fitzgerald <fitzgen@gmail.com>"
         ];
@@ -971,8 +971,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "507fa934a7f2ab2d8b160f588dd2a260caa8798b";
-          sha256 = "0wjp7m5id8q6k3qpaiivbaqgqvl7gnsn3v6lyykn1q326f31v5ca";
+          rev = "72741d1cbe4b8ac2b3d80b5c6e930dd707f0badd";
+          sha256 = "04fh1k9cvd4pyp0b6slh3brigzafg1gh76sydcq6ifcjwhl6nv3q";
         };
         dependencies = [
           {
@@ -1913,7 +1913,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.4";
+            packageId = "http 0.2.5";
           }
           {
             name = "indexmap";
@@ -2063,11 +2063,11 @@ rec {
         ];
 
       };
-      "http 0.2.4" = rec {
+      "http 0.2.5" = rec {
         crateName = "http";
-        version = "0.2.4";
+        version = "0.2.5";
         edition = "2018";
-        sha256 = "04fcnqbnqmrsnphz5lbca2plascsm8bib5csd518bqj7qyd8qzjj";
+        sha256 = "0sqqidxilz83h3nr9g3hwsa0z34mh6clrrdfvvd2f66l0mmhj8qk";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
           "Carl Lerche <me@carllerche.com>"
@@ -2135,7 +2135,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.4";
+            packageId = "http 0.2.5";
           }
         ];
 
@@ -2329,7 +2329,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.4";
+            packageId = "http 0.2.5";
           }
           {
             name = "http-body";
@@ -3447,9 +3447,9 @@ rec {
       };
       "openssl-sys" = rec {
         crateName = "openssl-sys";
-        version = "0.9.66";
+        version = "0.9.67";
         edition = "2015";
-        sha256 = "10nwcz53h9zznq46g6nfqqd4wgw388akzig03q6vfqg50p9x55hr";
+        sha256 = "0n5023ri01wfx54rr1zndi8qda6mhzscdpj09gsamqvczj6jvpv9";
         build = "build/main.rs";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
@@ -3747,7 +3747,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.4";
+            packageId = "http 0.2.5";
           }
           {
             name = "hyper";
@@ -5323,9 +5323,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.76";
+        version = "1.0.77";
         edition = "2018";
-        sha256 = "110vb9zy9fvijppwpalz5qh9g4g6y0m4vgrd4iaj0b1c83dhgwf6";
+        sha256 = "1870dx7d4h54w2qiczlx66d6snbmvkla9zhcj2ap9xgyw1lbqfaj";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -6151,9 +6151,9 @@ rec {
       };
       "tracing" = rec {
         crateName = "tracing";
-        version = "0.1.27";
+        version = "0.1.28";
         edition = "2018";
-        sha256 = "0zj33bpwhlb1p7r1hhfagxd2sfzvqkjsbzcdcfl9fr3x5fv9mfn2";
+        sha256 = "1a5xmjns2lwfvk4j6na0w7s63nzandfdy3f2hyb430hcbh4nxyc4";
         authors = [
           "Eliza Weisman <eliza@buoyant.io>"
           "Tokio Contributors <team@tokio.rs>"
