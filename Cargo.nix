@@ -971,8 +971,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "72741d1cbe4b8ac2b3d80b5c6e930dd707f0badd";
-          sha256 = "04fh1k9cvd4pyp0b6slh3brigzafg1gh76sydcq6ifcjwhl6nv3q";
+          rev = "08b2bb5538a497533ab6ee695d0b5eaa703b00f5";
+          sha256 = "002m44bj2qda0n5im51wr5mbm8d9n33qq8pzv8ymsswnffal4309";
         };
         dependencies = [
           {
@@ -2688,9 +2688,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.102";
+        version = "0.2.103";
         edition = "2015";
-        sha256 = "00z1f4hypdkbvajk6rj9yqjk7k4acgg5yzi64flg7z2bk27sr9d2";
+        sha256 = "1xpd65rnpdniyj565zvyn9pqr29vsrah1vr1yda76qksl5ap53yx";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3662,9 +3662,9 @@ rec {
       };
       "pkg-config" = rec {
         crateName = "pkg-config";
-        version = "0.3.19";
+        version = "0.3.20";
         edition = "2015";
-        sha256 = "0k4860955riciibxr8bhnklp79jydp4xfylwdn5v9kj96hxlac9q";
+        sha256 = "1jz6qlr0k0nz5bxijdba6bznll98zkfnqx763swr6y1qni0i16vw";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -5239,15 +5239,16 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
-      "smallvec 1.6.1" = rec {
+      "smallvec 1.7.0" = rec {
         crateName = "smallvec";
-        version = "1.6.1";
+        version = "1.7.0";
         edition = "2018";
-        sha256 = "0kk08axr0ybfbjzk65a41k84mb6sfhyajmfndaka9igkx34kf3zy";
+        sha256 = "02gka690j8l12gl50ifg7axqnx1m6v6d1byaq0wl3fx66p3vdjhy";
         authors = [
           "The Servo Project Developers"
         ];
         features = {
+          "const_new" = [ "const_generics" ];
         };
       };
       "socket2" = rec {
@@ -5543,9 +5544,9 @@ rec {
       };
       "tinyvec" = rec {
         crateName = "tinyvec";
-        version = "1.4.0";
+        version = "1.5.0";
         edition = "2018";
-        sha256 = "11m9pm752zxwm1afm2sbzmickv9wdlb8nw9jnh33cfj445pxshaj";
+        sha256 = "1xwiycwfl80737i952adpn1qawdi20kxr97bsymx14ch9lyjlfzq";
         authors = [
           "Lokathor <zefria@gmail.com>"
         ];
@@ -6294,7 +6295,7 @@ rec {
           }
           {
             name = "smallvec";
-            packageId = "smallvec 1.6.1";
+            packageId = "smallvec 1.7.0";
           }
           {
             name = "thiserror";
@@ -6381,7 +6382,7 @@ rec {
           }
           {
             name = "smallvec";
-            packageId = "smallvec 1.6.1";
+            packageId = "smallvec 1.7.0";
           }
           {
             name = "thiserror";

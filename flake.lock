@@ -28,11 +28,11 @@
         "nixpkgs-default": "nixpkgs-default"
       },
       "locked": {
-        "lastModified": 1632382149,
-        "narHash": "sha256-KdA2WLpXNChS/CxstzWmlbQVEUPA7QySwCmVBW66KVs=",
+        "lastModified": 1632950642,
+        "narHash": "sha256-7pXyR+HQ2EG26X2s1rwOWJNZcl9GNJgrKSJM6GrKgXY=",
         "ref": "master",
-        "rev": "22c89bb7f68426b88db8efd9d0894d3bdb39937f",
-        "revCount": 330,
+        "rev": "566ca988315936646f55992d953428f8664b3511",
+        "revCount": 341,
         "type": "git",
         "url": "https://gitlab.dbc.dk/it/facts.git"
       },
@@ -78,11 +78,11 @@
     },
     "nixpkgs-default": {
       "locked": {
-        "lastModified": 1631545603,
-        "narHash": "sha256-aT2UoEOnlEBpMRZKBLu/OBsDNTZQS48scjcL936VSLI=",
+        "lastModified": 1632418649,
+        "narHash": "sha256-4rZspkiQU7zbsuciRRMgoEPkAF/+FSv2jx/VIPxPVx4=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "b3083bc6933eb7fa4ee7bd4802e9f72b56f3e654",
+        "rev": "056a3c1fae30d06d14b171b9023743c21a23ec1a",
         "type": "github"
       },
       "original": {
@@ -94,11 +94,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1631663639,
-        "narHash": "sha256-5oMEq+P2krgBbqogWx1k1JrsTCG0pUVYS9DvDzNNV3o=",
+        "lastModified": 1632411313,
+        "narHash": "sha256-lekODc44lVo9/0EwGiX6LoEt2KhiPdcfNopealMJ7n4=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "bcd607489d76795508c48261e1ad05f5d4b7672f",
+        "rev": "51bcdc4cdaac48535dabf0ad4642a66774c609ed",
         "type": "github"
       },
       "original": {
