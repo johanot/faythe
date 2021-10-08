@@ -482,10 +482,10 @@ rec {
       };
       "cc" = rec {
         crateName = "cc";
-        version = "1.0.70";
+        version = "1.0.71";
         edition = "2018";
         crateBin = [];
-        sha256 = "1h0dm9pr7l2g6228pzl5fawd43s3zjkfzxvhvczgm154nvj6qsnj";
+        sha256 = "1pgflzb5dc9pli1lfwfv5jksmz57j15iqqxqpdbnjq4lclfnihkr";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -971,8 +971,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "08b2bb5538a497533ab6ee695d0b5eaa703b00f5";
-          sha256 = "002m44bj2qda0n5im51wr5mbm8d9n33qq8pzv8ymsswnffal4309";
+          rev = "cf2f34579a038f38bd63065a784f6bde041836c2";
+          sha256 = "1pzfmixi4hzx3ihdm573pd1ixxmwirpnas7chyvrqgbw80cpf8j6";
         };
         dependencies = [
           {
@@ -3812,9 +3812,9 @@ rec {
       };
       "quote" = rec {
         crateName = "quote";
-        version = "1.0.9";
+        version = "1.0.10";
         edition = "2018";
-        sha256 = "19rjmfqzk26rxbgxy5j2ckqc2v12sw2xw8l4gi8bzpn2bmsbkl63";
+        sha256 = "01ff7a76f871ggnby57iagw6499vci4bihcr11g6bqzjlp38rg1q";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -5324,9 +5324,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.77";
+        version = "1.0.80";
         edition = "2018";
-        sha256 = "1870dx7d4h54w2qiczlx66d6snbmvkla9zhcj2ap9xgyw1lbqfaj";
+        sha256 = "156i2pkz6rqic3zgfgq5wjhgy1gwmrm93aahsr8nv45x7xia246h";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -6152,9 +6152,9 @@ rec {
       };
       "tracing" = rec {
         crateName = "tracing";
-        version = "0.1.28";
+        version = "0.1.29";
         edition = "2018";
-        sha256 = "1a5xmjns2lwfvk4j6na0w7s63nzandfdy3f2hyb430hcbh4nxyc4";
+        sha256 = "0191zcbnkn8wy0b7xbz7jd9m2xf3sjr8k3cfqzghxwya6a966nip";
         authors = [
           "Eliza Weisman <eliza@buoyant.io>"
           "Tokio Contributors <team@tokio.rs>"
@@ -6195,9 +6195,9 @@ rec {
       };
       "tracing-core" = rec {
         crateName = "tracing-core";
-        version = "0.1.20";
+        version = "0.1.21";
         edition = "2018";
-        sha256 = "1krsibdghzcg5rnl4g74lxnl23j2bamkwsbd1hdwh8b1q845c4j6";
+        sha256 = "1r262wskhm6wmc5i2bxz44nglyzqaq3x50s0h5q0ffdq6xbdckhz";
         authors = [
           "Tokio Contributors <team@tokio.rs>"
         ];
@@ -6469,9 +6469,9 @@ rec {
       };
       "unicode-bidi" = rec {
         crateName = "unicode-bidi";
-        version = "0.3.6";
+        version = "0.3.7";
         edition = "2018";
-        sha256 = "11805a54czim5qj0p122lqr42z86bmm73zq6c4y4wykywr14qvr4";
+        sha256 = "13v7v8pp7mdqqf0ypk73va78c3b4xzpryvbls9p47nz3cd34008s";
         libName = "unicode_bidi";
         authors = [
           "The Servo Project Developers"
