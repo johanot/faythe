@@ -745,18 +745,18 @@ rec {
           "with-uuid" = [ "uuid" ];
         };
       };
-      "core-foundation 0.9.1" = rec {
+      "core-foundation 0.9.2" = rec {
         crateName = "core-foundation";
-        version = "0.9.1";
+        version = "0.9.2";
         edition = "2015";
-        sha256 = "0qhackx0i914nbhcwi6bbxnyyqqldgxc046gviak3a3f8apf528a";
+        sha256 = "1cs7dya58xf4px4b1953040fpz5lm3qhf7fzv0jf94xva42y3238";
         authors = [
           "The Servo Project Developers"
         ];
         dependencies = [
           {
             name = "core-foundation-sys";
-            packageId = "core-foundation-sys 0.8.2";
+            packageId = "core-foundation-sys 0.8.3";
           }
           {
             name = "libc";
@@ -781,11 +781,11 @@ rec {
         features = {
         };
       };
-      "core-foundation-sys 0.8.2" = rec {
+      "core-foundation-sys 0.8.3" = rec {
         crateName = "core-foundation-sys";
-        version = "0.8.2";
+        version = "0.8.3";
         edition = "2015";
-        sha256 = "06wq7yb7mlkc4h2kbc0yjfi0xv44z4snzdpr7c1l0zm4hi91n8pa";
+        sha256 = "1p5r2wckarkpkyc4z83q08dwpvcafrb1h6fxfa3qnikh8szww9sq";
         authors = [
           "The Servo Project Developers"
         ];
@@ -971,8 +971,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "cf2f34579a038f38bd63065a784f6bde041836c2";
-          sha256 = "1pzfmixi4hzx3ihdm573pd1ixxmwirpnas7chyvrqgbw80cpf8j6";
+          rev = "047b302ca1319b3457d62e07b74b0fa1469a9394";
+          sha256 = "1hlljnjng4s2pm0vik48r2hcy4i8r5j1bzlga4x3h3xdqsfh00bh";
         };
         dependencies = [
           {
@@ -3672,9 +3672,9 @@ rec {
       };
       "ppv-lite86" = rec {
         crateName = "ppv-lite86";
-        version = "0.2.10";
+        version = "0.2.14";
         edition = "2018";
-        sha256 = "0ms8198kclg4h96ggbziixxmsdl847s648kmbx11zlmjsqjccx5c";
+        sha256 = "0hdp3m8f1d0rlfmlf7n2a5ndzjh2ybpc816d2npg97qjs0dh3jn3";
         authors = [
           "The CryptoCorrosion Contributors"
         ];
@@ -3706,9 +3706,9 @@ rec {
       };
       "proc-macro2" = rec {
         crateName = "proc-macro2";
-        version = "1.0.29";
+        version = "1.0.30";
         edition = "2018";
-        sha256 = "0gfj25ksq90ifcssfnwv46v856sxd885wmm9bhrj1ays9xfi1xdr";
+        sha256 = "0w7fc5mvk7jsfgn1pmiphkvjd0min12zj1y0l1zqpg37pj73bhzd";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -4976,11 +4976,11 @@ rec {
           }
           {
             name = "core-foundation";
-            packageId = "core-foundation 0.9.1";
+            packageId = "core-foundation 0.9.2";
           }
           {
             name = "core-foundation-sys";
-            packageId = "core-foundation-sys 0.8.2";
+            packageId = "core-foundation-sys 0.8.3";
           }
           {
             name = "libc";
@@ -5042,7 +5042,7 @@ rec {
         dependencies = [
           {
             name = "core-foundation-sys";
-            packageId = "core-foundation-sys 0.8.2";
+            packageId = "core-foundation-sys 0.8.3";
           }
           {
             name = "libc";
@@ -5208,9 +5208,9 @@ rec {
       };
       "slab" = rec {
         crateName = "slab";
-        version = "0.4.4";
+        version = "0.4.5";
         edition = "2018";
-        sha256 = "1465rj4y59qjvzxik0v2m0mp71q50m9xfigxqww7yhsw3hna61y3";
+        sha256 = "1ddg01hf8h4bpfm027h0snhb7jfcs1jzi497083y13q13vyr3vwx";
         authors = [
           "Carl Lerche <me@carllerche.com>"
         ];
@@ -5357,9 +5357,9 @@ rec {
       };
       "synstructure" = rec {
         crateName = "synstructure";
-        version = "0.12.5";
+        version = "0.12.6";
         edition = "2018";
-        sha256 = "1yplh90imfrp1rycnl18rg8l9d19xbmak1bq1g2065mady9aljj7";
+        sha256 = "03r1lydbf3japnlpc4wka7y90pmz1i0danaj3f9a7b431akdlszk";
         authors = [
           "Nika Layzell <nika@thelayzells.com>"
         ];
@@ -5469,9 +5469,9 @@ rec {
       };
       "thiserror" = rec {
         crateName = "thiserror";
-        version = "1.0.29";
+        version = "1.0.30";
         edition = "2018";
-        sha256 = "124v54fr3b3i230naz4j04l401dnf2fb0d1g5fg3d0rd9c3clbk0";
+        sha256 = "05y4wm29ck8flwq5k1q6nhwh00a3b30cz3xr0qvnbwad5vjsnjw5";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -5485,9 +5485,9 @@ rec {
       };
       "thiserror-impl" = rec {
         crateName = "thiserror-impl";
-        version = "1.0.29";
+        version = "1.0.30";
         edition = "2018";
-        sha256 = "0k290k93cs3gfmfjfdz23srx3rl0grj3lxh0hhjxxs3q5k657mds";
+        sha256 = "0jviwmvx6wzawsj6c9msic7h419wmsbjagl9dzhpydkzc8zzscma";
         procMacro = true;
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
