@@ -289,9 +289,9 @@ rec {
       };
       "backtrace" = rec {
         crateName = "backtrace";
-        version = "0.3.61";
+        version = "0.3.62";
         edition = "2018";
-        sha256 = "00cv8523igvh3salpxhqacmy5z4s9g0khrw9kqrylkkkjbc0bag7";
+        sha256 = "0lp1g3fb4skk6lyq6wyzm1n7z1g60pl1qs12lmmgjl4rvbrcs6q9";
         authors = [
           "The Rust Project Developers"
         ];
@@ -400,9 +400,9 @@ rec {
       };
       "bumpalo" = rec {
         crateName = "bumpalo";
-        version = "3.7.1";
+        version = "3.8.0";
         edition = "2018";
-        sha256 = "0f55q7915m5dx5cgn5cli72z0gk18nf2757rd63lky4ypzvngpyr";
+        sha256 = "0v5vck40wmz95d48gq0z3al32vy1yic8fihjkb0sfh4h7862c7lg";
         authors = [
           "Nick Fitzgerald <fitzgen@gmail.com>"
         ];
@@ -971,8 +971,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "047b302ca1319b3457d62e07b74b0fa1469a9394";
-          sha256 = "1hlljnjng4s2pm0vik48r2hcy4i8r5j1bzlga4x3h3xdqsfh00bh";
+          rev = "3bf425938cea1db9c9b44c1b6e75cc750e5cc1f3";
+          sha256 = "1bfm6lrqb4q7fyr78izfg8mrd19vy34h3pvzccl9aynhvg55g35q";
         };
         dependencies = [
           {
@@ -1044,9 +1044,9 @@ rec {
       };
       "encoding_rs" = rec {
         crateName = "encoding_rs";
-        version = "0.8.28";
+        version = "0.8.29";
         edition = "2018";
-        sha256 = "0rf0r99q4kgjrx22kx7pjyjg4lm21599y3ggvy3hzj2spi7h5pw0";
+        sha256 = "0in7l50j06qmzzwk0h6bs5kdlyj5zyx9ab745lrzd60v1adahkm7";
         authors = [
           "Henri Sivonen <hsivonen@hsivonen.fi>"
         ];
@@ -1057,9 +1057,11 @@ rec {
           }
         ];
         features = {
+          "default" = [ "alloc" ];
           "fast-legacy-encode" = [ "fast-hangul-encode" "fast-hanja-encode" "fast-kanji-encode" "fast-gb-hanzi-encode" "fast-big5-hanzi-encode" ];
           "simd-accel" = [ "packed_simd" "packed_simd/into_bits" ];
         };
+        resolvedDefaultFeatures = [ "alloc" "default" ];
       };
       "enum-as-inner" = rec {
         crateName = "enum-as-inner";
@@ -2688,9 +2690,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.103";
+        version = "0.2.104";
         edition = "2015";
-        sha256 = "1xpd65rnpdniyj565zvyn9pqr29vsrah1vr1yda76qksl5ap53yx";
+        sha256 = "1knzxi1fk75yfz6zqf160yc55awh7gdpx6viwwlikkz1038rcbvv";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3357,9 +3359,9 @@ rec {
       };
       "object" = rec {
         crateName = "object";
-        version = "0.26.2";
+        version = "0.27.0";
         edition = "2018";
-        sha256 = "1hmbm3zn48g510y4m3h3nqxnvrzlcfrbbg09dlxx5jiw0x87xwrr";
+        sha256 = "0qy3m990l6v1q3ak5hln0kgy7y9sjpphjf44kfw9259h316028f8";
         dependencies = [
           {
             name = "memchr";
@@ -3371,13 +3373,14 @@ rec {
           "all" = [ "read" "write" "std" "compression" "wasm" ];
           "compression" = [ "flate2" "std" ];
           "default" = [ "read" "compression" ];
+          "doc" = [ "read_core" "write_core" "std" "compression" "archive" "coff" "elf" "macho" "pe" "wasm" ];
           "pe" = [ "coff" ];
           "read" = [ "read_core" "archive" "coff" "elf" "macho" "pe" "unaligned" ];
           "rustc-dep-of-std" = [ "core" "compiler_builtins" "alloc" "memchr/rustc-dep-of-std" ];
           "std" = [ "memchr/std" ];
           "wasm" = [ "wasmparser" ];
-          "write" = [ "write_core" "coff" "elf" "macho" ];
-          "write_core" = [ "crc32fast" "indexmap" "std" ];
+          "write" = [ "write_core" "coff" "elf" "macho" "pe" ];
+          "write_core" = [ "crc32fast" "indexmap/std" "std" ];
         };
         resolvedDefaultFeatures = [ "archive" "coff" "elf" "macho" "pe" "read_core" "unaligned" ];
       };

@@ -29,11 +29,11 @@
         "nixpkgs-default": "nixpkgs-default"
       },
       "locked": {
-        "lastModified": 1634199803,
-        "narHash": "sha256-klbwvEFrtHxvch5pDirbGXIKB3ONi0ob3CJO/FeXOdM=",
+        "lastModified": 1634302317,
+        "narHash": "sha256-yHTXGzoenUR/DzEulOlpavFXI0lUW/Y0QdCvOptLaz0=",
         "ref": "master",
-        "rev": "3fa520326574cc64b2e50994be01708ade35f883",
-        "revCount": 370,
+        "rev": "93b3854503d27a59b3b2ffdb814dca86f7882fea",
+        "revCount": 383,
         "type": "git",
         "url": "https://gitlab.dbc.dk/it/facts.git"
       },
@@ -111,11 +111,11 @@
     },
     "utils": {
       "locked": {
-        "lastModified": 1631561581,
-        "narHash": "sha256-3VQMV5zvxaVLvqqUrNz3iJelLw30mIVSfZmAaauM3dA=",
+        "lastModified": 1634851050,
+        "narHash": "sha256-N83GlSGPJJdcqhUxSCS/WwW5pksYf3VP1M13cDRTSVA=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "7e5bf3925f6fbdfaf50a2a7ca0be2879c4261d19",
+        "rev": "c91f3de5adaf1de973b797ef7485e441a65b8935",
         "type": "github"
       },
       "original": {
