@@ -13,6 +13,10 @@ use crate::config::Zone;
 use self::trust_dns_resolver::Resolver;
 use self::trust_dns_resolver::error::{ResolveError,ResolveErrorKind};
 use std::string::String;
+use tempfile::NamedTempFile;
+use crate::vault;
+use std::fs;
+use crate::vault::VaultError;
 
 #[derive(Debug)]
 pub enum DNSError {
@@ -21,13 +25,15 @@ pub enum DNSError {
     OutputFormat,
     ResolveError(ResolveError),
     WrongAnswer(String),
-    WrongSpec
+    WrongSpec,
+    Vault(VaultError),
+    KeyMissing,
 }
 
 pub fn add(config: &FaytheConfig, name: &DNSName, proof: &String) -> Result<(), DNSError> {
     let zone = name.find_zone(&config)?;
     let command = add_cmd(zone, &name, &proof);
-    update_dns(&command, &zone)
+    update_dns(&config, &command, &zone)
 }
 
 fn add_cmd(zone: &Zone, name: &DNSName, proof: &String) -> String {
@@ -42,11 +48,11 @@ fn add_cmd(zone: &Zone, name: &DNSName, proof: &String) -> String {
 pub fn delete(config: &FaytheConfig, spec: &CertSpec) -> Result<(), DNSError> {
     let zone = spec.cn.find_zone(&config)?;
     let command = delete_cmd(zone, &spec.cn);
-    update_dns(&command, &zone)?;
+    update_dns(&config, &command, &zone)?;
     for s in &spec.sans {
         let zone = s.find_zone(&config)?;
         let command = delete_cmd(zone, &s);
-        update_dns(&command, &zone)?
+        update_dns(&config, &command, &zone)?
     }
     Ok(())
 }
@@ -93,10 +99,47 @@ fn challenge_host(host: &DNSName, zone: Option<&Zone>) -> String {
     format!("_acme-challenge.{}{}.", &host.to_parent_domain_string(), &suffix)
 }
 
-fn update_dns(command: &String, zone: &Zone) -> Result<(), DNSError> {
+use std::time::Duration;
+use ttl_cache::TtlCache;
+use tokio::runtime::Runtime;
+use std::io::Write;
+use std::cell::RefCell;
+
+
+fn update_dns(faythe_config: &FaytheConfig, command: &String, zone: &Zone) -> Result<(), DNSError> {
+    thread_local! {
+        static KEY_CACHE: RefCell<TtlCache<String, String>> = RefCell::new(TtlCache::new(32));
+    }
+
+    let tmp_file_path = {
+        let tmp_file = NamedTempFile::new_in(&faythe_config.secret_temp_path)?;
+        let secret = KEY_CACHE.with(|cache| {
+            let key = cache.borrow().get(&zone.key).map(|e| e.to_owned());
+            match key {
+                Some(k) => Ok(k),
+                None => {
+                    let runtime = Runtime::new().unwrap();
+                    runtime.block_on(async {
+                        let key = fetch_key(&faythe_config, &zone).await;
+                        // five minute cache duration is arbitrary.
+                        // just want to avoid refetching keys 10 times for a single cert issue with 10 sans
+                        key
+                            .map(|k| {
+                                cache.borrow_mut().insert(zone.key.clone(), k.clone(), Duration::from_secs(5*60));
+                                k.to_owned()
+                            })
+                    })
+                }
+            }
+        });
+
+        write!(&tmp_file, "{}", secret?)?; // write raw secret to temporary file
+        tmp_file.into_temp_path() // marks temp file as deleteable once tmp_file_path is dropped
+    };
+
     let mut cmd = Command::new("nsupdate");
     let mut child = cmd.arg("-k")
-        .arg(&zone.key)
+        .arg(&tmp_file_path)
         .stdin(Stdio::piped())
         .spawn_ok()?;
     {
@@ -104,6 +147,20 @@ fn update_dns(command: &String, zone: &Zone) -> Result<(), DNSError> {
     }
 
     Ok(child.wait()?)
+}
+
+// either fetch keys from vault (if vault config is set) or directly from a file
+async fn fetch_key(config: &FaytheConfig, zone: &Zone) -> Result<String, DNSError> {
+    Ok(match &config.vault {
+        Some(conf) => {
+            let client = vault::authenticate(conf).await.map_err(|inner| DNSError::Vault(inner))?;
+            let keys = vault::read(&client, conf, &zone.key).await.map_err(|inner| DNSError::Vault(inner))?;
+            keys.get("key").ok_or(DNSError::KeyMissing)?.clone()
+        },
+        None => {
+            fs::read_to_string(&zone.key).map_err(|inner| DNSError::IO(inner))?
+        }
+    })
 }
 
 
