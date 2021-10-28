@@ -17,6 +17,7 @@ use tempfile::NamedTempFile;
 use crate::vault;
 use std::fs;
 use crate::vault::VaultError;
+use tempfile::TempPath;
 
 #[derive(Debug)]
 pub enum DNSError {
@@ -134,12 +135,12 @@ fn update_dns(faythe_config: &FaytheConfig, command: &String, zone: &Zone) -> Re
         });
 
         write!(&tmp_file, "{}", secret?)?; // write raw secret to temporary file
-        tmp_file.into_temp_path() // marks temp file as deleteable once tmp_file_path is dropped
+        TempPathWrapper(Some(tmp_file.into_temp_path())) // marks temp file as deleteable once tmp_file_path is dropped
     };
 
     let mut cmd = Command::new("nsupdate");
     let mut child = cmd.arg("-k")
-        .arg(&tmp_file_path)
+        .arg(tmp_file_path.0.as_ref().unwrap())
         .stdin(Stdio::piped())
         .spawn_ok()?;
     {
@@ -147,6 +148,23 @@ fn update_dns(faythe_config: &FaytheConfig, command: &String, zone: &Zone) -> Re
     }
 
     Ok(child.wait()?)
+}
+
+struct TempPathWrapper(Option<TempPath>);
+
+impl Drop for TempPathWrapper {
+    fn drop(&mut self) {
+        if let Some(p) = self.0.take() {
+            let path = p.to_str().unwrap_or("<unknown>").to_string();
+            p.close()
+            .and_then(|()| { log::info(&format!("successfully deleted tempfile: {}", &path)); Ok(()) })
+            .or_else(|err| -> Result<(), std::io::Error> {
+                log::error(&format!("failed to delete secrets tempfile: {}", &path), &err);
+                // log error, but continue issuing
+                Ok(())
+            }).unwrap();
+        }
+    }
 }
 
 // either fetch keys from vault (if vault config is set) or directly from a file
