@@ -406,9 +406,7 @@ pub mod tests {
             monitor_interval: 0,
             renewal_threshold: 30,
             issue_grace: 0,
-            zones,
-            secret_temp_path: PathBuf::from("/tmp"),
-            vault: None,
+            zones
         };
 
         ConfigContainer{
@@ -459,9 +457,7 @@ pub mod tests {
             monitor_interval: 0,
             renewal_threshold: 30,
             issue_grace: 0,
-            zones,
-            secret_temp_path: PathBuf::from("/tmp"),
-            vault: None,
+            zones
         };
 
         ConfigContainer{

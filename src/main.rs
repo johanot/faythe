@@ -21,7 +21,6 @@ mod kube;
 mod file;
 mod dns;
 mod metrics;
-mod vault;
 
 #[macro_export]
 macro_rules! set {

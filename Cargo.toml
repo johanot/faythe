@@ -18,10 +18,6 @@ lazy_static = "1.4.0"
 walkdir = "2.3"
 trust-dns-resolver = "0.19"
 env_logger = "0.7.1"
-prometheus_exporter_base = { version = "1", features = [ "hyper_server" ] }
-tokio = { version = "1", features = [ "full" ] }
+prometheus_exporter_base = "0.31"
+tokio = { version = "0.2", features = [ "macros" ] }
 dbc-rust-modules = { git = "https://github.com/dbcdk/rust-modules", branch = "main" }
-vaultrs = { git = "https://github.com/jmgilman/vaultrs", branch = "master" }
-ttl_cache = "0.5"
-tempfile = "3"
-envfile = "0.2"

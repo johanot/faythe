@@ -6,11 +6,8 @@ use std::prelude::v1::Vec;
 use crate::file::FileSpec;
 use crate::common::SpecError;
 use std::collections::HashMap;
-use std::path::PathBuf;
-use serde::{Deserialize, Deserializer};
 
 #[derive(Clone, Deserialize, Debug)]
-#[serde(deny_unknown_fields)]
 pub struct FaytheConfig {
     #[serde(default = "default_metrics_port")]
     pub metrics_port: u16,
@@ -29,32 +26,9 @@ pub struct FaytheConfig {
     pub kube_monitor_configs: Vec<KubeMonitorConfig>,
     #[serde(default)]
     pub file_monitor_configs: Vec<FileMonitorConfig>,
-    pub vault: Option<VaultConfig>,
-    #[serde(default = "default_secret_temp_path")]
-    pub secret_temp_path: PathBuf,
 }
 
 #[derive(Clone, Deserialize, Debug)]
-#[serde(deny_unknown_fields)]
-pub struct VaultConfig {
-    pub addr: String,
-    pub app_role_env_file: PathBuf,
-    #[serde(deserialize_with = "deserialize_trim_slashes")]
-    pub kv_mount: String,
-    #[serde(deserialize_with = "deserialize_trim_slashes")]
-    pub kv_prefix: String,
-}
-
-fn deserialize_trim_slashes<'de, D>(deserializer: D) -> Result<String, D::Error>
-where
-    D: Deserializer<'de>,
-{
-     let raw: &str = Deserialize::deserialize(deserializer)?;
-     Ok(raw.trim_matches('/').to_string())
-}
-
-#[derive(Clone, Deserialize, Debug)]
-#[serde(deny_unknown_fields)]
 pub struct KubeMonitorConfig {
     pub secret_namespace: String,
     pub secret_hostlabel: String,
@@ -65,7 +39,6 @@ pub struct KubeMonitorConfig {
 }
 
 #[derive(Clone, Deserialize, Debug)]
-#[serde(deny_unknown_fields)]
 pub struct FileMonitorConfig {
     pub directory: String,
     pub specs: Vec<FileSpec>,
@@ -83,7 +56,6 @@ pub struct ConfigContainer {
 }
 
 #[derive(Clone, Deserialize, Debug)]
-#[serde(deny_unknown_fields)]
 pub struct Zone {
     pub server: String,
     pub key: String,
@@ -127,8 +99,6 @@ fn default_wildcard_cert_k8s_prefix() -> String { "wild--card".to_string() }
 fn default_k8s_touch_annotation() -> Option<String> { Some("faythe.touched".to_string()) }
 
 fn default_metrics_port() -> u16 { 9105 }
-
-fn default_secret_temp_path() -> PathBuf { PathBuf::from("/tmp") } // to make backward-compatibility easier, but you should really use a memory-based mount
 
 pub fn parse_config_file(file: &str) -> serde_json::Result<FaytheConfig> {
     let path = std::path::Path::new(&file);
