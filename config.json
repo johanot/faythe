@@ -26,5 +26,12 @@
         "challenge_suffix": "acme.dbc.dk"
       }
     },
-   "val_dns_servers": ["ns1.gratisdns.dk","ns2.gratisdns.dk","ns3.gratisdns.dk","ns4.gratisdns.dk","ns5.gratisdns.dk"]
+   "val_dns_servers": ["ns1.gratisdns.dk","ns2.gratisdns.dk","ns3.gratisdns.dk","ns4.gratisdns.dk","ns5.gratisdns.dk"],
+   "vault": {
+    "addr": "https://vault-a.dbccloud.dk:8200",
+    "app_role_env_file": "faythe-pnz.env",
+    "kv_mount": "kv",
+    "kv_prefix": "platform-vault-secrets/dns"
+  },
+  "secret_temp_path": "/run/faythe"
 }
