@@ -971,8 +971,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "3bf425938cea1db9c9b44c1b6e75cc750e5cc1f3";
-          sha256 = "1bfm6lrqb4q7fyr78izfg8mrd19vy34h3pvzccl9aynhvg55g35q";
+          rev = "796e47bdeafa4f67ded680a8ed4de15ddbd8558e";
+          sha256 = "08k7ys6a37xlll1v9hw9fp1n8xpji1pbiw0ssqi88qa4qvks3j15";
         };
         dependencies = [
           {
@@ -2690,9 +2690,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.104";
+        version = "0.2.105";
         edition = "2015";
-        sha256 = "1knzxi1fk75yfz6zqf160yc55awh7gdpx6viwwlikkz1038rcbvv";
+        sha256 = "04rhxxjvpd106b2yw2pxa4lcnm6wbk5nnx03b61ma3b26qhmg7c6";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3359,9 +3359,9 @@ rec {
       };
       "object" = rec {
         crateName = "object";
-        version = "0.27.0";
+        version = "0.27.1";
         edition = "2018";
-        sha256 = "0qy3m990l6v1q3ak5hln0kgy7y9sjpphjf44kfw9259h316028f8";
+        sha256 = "1ygv9zgi9wz6q5f2z9xn72i0c97jjr1dgj30kbyicdhxk8zivb37";
         dependencies = [
           {
             name = "memchr";
@@ -3401,9 +3401,9 @@ rec {
       };
       "openssl" = rec {
         crateName = "openssl";
-        version = "0.10.36";
+        version = "0.10.37";
         edition = "2018";
-        sha256 = "0jpz4nj3q8y9xqqhbvvgsqcdinkgv125s4kg80ybgh7yfvdsr7wd";
+        sha256 = "0xag7rmfadjmb3janvvz2z85vr7hwb5j42w8aa1njcrn83jbkiib";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
         ];
@@ -3450,9 +3450,9 @@ rec {
       };
       "openssl-sys" = rec {
         crateName = "openssl-sys";
-        version = "0.9.67";
+        version = "0.9.68";
         edition = "2015";
-        sha256 = "0n5023ri01wfx54rr1zndi8qda6mhzscdpj09gsamqvczj6jvpv9";
+        sha256 = "0l2ikxygkza3s5q3lvng4mhisdp2vdrvzkhpwhkx8vgnscjiymqw";
         build = "build/main.rs";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
@@ -3665,9 +3665,9 @@ rec {
       };
       "pkg-config" = rec {
         crateName = "pkg-config";
-        version = "0.3.20";
+        version = "0.3.22";
         edition = "2015";
-        sha256 = "1jz6qlr0k0nz5bxijdba6bznll98zkfnqx763swr6y1qni0i16vw";
+        sha256 = "07vy6mn0q6k2adrs7min3rpy999q7kprph0vb1414iwlybs5sa8j";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -3675,9 +3675,9 @@ rec {
       };
       "ppv-lite86" = rec {
         crateName = "ppv-lite86";
-        version = "0.2.14";
+        version = "0.2.15";
         edition = "2018";
-        sha256 = "0hdp3m8f1d0rlfmlf7n2a5ndzjh2ybpc816d2npg97qjs0dh3jn3";
+        sha256 = "1fimwnyyh3wx33r5s77lw5g5vcxhw1p5j60pdvbbwr8l374gn37d";
         authors = [
           "The CryptoCorrosion Contributors"
         ];
@@ -3709,12 +3709,12 @@ rec {
       };
       "proc-macro2" = rec {
         crateName = "proc-macro2";
-        version = "1.0.30";
+        version = "1.0.32";
         edition = "2018";
-        sha256 = "0w7fc5mvk7jsfgn1pmiphkvjd0min12zj1y0l1zqpg37pj73bhzd";
+        sha256 = "0hqbxlvhiaybakl1gai3mgps1dxsmxricxsr2rfdrh222z0qql5s";
         authors = [
-          "Alex Crichton <alex@alexcrichton.com>"
           "David Tolnay <dtolnay@gmail.com>"
+          "Alex Crichton <alex@alexcrichton.com>"
         ];
         dependencies = [
           {
@@ -5327,9 +5327,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.80";
+        version = "1.0.81";
         edition = "2018";
-        sha256 = "156i2pkz6rqic3zgfgq5wjhgy1gwmrm93aahsr8nv45x7xia246h";
+        sha256 = "0rh9hvwy75j3krmi4d4x76xb86f753hxr8mlxjbabddyp0cfxbzj";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
