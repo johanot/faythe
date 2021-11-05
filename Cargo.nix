@@ -139,9 +139,9 @@ rec {
       };
       "addr2line" = rec {
         crateName = "addr2line";
-        version = "0.16.0";
+        version = "0.17.0";
         edition = "2015";
-        sha256 = "1kday4xm4ky46ihsys3ch1vf5cv3lfjclfi610mpsb1xz6vz4q9y";
+        sha256 = "0sw16zqy6w0ar633z69m7lw6gb0k1y7xj3387a8wly43ij5div5r";
         dependencies = [
           {
             name = "gimli";
@@ -289,9 +289,9 @@ rec {
       };
       "backtrace" = rec {
         crateName = "backtrace";
-        version = "0.3.62";
+        version = "0.3.63";
         edition = "2018";
-        sha256 = "0lp1g3fb4skk6lyq6wyzm1n7z1g60pl1qs12lmmgjl4rvbrcs6q9";
+        sha256 = "1dp1dik2riphgslibafp3kzj95f8kgx42wkh4qghc4v5pbc2j5ij";
         authors = [
           "The Rust Project Developers"
         ];
@@ -971,8 +971,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "796e47bdeafa4f67ded680a8ed4de15ddbd8558e";
-          sha256 = "08k7ys6a37xlll1v9hw9fp1n8xpji1pbiw0ssqi88qa4qvks3j15";
+          rev = "e7b6f84b9022fbc1dd08d61562a8af4663e9542e";
+          sha256 = "0aicxcwiqq977n7c9qrz60pv98c3rp7a4fj8br0fjwazm8gq4pnv";
         };
         dependencies = [
           {
@@ -1815,17 +1815,18 @@ rec {
       };
       "gimli" = rec {
         crateName = "gimli";
-        version = "0.25.0";
+        version = "0.26.1";
         edition = "2018";
-        sha256 = "1rwgmjp94ivk872xd2s9lfb7wpz6rj1s9bzqnhnkn6l4jw21x87h";
+        sha256 = "1m0vi36ypv4gx9gzcw6y456yqnlypizhwlcqrmg6vkwd0lnkgk3q";
         features = {
           "default" = [ "read" "write" "std" "fallible-iterator" "endian-reader" ];
-          "endian-reader" = [ "stable_deref_trait" ];
+          "endian-reader" = [ "read" "stable_deref_trait" ];
+          "read" = [ "read-core" ];
           "rustc-dep-of-std" = [ "core" "alloc" "compiler_builtins" ];
           "std" = [ "fallible-iterator/std" "stable_deref_trait/std" ];
           "write" = [ "indexmap" ];
         };
-        resolvedDefaultFeatures = [ "read" ];
+        resolvedDefaultFeatures = [ "read" "read-core" ];
       };
       "h2 0.1.26" = rec {
         crateName = "h2";
@@ -2690,9 +2691,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.105";
+        version = "0.2.106";
         edition = "2015";
-        sha256 = "04rhxxjvpd106b2yw2pxa4lcnm6wbk5nnx03b61ma3b26qhmg7c6";
+        sha256 = "0wynaqs2ix4fqk603qhi7axw1fg9p5rhbcp9nhrs6fg0m7wm61d6";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3401,9 +3402,9 @@ rec {
       };
       "openssl" = rec {
         crateName = "openssl";
-        version = "0.10.37";
+        version = "0.10.38";
         edition = "2018";
-        sha256 = "0xag7rmfadjmb3janvvz2z85vr7hwb5j42w8aa1njcrn83jbkiib";
+        sha256 = "15baqlphisr1f7ddq11jnrrzz4shdh35kwal24adyc2c4cif4yhc";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
         ];
@@ -3450,9 +3451,9 @@ rec {
       };
       "openssl-sys" = rec {
         crateName = "openssl-sys";
-        version = "0.9.68";
+        version = "0.9.70";
         edition = "2015";
-        sha256 = "0l2ikxygkza3s5q3lvng4mhisdp2vdrvzkhpwhkx8vgnscjiymqw";
+        sha256 = "1pryvrgwc7qrr8rq7smmkz2hqc3zzxjss7b6ldfnn8pqnf3pjlf6";
         build = "build/main.rs";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
