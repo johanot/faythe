@@ -482,10 +482,10 @@ rec {
       };
       "cc" = rec {
         crateName = "cc";
-        version = "1.0.71";
+        version = "1.0.72";
         edition = "2018";
         crateBin = [];
-        sha256 = "1pgflzb5dc9pli1lfwfv5jksmz57j15iqqxqpdbnjq4lclfnihkr";
+        sha256 = "1vl50h2qh0nh0iddzj6gd1pnxnxpvwmbfxc30578c1pajmxi7a92";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -971,8 +971,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "e7b6f84b9022fbc1dd08d61562a8af4663e9542e";
-          sha256 = "0aicxcwiqq977n7c9qrz60pv98c3rp7a4fj8br0fjwazm8gq4pnv";
+          rev = "0dd6918eef7f3194d75f1da9873fb1e9edaef90d";
+          sha256 = "1ydv3x6gp42plqrgybhg5gmapr63987jwkcca7mvv1xs6lwl05z8";
         };
         dependencies = [
           {
@@ -2691,9 +2691,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.106";
+        version = "0.2.107";
         edition = "2015";
-        sha256 = "0wynaqs2ix4fqk603qhi7axw1fg9p5rhbcp9nhrs6fg0m7wm61d6";
+        sha256 = "06fjyglysl1aph07hc8cl1akw25lizcvwppqbralynys0hsf5rgv";
         authors = [
           "The Rust Project Developers"
         ];
@@ -5151,9 +5151,9 @@ rec {
       };
       "serde_json" = rec {
         crateName = "serde_json";
-        version = "1.0.68";
+        version = "1.0.69";
         edition = "2018";
-        sha256 = "1n2jg9cf14lrxasj63rlrwxlw5v79m851gycw6zy20jnjx9hhs8g";
+        sha256 = "1y22sfi9z3bkf9j6qnd036cqgraq0kr94ss7sghcfa8i8d78crp4";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -5548,9 +5548,9 @@ rec {
       };
       "tinyvec" = rec {
         crateName = "tinyvec";
-        version = "1.5.0";
+        version = "1.5.1";
         edition = "2018";
-        sha256 = "1xwiycwfl80737i952adpn1qawdi20kxr97bsymx14ch9lyjlfzq";
+        sha256 = "1lnqnva56673r0d40586rkzyl2qqcz19wm29q8h5a95n89d1s71c";
         authors = [
           "Lokathor <zefria@gmail.com>"
         ];
@@ -5563,6 +5563,7 @@ rec {
         ];
         features = {
           "alloc" = [ "tinyvec_macros" ];
+          "real_blackbox" = [ "criterion/real_blackbox" ];
           "rustc_1_55" = [ "rustc_1_40" ];
         };
         resolvedDefaultFeatures = [ "alloc" "default" "tinyvec_macros" ];
