@@ -971,8 +971,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "0dd6918eef7f3194d75f1da9873fb1e9edaef90d";
-          sha256 = "1ydv3x6gp42plqrgybhg5gmapr63987jwkcca7mvv1xs6lwl05z8";
+          rev = "2d120235b0d47cb76d36827a8fb9371f8c894d45";
+          sha256 = "0rylmwwhdvglh5mrcsns17k637chj38znda8bc9dpiz6wsn7h5xg";
         };
         dependencies = [
           {
@@ -3451,9 +3451,9 @@ rec {
       };
       "openssl-sys" = rec {
         crateName = "openssl-sys";
-        version = "0.9.70";
+        version = "0.9.71";
         edition = "2015";
-        sha256 = "1pryvrgwc7qrr8rq7smmkz2hqc3zzxjss7b6ldfnn8pqnf3pjlf6";
+        sha256 = "0wscz8aqw4n6166sklz9fj5832iz2dpplxd4cfrhjyb0bqb3vwbx";
         build = "build/main.rs";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
@@ -5151,9 +5151,9 @@ rec {
       };
       "serde_json" = rec {
         crateName = "serde_json";
-        version = "1.0.69";
+        version = "1.0.71";
         edition = "2018";
-        sha256 = "1y22sfi9z3bkf9j6qnd036cqgraq0kr94ss7sghcfa8i8d78crp4";
+        sha256 = "06gv3gb3mr9jxdy62dxll5ysaq7f4jbh0j8a0hjaq4a0lrkg8fq6";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
