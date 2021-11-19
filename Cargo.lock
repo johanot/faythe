@@ -345,7 +345,7 @@ dependencies = [
 [[package]]
 name = "dbc-rust-modules"
 version = "0.1.0"
-source = "git+https://github.com/dbcdk/rust-modules?branch=main#0dd6918eef7f3194d75f1da9873fb1e9edaef90d"
+source = "git+https://github.com/dbcdk/rust-modules?branch=main#2d120235b0d47cb76d36827a8fb9371f8c894d45"
 dependencies = [
  "chrono",
  "erased-serde",
@@ -1235,9 +1235,9 @@ checksum = "28988d872ab76095a6e6ac88d99b54fd267702734fd7ffe610ca27f533ddb95a"
 
 [[package]]
 name = "openssl-sys"
-version = "0.9.70"
+version = "0.9.71"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c6517987b3f8226b5da3661dad65ff7f300cc59fb5ea8333ca191fc65fde3edf"
+checksum = "7df13d165e607909b363a4757a6f133f8a818a74e9d3a98d09c6128e15fa4c73"
 dependencies = [
  "autocfg 1.0.1",
  "cc",
@@ -1858,9 +1858,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.69"
+version = "1.0.71"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e466864e431129c7e0d3476b92f20458e5879919a0596c6472738d9fa2d342f8"
+checksum = "063bf466a64011ac24040a49009724ee60a57da1b437617ceb32e53ad61bfb19"
 dependencies = [
  "itoa",
  "ryu",
