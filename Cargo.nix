@@ -194,9 +194,9 @@ rec {
       };
       "ansi_term" = rec {
         crateName = "ansi_term";
-        version = "0.11.0";
+        version = "0.12.1";
         edition = "2015";
-        sha256 = "16wpvrghvd0353584i1idnsgm0r3vchg8fyrm0x8ayv1rgvbljgf";
+        sha256 = "1ljmkbilxgmhavxvxqa7qvm6f3fjggi7q2l3a72q9x0cxjvrnanm";
         authors = [
           "ogham@bsago.me"
           "Ryan Scheel (Havvy) <ryan.havvy@gmail.com>"
@@ -207,10 +207,12 @@ rec {
             name = "winapi";
             packageId = "winapi 0.3.9";
             target = { target, features }: (target."os" == "windows");
-            features = [ "errhandlingapi" "consoleapi" "processenv" ];
+            features = [ "consoleapi" "errhandlingapi" "fileapi" "handleapi" "processenv" ];
           }
         ];
-
+        features = {
+          "derive_serde_style" = [ "serde" ];
+        };
       };
       "async-trait" = rec {
         crateName = "async-trait";
@@ -566,9 +568,9 @@ rec {
       };
       "clap" = rec {
         crateName = "clap";
-        version = "2.33.3";
-        edition = "2015";
-        sha256 = "00i065a58987k1sbzqmlz721rw521zcg08jmsh40gi3khp3qmr9p";
+        version = "2.34.0";
+        edition = "2018";
+        sha256 = "071q5d8jfwbazi6zhik9xwpacx5i6kb2vkzy060vhf0c3120aqd0";
         authors = [
           "Kevin K. <kbknapp@gmail.com>"
         ];
@@ -611,7 +613,6 @@ rec {
           "color" = [ "ansi_term" "atty" ];
           "default" = [ "suggestions" "color" "vec_map" ];
           "doc" = [ "yaml" ];
-          "lints" = [ "clippy" ];
           "suggestions" = [ "strsim" ];
           "wrap_help" = [ "term_size" "textwrap/term_size" ];
           "yaml" = [ "yaml-rust" ];
@@ -794,9 +795,9 @@ rec {
       };
       "crc32fast" = rec {
         crateName = "crc32fast";
-        version = "1.2.2";
+        version = "1.3.0";
         edition = "2015";
-        sha256 = "17riq124dh6rfanysm68vmgp9sdll4sbd326qiyr3508b3lb299q";
+        sha256 = "0di8ip18srxbva7dvz8y9rqmmc43s1lc3nasl4fgr17az86jk33k";
         authors = [
           "Sam Rijs <srijs@airpost.net>"
           "Alex Crichton <alex@alexcrichton.com>"
@@ -971,8 +972,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "2d120235b0d47cb76d36827a8fb9371f8c894d45";
-          sha256 = "0rylmwwhdvglh5mrcsns17k637chj38znda8bc9dpiz6wsn7h5xg";
+          rev = "873caff29d3d4253899b867f7af3bb42e683da81";
+          sha256 = "09h0j17gxzrrllr0ci24j18f2a2rzr2r5fs1cq3prydr6dw9cnyv";
         };
         dependencies = [
           {
@@ -4773,9 +4774,9 @@ rec {
       };
       "ryu" = rec {
         crateName = "ryu";
-        version = "1.0.5";
+        version = "1.0.6";
         edition = "2018";
-        sha256 = "0vpqv1dj7fksa6hm3zpk5rbsjs0ifbfy7xwzsyyil0rx37a03lvi";
+        sha256 = "0s35bwagycbzwmbj0fngm4jljnan272cz12i84kbmfbalssi75iw";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
