@@ -216,9 +216,9 @@ rec {
       };
       "async-trait" = rec {
         crateName = "async-trait";
-        version = "0.1.51";
+        version = "0.1.52";
         edition = "2018";
-        sha256 = "0pis4f9k7nhphp24rkm5lkbnhcz5p78qz6nyh6l1b0gndmvqwca4";
+        sha256 = "1qv5l9izrd96zcrlcr4x1kh41ylq1d9702f3vl8w11m2rb67l6h6";
         procMacro = true;
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
@@ -972,8 +972,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "873caff29d3d4253899b867f7af3bb42e683da81";
-          sha256 = "09h0j17gxzrrllr0ci24j18f2a2rzr2r5fs1cq3prydr6dw9cnyv";
+          rev = "bb9506857ace4485b043e706f43cf947becfc20b";
+          sha256 = "0w1d93ackw346w5wllbi8w4wznjwn51whsg3g6ydlm1knaiyqg0x";
         };
         dependencies = [
           {
@@ -1045,9 +1045,9 @@ rec {
       };
       "encoding_rs" = rec {
         crateName = "encoding_rs";
-        version = "0.8.29";
+        version = "0.8.30";
         edition = "2018";
-        sha256 = "0in7l50j06qmzzwk0h6bs5kdlyj5zyx9ab745lrzd60v1adahkm7";
+        sha256 = "1pqirqhlj8mbaln0pv4dk65yr22clpx509ci6gdgs3r5pf5dr5kq";
         authors = [
           "Henri Sivonen <hsivonen@hsivonen.fi>"
         ];
@@ -1450,11 +1450,14 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "use_std" "with-deprecated" ];
       };
-      "futures 0.3.18" = rec {
+      "futures 0.3.17" = rec {
         crateName = "futures";
-        version = "0.3.18";
+        version = "0.3.17";
         edition = "2018";
-        sha256 = "17jbp2zl1f0cfblaiky8d8kim6k82cxmmnbgy1gj8p1jih6j3l4c";
+        sha256 = "1jk6znbqrmb6xkgs4g0s7ivv1djq7dyaci9d7xfdb04hagms0am1";
+        authors = [
+          "Alex Crichton <alex@alexcrichton.com>"
+        ];
         dependencies = [
           {
             name = "futures-channel";
@@ -1507,9 +1510,12 @@ rec {
       };
       "futures-channel" = rec {
         crateName = "futures-channel";
-        version = "0.3.18";
+        version = "0.3.17";
         edition = "2018";
-        sha256 = "09rd4nigr2yyw074yv7yqqvzs90x80nnmkhd6kvnby6vwcwwvj3z";
+        sha256 = "121q4y5c10vihzgcb6fvp0gwzyh4hg6c37riqz9nbhdk7f6bm9jx";
+        authors = [
+          "Alex Crichton <alex@alexcrichton.com>"
+        ];
         dependencies = [
           {
             name = "futures-core";
@@ -1533,9 +1539,12 @@ rec {
       };
       "futures-core" = rec {
         crateName = "futures-core";
-        version = "0.3.18";
+        version = "0.3.17";
         edition = "2018";
-        sha256 = "0id4niawvf6vxv2s7w782jmm6m5arrcx2isvlsws1hp75zj1d4v2";
+        sha256 = "0gd5hfxcy5fqc3wm55a4yhcbh921wvzv09nkbhwh6dpjaxlw5lc8";
+        authors = [
+          "Alex Crichton <alex@alexcrichton.com>"
+        ];
         features = {
           "default" = [ "std" ];
           "std" = [ "alloc" ];
@@ -1570,9 +1579,12 @@ rec {
       };
       "futures-io" = rec {
         crateName = "futures-io";
-        version = "0.3.18";
+        version = "0.3.17";
         edition = "2018";
-        sha256 = "04dakn3362gw8q2jd9wdq19df4am1j5p4sngdhj57hxmnr6kb0g4";
+        sha256 = "0xrk0xsrmhxrndhby79j31mkzbwg21s09fkpqldhyf1yzshf4baj";
+        authors = [
+          "Alex Crichton <alex@alexcrichton.com>"
+        ];
         features = {
           "default" = [ "std" ];
         };
@@ -1580,11 +1592,19 @@ rec {
       };
       "futures-macro" = rec {
         crateName = "futures-macro";
-        version = "0.3.18";
+        version = "0.3.17";
         edition = "2018";
-        sha256 = "1pbz9s2zhs9l8pfylxiq38zlmzggl34zk6n6fgblxg252sr1g7x8";
+        sha256 = "1fvriw31ippggp8496dpbvkykr2fgk57amhwrz5lqjzabjws9r0q";
         procMacro = true;
+        authors = [
+          "Taylor Cramer <cramertj@google.com>"
+          "Taiki Endo <te316e89@gmail.com>"
+        ];
         dependencies = [
+          {
+            name = "proc-macro-hack";
+            packageId = "proc-macro-hack";
+          }
           {
             name = "proc-macro2";
             packageId = "proc-macro2";
@@ -1599,13 +1619,22 @@ rec {
             features = [ "full" ];
           }
         ];
+        buildDependencies = [
+          {
+            name = "autocfg";
+            packageId = "autocfg 1.0.1";
+          }
+        ];
 
       };
       "futures-sink" = rec {
         crateName = "futures-sink";
-        version = "0.3.18";
+        version = "0.3.17";
         edition = "2018";
-        sha256 = "1bq5jdv9d1llmlzq8ycmkbhw2z8yqkwhd6fd68dd4qkv8d168v4r";
+        sha256 = "04dwqbcwxil6iyv7fif2xjncz849mm63sghbb60f8kq22cy1bsin";
+        authors = [
+          "Alex Crichton <alex@alexcrichton.com>"
+        ];
         features = {
           "default" = [ "std" ];
           "std" = [ "alloc" ];
@@ -1614,9 +1643,12 @@ rec {
       };
       "futures-task" = rec {
         crateName = "futures-task";
-        version = "0.3.18";
+        version = "0.3.17";
         edition = "2018";
-        sha256 = "04nyz21ymr2r4fh9hdk1ppi8g61ryp97c8ighf3chcmbm9r1igys";
+        sha256 = "169fi44d8sbfpkkyhncj0pgkp1amrllg5523lncf8wyvxps00g8x";
+        authors = [
+          "Alex Crichton <alex@alexcrichton.com>"
+        ];
         features = {
           "default" = [ "std" ];
           "std" = [ "alloc" ];
@@ -1625,9 +1657,12 @@ rec {
       };
       "futures-util" = rec {
         crateName = "futures-util";
-        version = "0.3.18";
+        version = "0.3.17";
         edition = "2018";
-        sha256 = "0gmqxlf3vx9aikb0yhcihjn2p3g2rsr1l3xcc4h4fmi3289j5lj1";
+        sha256 = "10al5ci74s6rk2d2wqqya0d4fwc6sqv525hzbvj6wfha45jq8min";
+        authors = [
+          "Alex Crichton <alex@alexcrichton.com>"
+        ];
         dependencies = [
           {
             name = "futures-channel";
@@ -1679,14 +1714,30 @@ rec {
             packageId = "pin-utils";
           }
           {
+            name = "proc-macro-hack";
+            packageId = "proc-macro-hack";
+            optional = true;
+          }
+          {
+            name = "proc-macro-nested";
+            packageId = "proc-macro-nested";
+            optional = true;
+          }
+          {
             name = "slab";
             packageId = "slab";
             optional = true;
           }
         ];
+        buildDependencies = [
+          {
+            name = "autocfg";
+            packageId = "autocfg 1.0.1";
+          }
+        ];
         features = {
           "alloc" = [ "futures-core/alloc" "futures-task/alloc" ];
-          "async-await-macro" = [ "async-await" "futures-macro" ];
+          "async-await-macro" = [ "async-await" "futures-macro" "proc-macro-hack" "proc-macro-nested" ];
           "channel" = [ "std" "futures-channel" ];
           "compat" = [ "std" "futures_01" ];
           "default" = [ "std" "async-await" "async-await-macro" ];
@@ -1698,7 +1749,7 @@ rec {
           "unstable" = [ "futures-core/unstable" "futures-task/unstable" ];
           "write-all-vectored" = [ "io" ];
         };
-        resolvedDefaultFeatures = [ "alloc" "async-await" "async-await-macro" "channel" "default" "futures-channel" "futures-io" "futures-macro" "futures-sink" "io" "memchr" "sink" "slab" "std" ];
+        resolvedDefaultFeatures = [ "alloc" "async-await" "async-await-macro" "channel" "default" "futures-channel" "futures-io" "futures-macro" "futures-sink" "io" "memchr" "proc-macro-hack" "proc-macro-nested" "sink" "slab" "std" ];
       };
       "getrandom 0.1.16" = rec {
         crateName = "getrandom";
@@ -2011,7 +2062,7 @@ rec {
           }
           {
             name = "itoa";
-            packageId = "itoa";
+            packageId = "itoa 0.4.8";
           }
         ];
 
@@ -2037,7 +2088,7 @@ rec {
           }
           {
             name = "itoa";
-            packageId = "itoa";
+            packageId = "itoa 0.4.8";
           }
         ];
 
@@ -2177,7 +2228,7 @@ rec {
           }
           {
             name = "itoa";
-            packageId = "itoa";
+            packageId = "itoa 0.4.8";
           }
           {
             name = "log";
@@ -2298,7 +2349,7 @@ rec {
           }
           {
             name = "itoa";
-            packageId = "itoa";
+            packageId = "itoa 0.4.8";
           }
           {
             name = "pin-project";
@@ -2575,7 +2626,7 @@ rec {
         ];
 
       };
-      "itoa" = rec {
+      "itoa 0.4.8" = rec {
         crateName = "itoa";
         version = "0.4.8";
         edition = "2015";
@@ -2587,6 +2638,16 @@ rec {
           "default" = [ "std" ];
         };
         resolvedDefaultFeatures = [ "default" "std" ];
+      };
+      "itoa 1.0.1" = rec {
+        crateName = "itoa";
+        version = "1.0.1";
+        edition = "2018";
+        sha256 = "0d8wr2qf5b25a04xf10rz9r0pdbjdgb0zaw3xvf8k2sqcz1qzaqs";
+        authors = [
+          "David Tolnay <dtolnay@gmail.com>"
+        ];
+
       };
       "js-sys" = rec {
         crateName = "js-sys";
@@ -2641,9 +2702,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.108";
+        version = "0.2.112";
         edition = "2015";
-        sha256 = "06finl0p44lvqyw7s0qgc7bgmdz771gfg6bmmxlyrcbngsss28c5";
+        sha256 = "09bik7pcck869kfr5i9hjhnck0mzpd9v0ijxbqnh8fja6rzx20qv";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3337,9 +3398,9 @@ rec {
       };
       "once_cell" = rec {
         crateName = "once_cell";
-        version = "1.8.0";
+        version = "1.9.0";
         edition = "2018";
-        sha256 = "0mkbbxg6416z11r2yzsq91cqrkj9w1iyx5hakq15h5sbnriwnbv9";
+        sha256 = "1mfqhrsgi368x92bwnq3vi3p5nv0n1qlrn69gfflhvkfkxfm2cns";
         authors = [
           "Aleksey Kladov <aleksey.kladov@gmail.com>"
         ];
@@ -3401,9 +3462,9 @@ rec {
       };
       "openssl-sys" = rec {
         crateName = "openssl-sys";
-        version = "0.9.71";
+        version = "0.9.72";
         edition = "2015";
-        sha256 = "0wscz8aqw4n6166sklz9fj5832iz2dpplxd4cfrhjyb0bqb3vwbx";
+        sha256 = "1jq3qbcvf16qn71yasdzw54b14n8nz98vr52l1gp60in72f10iky";
         build = "build/main.rs";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
@@ -3616,9 +3677,9 @@ rec {
       };
       "pkg-config" = rec {
         crateName = "pkg-config";
-        version = "0.3.22";
+        version = "0.3.24";
         edition = "2015";
-        sha256 = "07vy6mn0q6k2adrs7min3rpy999q7kprph0vb1414iwlybs5sa8j";
+        sha256 = "1ghcyjp5537r7qigmgl3dj62j01arlpddaq93a3i414v3iskz2aq";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -3637,11 +3698,32 @@ rec {
         };
         resolvedDefaultFeatures = [ "simd" "std" ];
       };
+      "proc-macro-hack" = rec {
+        crateName = "proc-macro-hack";
+        version = "0.5.19";
+        edition = "2018";
+        sha256 = "1rg0kzsj7lj00qj602d3h77spwfz48vixn1wbjp7a4yrq65w9w6v";
+        procMacro = true;
+        authors = [
+          "David Tolnay <dtolnay@gmail.com>"
+        ];
+
+      };
+      "proc-macro-nested" = rec {
+        crateName = "proc-macro-nested";
+        version = "0.1.7";
+        edition = "2015";
+        sha256 = "11hh1jynh62f3m1ii0f9gf1l3y0fhkwpmr40lz3704v848n1p25w";
+        authors = [
+          "David Tolnay <dtolnay@gmail.com>"
+        ];
+
+      };
       "proc-macro2" = rec {
         crateName = "proc-macro2";
-        version = "1.0.32";
+        version = "1.0.34";
         edition = "2018";
-        sha256 = "0hqbxlvhiaybakl1gai3mgps1dxsmxricxsr2rfdrh222z0qql5s";
+        sha256 = "1c93jhwl8lv3hiqqvdhd2d2xhjryh5bqb9w5icr5i7bw1wnfk11g";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
           "Alex Crichton <alex@alexcrichton.com>"
@@ -4774,9 +4856,9 @@ rec {
       };
       "ryu" = rec {
         crateName = "ryu";
-        version = "1.0.6";
+        version = "1.0.9";
         edition = "2018";
-        sha256 = "0s35bwagycbzwmbj0fngm4jljnan272cz12i84kbmfbalssi75iw";
+        sha256 = "17qlxkqm4h8h9xqj6rh2vnmwxyzikbsj5w223chmr5l2qx8bgd3k";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -5024,9 +5106,9 @@ rec {
       };
       "serde" = rec {
         crateName = "serde";
-        version = "1.0.130";
+        version = "1.0.132";
         edition = "2015";
-        sha256 = "04y9s1mxcxakg9bhfdiff9w4zzprk6m6dazcpmpi8nfg6zg0cbgi";
+        sha256 = "027hwywf8pyvqsjkgikjdbm22pvhpd626xzbswgws1gk7k17b64b";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -5052,9 +5134,9 @@ rec {
       };
       "serde_derive" = rec {
         crateName = "serde_derive";
-        version = "1.0.130";
+        version = "1.0.132";
         edition = "2015";
-        sha256 = "12shxhi47db54i4j44ic2nl299x5p89ngna0w3m6854nn4d1mg6p";
+        sha256 = "0xk2c38j9421wnbgcv7n7zl72i5cyvfbpnc7i1ahwv2mn9fdph7c";
         procMacro = true;
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
@@ -5080,9 +5162,9 @@ rec {
       };
       "serde_json" = rec {
         crateName = "serde_json";
-        version = "1.0.72";
+        version = "1.0.73";
         edition = "2018";
-        sha256 = "09xmy9iycl8r8bkrgbbxbwbjwj5dii3bbhk812wnzyidgy1s1zyh";
+        sha256 = "1xbwmzc5j6r1nz62a20w6l9bkwbhzd11vwbdqmzbqcv5pi207gdw";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -5090,8 +5172,7 @@ rec {
         dependencies = [
           {
             name = "itoa";
-            packageId = "itoa";
-            usesDefaultFeatures = false;
+            packageId = "itoa 1.0.1";
           }
           {
             name = "ryu";
@@ -5126,7 +5207,7 @@ rec {
           }
           {
             name = "itoa";
-            packageId = "itoa";
+            packageId = "itoa 0.4.8";
           }
           {
             name = "serde";
@@ -6207,7 +6288,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.3.18";
+            packageId = "futures 0.3.17";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -6248,7 +6329,7 @@ rec {
         devDependencies = [
           {
             name = "futures";
-            packageId = "futures 0.3.18";
+            packageId = "futures 0.3.17";
             usesDefaultFeatures = false;
             features = [ "std" "executor" ];
           }
@@ -6286,7 +6367,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.3.18";
+            packageId = "futures 0.3.17";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -6336,7 +6417,7 @@ rec {
         devDependencies = [
           {
             name = "futures";
-            packageId = "futures 0.3.18";
+            packageId = "futures 0.3.17";
             usesDefaultFeatures = false;
             features = [ "std" "executor" ];
           }
