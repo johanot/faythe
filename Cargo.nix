@@ -1135,9 +1135,9 @@ rec {
       };
       "erased-serde" = rec {
         crateName = "erased-serde";
-        version = "0.3.16";
+        version = "0.3.17";
         edition = "2018";
-        sha256 = "1yiagaq650qay55k5mzci669hv1xvkw7ykhkb4mw57fr852svs9x";
+        sha256 = "1qc8l3f6m9fpzgg9zcaaj3vcpm8jx61abqg4sd6a21mqa41di9a4";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -1864,7 +1864,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.5";
+            packageId = "http 0.2.6";
           }
           {
             name = "indexmap";
@@ -2014,11 +2014,11 @@ rec {
         ];
 
       };
-      "http 0.2.5" = rec {
+      "http 0.2.6" = rec {
         crateName = "http";
-        version = "0.2.5";
+        version = "0.2.6";
         edition = "2018";
-        sha256 = "0sqqidxilz83h3nr9g3hwsa0z34mh6clrrdfvvd2f66l0mmhj8qk";
+        sha256 = "00zxqk6m9qksxmlajmhnhgryw6xmqn9riimwx87nz1l4cmscdx1i";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
           "Carl Lerche <me@carllerche.com>"
@@ -2035,7 +2035,7 @@ rec {
           }
           {
             name = "itoa";
-            packageId = "itoa 0.4.8";
+            packageId = "itoa 1.0.1";
           }
         ];
 
@@ -2086,7 +2086,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.5";
+            packageId = "http 0.2.6";
           }
         ];
 
@@ -2280,7 +2280,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.5";
+            packageId = "http 0.2.6";
           }
           {
             name = "http-body";
@@ -3552,12 +3552,9 @@ rec {
       };
       "pin-project" = rec {
         crateName = "pin-project";
-        version = "1.0.8";
+        version = "1.0.9";
         edition = "2018";
-        sha256 = "020c5nyj7qpyqn6xwy3hw6vgm31mifq9g7p916n5vihc480chssp";
-        authors = [
-          "Taiki Endo <te316e89@gmail.com>"
-        ];
+        sha256 = "13s3h5yg338bgkvs070f6dnnf3lnc2y6lkphrxh82j08wly128hn";
         dependencies = [
           {
             name = "pin-project-internal";
@@ -3569,13 +3566,10 @@ rec {
       };
       "pin-project-internal" = rec {
         crateName = "pin-project-internal";
-        version = "1.0.8";
+        version = "1.0.9";
         edition = "2018";
-        sha256 = "12gkrjd7xzwa3vlhpzxbxlbwisi2dw8l1q62v867zkhl7lbfi3vf";
+        sha256 = "0xiyp9jgfk93950b33j4pilg3k0zlhfaqmnk47bpdpwkxrpzanmr";
         procMacro = true;
-        authors = [
-          "Taiki Endo <te316e89@gmail.com>"
-        ];
         dependencies = [
           {
             name = "proc-macro2";
@@ -3635,9 +3629,9 @@ rec {
       };
       "ppv-lite86" = rec {
         crateName = "ppv-lite86";
-        version = "0.2.15";
+        version = "0.2.16";
         edition = "2018";
-        sha256 = "1fimwnyyh3wx33r5s77lw5g5vcxhw1p5j60pdvbbwr8l374gn37d";
+        sha256 = "0wkqwnvnfcgqlrahphl45vdlgi2f1bs7nqcsalsllp1y4dp9x7zb";
         authors = [
           "The CryptoCorrosion Contributors"
         ];
@@ -3648,9 +3642,9 @@ rec {
       };
       "proc-macro2" = rec {
         crateName = "proc-macro2";
-        version = "1.0.34";
+        version = "1.0.36";
         edition = "2018";
-        sha256 = "1c93jhwl8lv3hiqqvdhd2d2xhjryh5bqb9w5icr5i7bw1wnfk11g";
+        sha256 = "0adh6gvs31x6pfwmygypmzrv1jc7kjq568vsqcfaxk7vhdc2sd67";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
           "Alex Crichton <alex@alexcrichton.com>"
@@ -3689,7 +3683,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.5";
+            packageId = "http 0.2.6";
           }
           {
             name = "hyper";
@@ -3754,9 +3748,9 @@ rec {
       };
       "quote" = rec {
         crateName = "quote";
-        version = "1.0.10";
+        version = "1.0.14";
         edition = "2018";
-        sha256 = "01ff7a76f871ggnby57iagw6499vci4bihcr11g6bqzjlp38rg1q";
+        sha256 = "0zf823y56wqwxkcp3rf3ik9zashpmx9700q0fmqz3np4gi281aj7";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -5265,9 +5259,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.83";
+        version = "1.0.84";
         edition = "2018";
-        sha256 = "0n8r5xpjg7mqnsa3232j1xibg7sfkb2r2gn8923363k3k6wxz893";
+        sha256 = "0sz0q8g0bm2cgxlb6mdhrs8wb731m4ps6ql70rhrmsz5ivdfdcpc";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -6661,9 +6655,9 @@ rec {
       };
       "version_check" = rec {
         crateName = "version_check";
-        version = "0.9.3";
+        version = "0.9.4";
         edition = "2015";
-        sha256 = "1zmkcgj2m0pq0l4wnhrp1wl1lygf7x2h5p7pvjwc4719lnlxrv2z";
+        sha256 = "0gs8grwdlgh0xq660d7wr80x14vxbizmd8dbp29p2pdncx8lp1s9";
         authors = [
           "Sergio Benitez <sb@sergio.bz>"
         ];
