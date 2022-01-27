@@ -2,13 +2,14 @@
   description = "faythe";
 
   inputs = {
-    facts.url = "git+https://gitlab.dbc.dk/it/facts.git";
-    nixpkgs.follows = "facts/nixpkgs-default";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-21.11";
     ci.url = "git+https://gitlab.dbc.dk/platform/bump-o-matic.git";
-    ci.inputs.nixpkgs.follows = "facts/nixpkgs-default";
+    ci.inputs.nixpkgs.follows = "nixpkgs";
+    ci.inputs.utils.follows = "utils";
+    utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, facts, ci }:
+  outputs = { self, nixpkgs, ci, utils }:
   let
     pname = "faythe";
     system = "x86_64-linux";
