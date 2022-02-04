@@ -291,9 +291,9 @@ rec {
       };
       "backtrace" = rec {
         crateName = "backtrace";
-        version = "0.3.63";
+        version = "0.3.64";
         edition = "2018";
-        sha256 = "1dp1dik2riphgslibafp3kzj95f8kgx42wkh4qghc4v5pbc2j5ij";
+        sha256 = "07y3z67h9mybdw4l1cjrlqw3ng7h7m4y374d4jmk7ki3h3p1s4jy";
         authors = [
           "The Rust Project Developers"
         ];
@@ -2691,9 +2691,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.115";
+        version = "0.2.117";
         edition = "2015";
-        sha256 = "13c11qdsk7clp0mxyl4pwb6yq0wpvrkfkky4dq7h0sm9lwpri38a";
+        sha256 = "0v52a7r5kmgc97rjf1sm3p3gkw3djzrnld4sli65nnxnz7h74kg7";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3050,12 +3050,12 @@ rec {
           }
           {
             name = "security-framework";
-            packageId = "security-framework 2.5.0";
+            packageId = "security-framework 2.6.0";
             target = { target, features }: ((target."os" == "macos") || (target."os" == "ios"));
           }
           {
             name = "security-framework-sys";
-            packageId = "security-framework-sys 2.5.0";
+            packageId = "security-framework-sys 2.6.0";
             target = { target, features }: ((target."os" == "macos") || (target."os" == "ios"));
           }
           {
@@ -4815,11 +4815,11 @@ rec {
           "OSX_10_9" = [ "security-framework-sys/OSX_10_9" ];
         };
       };
-      "security-framework 2.5.0" = rec {
+      "security-framework 2.6.0" = rec {
         crateName = "security-framework";
-        version = "2.5.0";
+        version = "2.6.0";
         edition = "2018";
-        sha256 = "1kp4zy9dplw0675m2hx3r1319g3adasz5winm3ba3v8lv0akr7fh";
+        sha256 = "1b2in39zp2a28vj3v5h6apvw0pb3mmalycqcwavcp2n6nr47kv9z";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
           "Kornel <kornel@geekhood.net>"
@@ -4843,7 +4843,7 @@ rec {
           }
           {
             name = "security-framework-sys";
-            packageId = "security-framework-sys 2.5.0";
+            packageId = "security-framework-sys 2.6.0";
             usesDefaultFeatures = false;
           }
         ];
@@ -4885,11 +4885,11 @@ rec {
           "OSX_10_13" = [ "OSX_10_12" ];
         };
       };
-      "security-framework-sys 2.5.0" = rec {
+      "security-framework-sys 2.6.0" = rec {
         crateName = "security-framework-sys";
-        version = "2.5.0";
+        version = "2.6.0";
         edition = "2018";
-        sha256 = "1xw7pagdarq2jx1aqx2r3rwy0caxsadna33fv8rwdgy6846d23g9";
+        sha256 = "0v5r7cjkx2ylz2rb9wddxz09ks0zjv9156arna0j0dn2ifzj2wx5";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
           "Kornel <kornel@geekhood.net>"
@@ -6008,9 +6008,9 @@ rec {
       };
       "tracing" = rec {
         crateName = "tracing";
-        version = "0.1.29";
+        version = "0.1.30";
         edition = "2018";
-        sha256 = "0191zcbnkn8wy0b7xbz7jd9m2xf3sjr8k3cfqzghxwya6a966nip";
+        sha256 = "1faza94zaf6cwd3fmrwj6bq2xz538wpaxxakb46yba729wsr739d";
         authors = [
           "Eliza Weisman <eliza@buoyant.io>"
           "Tokio Contributors <team@tokio.rs>"
@@ -6046,14 +6046,15 @@ rec {
           "default" = [ "std" "attributes" ];
           "log-always" = [ "log" ];
           "std" = [ "tracing-core/std" ];
+          "valuable" = [ "tracing-core/valuable" ];
         };
         resolvedDefaultFeatures = [ "log" "std" ];
       };
       "tracing-core" = rec {
         crateName = "tracing-core";
-        version = "0.1.21";
+        version = "0.1.22";
         edition = "2018";
-        sha256 = "1r262wskhm6wmc5i2bxz44nglyzqaq3x50s0h5q0ffdq6xbdckhz";
+        sha256 = "08wssa1n70vg02nfw6ykfzjhind88ws8vjqi64nsfch6718wpkq3";
         authors = [
           "Tokio Contributors <team@tokio.rs>"
         ];
@@ -6065,7 +6066,7 @@ rec {
           }
         ];
         features = {
-          "default" = [ "std" ];
+          "default" = [ "std" "valuable/std" ];
           "std" = [ "lazy_static" ];
         };
         resolvedDefaultFeatures = [ "lazy_static" "std" ];
