@@ -269,21 +269,27 @@ rec {
         ];
 
       };
-      "autocfg 0.1.7" = rec {
+      "autocfg 0.1.8" = rec {
         crateName = "autocfg";
-        version = "0.1.7";
+        version = "0.1.8";
         edition = "2015";
-        sha256 = "1chwgimpx5z7xbag7krr9d8asxfqbh683qhgl9kn3hxk2l0djj8x";
+        sha256 = "0y4vw4l4izdxq1v0rrhvmlbqvalrqrmk60v1z0dqlgnlbzkl7phd";
         authors = [
           "Josh Stone <cuviper@gmail.com>"
         ];
+        dependencies = [
+          {
+            name = "autocfg";
+            packageId = "autocfg 1.1.0";
+          }
+        ];
 
       };
-      "autocfg 1.0.1" = rec {
+      "autocfg 1.1.0" = rec {
         crateName = "autocfg";
-        version = "1.0.1";
+        version = "1.1.0";
         edition = "2015";
-        sha256 = "0jj6i9zn4gjl03kjvziqdji6rwx8ykz8zk2ngpc331z2g3fk3c6d";
+        sha256 = "1ylp3cb47ylzabimazvbz9ms6ap784zhb6syaz6c1jqpmcmq0s6l";
         authors = [
           "Josh Stone <cuviper@gmail.com>"
         ];
@@ -746,11 +752,11 @@ rec {
           "with-uuid" = [ "uuid" ];
         };
       };
-      "core-foundation 0.9.2" = rec {
+      "core-foundation 0.9.3" = rec {
         crateName = "core-foundation";
-        version = "0.9.2";
+        version = "0.9.3";
         edition = "2015";
-        sha256 = "1cs7dya58xf4px4b1953040fpz5lm3qhf7fzv0jf94xva42y3238";
+        sha256 = "0ii1ihpjb30fk38gdikm5wqlkmyr8k46fh4k2r8sagz5dng7ljhr";
         authors = [
           "The Servo Project Developers"
         ];
@@ -795,9 +801,9 @@ rec {
       };
       "crc32fast" = rec {
         crateName = "crc32fast";
-        version = "1.3.1";
+        version = "1.3.2";
         edition = "2015";
-        sha256 = "1qv0krk4ggxzz68x199xm9wg3bw4dgiff8971dznz1r91qqrq852";
+        sha256 = "03c8f29yx293yf43xar946xbls1g60c207m9drf8ilqhr25vsh5m";
         authors = [
           "Sam Rijs <srijs@airpost.net>"
           "Alex Crichton <alex@alexcrichton.com>"
@@ -877,7 +883,7 @@ rec {
         buildDependencies = [
           {
             name = "autocfg";
-            packageId = "autocfg 1.0.1";
+            packageId = "autocfg 1.1.0";
           }
         ];
         features = {
@@ -940,7 +946,7 @@ rec {
         buildDependencies = [
           {
             name = "autocfg";
-            packageId = "autocfg 1.0.1";
+            packageId = "autocfg 1.1.0";
           }
         ];
         features = {
@@ -1475,11 +1481,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "use_std" "with-deprecated" ];
       };
-      "futures 0.3.19" = rec {
+      "futures 0.3.21" = rec {
         crateName = "futures";
-        version = "0.3.19";
+        version = "0.3.21";
         edition = "2018";
-        sha256 = "1d1mj2qr499g2fhkidk9qvjv1s1anav4ny87z5wlxcrbzrbhfmi8";
+        sha256 = "17id2zvn2acny759indn6yj2acfa6lhkwzaidxr2pqfiaigycgzp";
         dependencies = [
           {
             name = "futures-channel";
@@ -1531,9 +1537,9 @@ rec {
       };
       "futures-channel" = rec {
         crateName = "futures-channel";
-        version = "0.3.19";
+        version = "0.3.21";
         edition = "2018";
-        sha256 = "02vzdkc1n25nliwa2758pni7fyn1ch2msrzw18v5ycw8cl5xlgds";
+        sha256 = "0420lz2fmxa356ax1rp2sqi7b27ykfhvq4w9f1sla4hlp7j3q263";
         dependencies = [
           {
             name = "futures-core";
@@ -1557,9 +1563,9 @@ rec {
       };
       "futures-core" = rec {
         crateName = "futures-core";
-        version = "0.3.19";
+        version = "0.3.21";
         edition = "2018";
-        sha256 = "1mw34nxzggvr2jvk4ljygy077wy32lrdxkyw1j0mj9dqc42gzj6h";
+        sha256 = "1lqhc6mqklh5bmkpr77p42lqwjj8gaskk5ba2p3kl1z4nw2gs28c";
         features = {
           "default" = [ "std" ];
           "std" = [ "alloc" ];
@@ -1594,9 +1600,9 @@ rec {
       };
       "futures-io" = rec {
         crateName = "futures-io";
-        version = "0.3.19";
+        version = "0.3.21";
         edition = "2018";
-        sha256 = "1ckir41haa2hs9znrwavgh33hv3l23jmywqg73xwdam1ym5d7ydi";
+        sha256 = "0swn29fysas36ikk5aw55104fi98117amvgxw9g96pjs5ab4ah7w";
         features = {
           "default" = [ "std" ];
         };
@@ -1604,9 +1610,9 @@ rec {
       };
       "futures-macro" = rec {
         crateName = "futures-macro";
-        version = "0.3.19";
+        version = "0.3.21";
         edition = "2018";
-        sha256 = "0g5xp1xmyfibyscynig2m5gvp5smgg7xvcwr0p3yzc7zvxx99gbd";
+        sha256 = "04pmj5xfk5rdhlj69wc7w3zvdg3xardg8srig96lszrk00wf3h9k";
         procMacro = true;
         dependencies = [
           {
@@ -1627,9 +1633,9 @@ rec {
       };
       "futures-sink" = rec {
         crateName = "futures-sink";
-        version = "0.3.19";
+        version = "0.3.21";
         edition = "2018";
-        sha256 = "026m2x353l7x7apa3hdx26ma7kwgxgbghl0393v4zmv8rfn5n1g3";
+        sha256 = "0s58gx5yw1a21xviw2qgc0wzk225vgn4kbzddrp141m3kw9kw5i1";
         features = {
           "default" = [ "std" ];
           "std" = [ "alloc" ];
@@ -1638,9 +1644,9 @@ rec {
       };
       "futures-task" = rec {
         crateName = "futures-task";
-        version = "0.3.19";
+        version = "0.3.21";
         edition = "2018";
-        sha256 = "0wmd3b70sgp1dr3q24439hkm7zj9m1lcafmqvzj7q5ihbi4cdrvf";
+        sha256 = "0skpiz2ljisywajv79p70yapfwhkqhb39wxy3f09v47mdfbnmijp";
         features = {
           "default" = [ "std" ];
           "std" = [ "alloc" ];
@@ -1649,9 +1655,9 @@ rec {
       };
       "futures-util" = rec {
         crateName = "futures-util";
-        version = "0.3.19";
+        version = "0.3.21";
         edition = "2018";
-        sha256 = "0r3i29hhfhv69qjdxh3j4ffxji4hl0yc1gmim1viy9vsni0czdfr";
+        sha256 = "0sh3wqi8p36csjffy0irq8nlx9shqxp7z4dsih6bknarsvaspdyq";
         dependencies = [
           {
             name = "futures-channel";
@@ -2117,9 +2123,9 @@ rec {
       };
       "httparse" = rec {
         crateName = "httparse";
-        version = "1.5.1";
+        version = "1.6.0";
         edition = "2015";
-        sha256 = "00smbrgb9vyzbbj3j5d66iarjl5x2wpfwkmhcy5nizylw7dlzndc";
+        sha256 = "1i66wqc7lkfsi8h26sm8s6kirzzh1xgpx2dlrkzbfpz1h944204i";
         authors = [
           "Sean McArthur <sean@seanmonstar.com>"
         ];
@@ -2541,7 +2547,7 @@ rec {
         buildDependencies = [
           {
             name = "autocfg";
-            packageId = "autocfg 1.0.1";
+            packageId = "autocfg 1.1.0";
           }
         ];
         features = {
@@ -2838,7 +2844,7 @@ rec {
         buildDependencies = [
           {
             name = "autocfg";
-            packageId = "autocfg 1.0.1";
+            packageId = "autocfg 1.1.0";
           }
         ];
         features = {
@@ -2903,7 +2909,7 @@ rec {
         buildDependencies = [
           {
             name = "autocfg";
-            packageId = "autocfg 1.0.1";
+            packageId = "autocfg 1.1.0";
           }
         ];
         features = {
@@ -3050,12 +3056,12 @@ rec {
           }
           {
             name = "security-framework";
-            packageId = "security-framework 2.6.0";
+            packageId = "security-framework 2.6.1";
             target = { target, features }: ((target."os" == "macos") || (target."os" == "ios"));
           }
           {
             name = "security-framework-sys";
-            packageId = "security-framework-sys 2.6.0";
+            packageId = "security-framework-sys 2.6.1";
             target = { target, features }: ((target."os" == "macos") || (target."os" == "ios"));
           }
           {
@@ -3178,7 +3184,7 @@ rec {
         buildDependencies = [
           {
             name = "autocfg";
-            packageId = "autocfg 1.0.1";
+            packageId = "autocfg 1.1.0";
           }
         ];
         features = {
@@ -3206,7 +3212,7 @@ rec {
         buildDependencies = [
           {
             name = "autocfg";
-            packageId = "autocfg 1.0.1";
+            packageId = "autocfg 1.1.0";
           }
         ];
         features = {
@@ -3234,7 +3240,7 @@ rec {
         buildDependencies = [
           {
             name = "autocfg";
-            packageId = "autocfg 1.0.1";
+            packageId = "autocfg 1.1.0";
           }
         ];
         features = {
@@ -3267,7 +3273,7 @@ rec {
         buildDependencies = [
           {
             name = "autocfg";
-            packageId = "autocfg 1.0.1";
+            packageId = "autocfg 1.1.0";
           }
         ];
         features = {
@@ -3306,7 +3312,7 @@ rec {
         buildDependencies = [
           {
             name = "autocfg";
-            packageId = "autocfg 1.0.1";
+            packageId = "autocfg 1.1.0";
           }
         ];
         features = {
@@ -3329,7 +3335,7 @@ rec {
         buildDependencies = [
           {
             name = "autocfg";
-            packageId = "autocfg 1.0.1";
+            packageId = "autocfg 1.1.0";
           }
         ];
         features = {
@@ -3469,7 +3475,7 @@ rec {
         buildDependencies = [
           {
             name = "autocfg";
-            packageId = "autocfg 1.0.1";
+            packageId = "autocfg 1.1.0";
           }
           {
             name = "cc";
@@ -3864,7 +3870,7 @@ rec {
         buildDependencies = [
           {
             name = "autocfg";
-            packageId = "autocfg 0.1.7";
+            packageId = "autocfg 0.1.8";
           }
         ];
         features = {
@@ -3956,7 +3962,7 @@ rec {
         buildDependencies = [
           {
             name = "autocfg";
-            packageId = "autocfg 0.1.7";
+            packageId = "autocfg 0.1.8";
           }
         ];
 
@@ -4192,7 +4198,7 @@ rec {
         buildDependencies = [
           {
             name = "autocfg";
-            packageId = "autocfg 0.1.7";
+            packageId = "autocfg 0.1.8";
           }
         ];
         features = {
@@ -4815,11 +4821,11 @@ rec {
           "OSX_10_9" = [ "security-framework-sys/OSX_10_9" ];
         };
       };
-      "security-framework 2.6.0" = rec {
+      "security-framework 2.6.1" = rec {
         crateName = "security-framework";
-        version = "2.6.0";
+        version = "2.6.1";
         edition = "2018";
-        sha256 = "1b2in39zp2a28vj3v5h6apvw0pb3mmalycqcwavcp2n6nr47kv9z";
+        sha256 = "1p0hgqba3h2glm7mgp5d45l2gpmh28kn5vddlfa032mg5wblzh9d";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
           "Kornel <kornel@geekhood.net>"
@@ -4831,7 +4837,7 @@ rec {
           }
           {
             name = "core-foundation";
-            packageId = "core-foundation 0.9.2";
+            packageId = "core-foundation 0.9.3";
           }
           {
             name = "core-foundation-sys";
@@ -4843,7 +4849,7 @@ rec {
           }
           {
             name = "security-framework-sys";
-            packageId = "security-framework-sys 2.6.0";
+            packageId = "security-framework-sys 2.6.1";
             usesDefaultFeatures = false;
           }
         ];
@@ -4885,11 +4891,11 @@ rec {
           "OSX_10_13" = [ "OSX_10_12" ];
         };
       };
-      "security-framework-sys 2.6.0" = rec {
+      "security-framework-sys 2.6.1" = rec {
         crateName = "security-framework-sys";
-        version = "2.6.0";
+        version = "2.6.1";
         edition = "2018";
-        sha256 = "0v5r7cjkx2ylz2rb9wddxz09ks0zjv9156arna0j0dn2ifzj2wx5";
+        sha256 = "0mn5lm0jip9nm6ydqm6qd9alyiwq15c027777jsbyibs2wxa2q01";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
           "Kornel <kornel@geekhood.net>"
@@ -6130,7 +6136,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.3.19";
+            packageId = "futures 0.3.21";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -6171,7 +6177,7 @@ rec {
         devDependencies = [
           {
             name = "futures";
-            packageId = "futures 0.3.19";
+            packageId = "futures 0.3.21";
             usesDefaultFeatures = false;
             features = [ "std" "executor" ];
           }
@@ -6209,7 +6215,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.3.19";
+            packageId = "futures 0.3.21";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -6259,7 +6265,7 @@ rec {
         devDependencies = [
           {
             name = "futures";
-            packageId = "futures 0.3.19";
+            packageId = "futures 0.3.21";
             usesDefaultFeatures = false;
             features = [ "std" "executor" ];
           }
@@ -6363,9 +6369,9 @@ rec {
       };
       "unicode-segmentation" = rec {
         crateName = "unicode-segmentation";
-        version = "1.8.0";
+        version = "1.9.0";
         edition = "2018";
-        sha256 = "0nrqfgxkh00wb5dhl0874z20789i2yjimp6ndgh4ay4yjjd895c8";
+        sha256 = "16gxxda9aya0arcqs9aa9lb31b3i54i34dmyqi6j5xkpszsj123y";
         authors = [
           "kwantam <kwantam@gmail.com>"
           "Manish Goregaokar <manishsmail@gmail.com>"
