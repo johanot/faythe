@@ -490,10 +490,10 @@ rec {
       };
       "cc" = rec {
         crateName = "cc";
-        version = "1.0.72";
+        version = "1.0.73";
         edition = "2018";
         crateBin = [];
-        sha256 = "1vl50h2qh0nh0iddzj6gd1pnxnxpvwmbfxc30578c1pajmxi7a92";
+        sha256 = "04ccylrjq94jssh8f7d7hxv64gs9f1m1jrsxb7wqgfxk4xljmzrg";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -2697,9 +2697,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.117";
+        version = "0.2.118";
         edition = "2015";
-        sha256 = "0v52a7r5kmgc97rjf1sm3p3gkw3djzrnld4sli65nnxnz7h74kg7";
+        sha256 = "153ax7fccbf0wpmhbccgxlbbgcpjfvqzk1xa0i1m18354ikhkr86";
         authors = [
           "The Rust Project Developers"
         ];
@@ -2863,9 +2863,9 @@ rec {
       };
       "mime_guess" = rec {
         crateName = "mime_guess";
-        version = "2.0.3";
+        version = "2.0.4";
         edition = "2015";
-        sha256 = "04pjpbl90z4yn0cmifvwgf4mqznciw6b095k626q96bxx71d9116";
+        sha256 = "1vs28rxnbfwil6f48hh58lfcx90klcvg68gxdc60spwa4cy2d4j1";
         authors = [
           "Austin Bonander <austin.bonander@gmail.com>"
         ];
@@ -5008,9 +5008,9 @@ rec {
       };
       "serde_json" = rec {
         crateName = "serde_json";
-        version = "1.0.78";
+        version = "1.0.79";
         edition = "2018";
-        sha256 = "11c0fm7wb2wydlxmq9ziqfjwxl9j1cl0jxq16az49z8fryj1ng6j";
+        sha256 = "158xd1swdvw6y59bx4avb8vdpj727n54r77xw5f7c15kqfjrz3cf";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -6014,9 +6014,9 @@ rec {
       };
       "tracing" = rec {
         crateName = "tracing";
-        version = "0.1.30";
+        version = "0.1.31";
         edition = "2018";
-        sha256 = "1faza94zaf6cwd3fmrwj6bq2xz538wpaxxakb46yba729wsr739d";
+        sha256 = "17wvxyppvkqgs1cc583sjrd4q8nirchks0vgff9xvlhcxyl51ipn";
         authors = [
           "Eliza Weisman <eliza@buoyant.io>"
           "Tokio Contributors <team@tokio.rs>"
