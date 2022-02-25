@@ -1761,11 +1761,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "std" ];
       };
-      "getrandom 0.2.4" = rec {
+      "getrandom 0.2.5" = rec {
         crateName = "getrandom";
-        version = "0.2.4";
+        version = "0.2.5";
         edition = "2018";
-        sha256 = "0k0bdr1dyf4n9fvnkx4fmwxhv4hgnyf55gj86v4m69fln743g3a1";
+        sha256 = "0xqfjd779yklms48j222jknmw2a2lx6fhynb3zx18w8r00wxk76k";
         authors = [
           "The Rand Project Developers"
         ];
@@ -2697,9 +2697,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.118";
+        version = "0.2.119";
         edition = "2015";
-        sha256 = "153ax7fccbf0wpmhbccgxlbbgcpjfvqzk1xa0i1m18354ikhkr86";
+        sha256 = "195a2q4lfhg7dc72vmchma3mzdcxpkiz6xpak3hchmrlpdjy3whv";
         authors = [
           "The Rust Project Developers"
         ];
@@ -6518,7 +6518,7 @@ rec {
         dependencies = [
           {
             name = "getrandom";
-            packageId = "getrandom 0.2.4";
+            packageId = "getrandom 0.2.5";
             optional = true;
           }
         ];
