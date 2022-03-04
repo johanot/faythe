@@ -1072,9 +1072,9 @@ rec {
       };
       "enum-as-inner" = rec {
         crateName = "enum-as-inner";
-        version = "0.3.3";
+        version = "0.3.4";
         edition = "2018";
-        sha256 = "15gmpgywijda93lkq7hf2y53h66sqkhzabzbxich288xm6b00pvw";
+        sha256 = "1m2l8zh0yd7i95qkyha86ca8m0bnhfimv38dr3n4p41yh6di03ap";
         procMacro = true;
         authors = [
           "Benjamin Fry <benjaminfry@me.com>"
@@ -1954,19 +1954,16 @@ rec {
       };
       "heck" = rec {
         crateName = "heck";
-        version = "0.3.3";
+        version = "0.4.0";
         edition = "2018";
-        sha256 = "0b0kkr790p66lvzn9nsmfjvydrbmh9z5gb664jchwgw64vxiwqkd";
+        sha256 = "1ygphsnfwl2xpa211vbqkz1db6ri1kvkg8p8sqybi37wclg7fh15";
         authors = [
           "Without Boats <woboats@gmail.com>"
         ];
-        dependencies = [
-          {
-            name = "unicode-segmentation";
-            packageId = "unicode-segmentation";
-          }
-        ];
-
+        features = {
+          "unicode" = [ "unicode-segmentation" ];
+        };
+        resolvedDefaultFeatures = [ "default" ];
       };
       "hermit-abi" = rec {
         crateName = "hermit-abi";
@@ -3394,9 +3391,9 @@ rec {
       };
       "once_cell" = rec {
         crateName = "once_cell";
-        version = "1.9.0";
+        version = "1.10.0";
         edition = "2018";
-        sha256 = "1mfqhrsgi368x92bwnq3vi3p5nv0n1qlrn69gfflhvkfkxfm2cns";
+        sha256 = "1fgclb93az22gq5lmqsm84kilx1p1xpij559bmvx2mn1x8vy1ww7";
         authors = [
           "Aleksey Kladov <aleksey.kladov@gmail.com>"
         ];
@@ -4256,11 +4253,11 @@ rec {
         ];
 
       };
-      "redox_syscall 0.2.10" = rec {
+      "redox_syscall 0.2.11" = rec {
         crateName = "redox_syscall";
-        version = "0.2.10";
+        version = "0.2.11";
         edition = "2018";
-        sha256 = "1zq36bhw4c6xig340ja1jmr36iy0d3djp8smsabxx71676bg70w3";
+        sha256 = "0g2gcdqp462827ywwk51jx7sgy706wbz86vvfkq484jma80zx043";
         libName = "syscall";
         authors = [
           "Jeremy Soller <jackpot51@gmail.com>"
@@ -5278,7 +5275,7 @@ rec {
           }
           {
             name = "redox_syscall";
-            packageId = "redox_syscall 0.2.10";
+            packageId = "redox_syscall 0.2.11";
             target = { target, features }: (target."os" == "redox");
           }
           {
@@ -5297,9 +5294,9 @@ rec {
       };
       "termcolor" = rec {
         crateName = "termcolor";
-        version = "1.1.2";
+        version = "1.1.3";
         edition = "2018";
-        sha256 = "1x65i1ny4m6z1by62ra6wdcrd557p2ysm866x0pg60zby2cxizid";
+        sha256 = "0mbpflskhnz3jf312k50vn0hqbql8ga2rk0k79pkgchip4q4vcms";
         authors = [
           "Andrew Gallant <jamslam@gmail.com>"
         ];
@@ -6366,18 +6363,6 @@ rec {
           "default" = [ "std" ];
         };
         resolvedDefaultFeatures = [ "default" "std" ];
-      };
-      "unicode-segmentation" = rec {
-        crateName = "unicode-segmentation";
-        version = "1.9.0";
-        edition = "2018";
-        sha256 = "16gxxda9aya0arcqs9aa9lb31b3i54i34dmyqi6j5xkpszsj123y";
-        authors = [
-          "kwantam <kwantam@gmail.com>"
-          "Manish Goregaokar <manishsmail@gmail.com>"
-        ];
-        features = {
-        };
       };
       "unicode-width" = rec {
         crateName = "unicode-width";
