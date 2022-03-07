@@ -10,6 +10,7 @@ use crate::exec::{SpawnOk, OpenStdin, Wait, ExecErrorInfo};
 use crate::log;
 use crate::common::{CertSpec, DNSName, SpecError};
 use crate::config::Zone;
+use crate::config::UpdateConfig;
 use self::trust_dns_resolver::Resolver;
 use self::trust_dns_resolver::error::{ResolveError,ResolveErrorKind};
 use std::string::String;
@@ -21,13 +22,22 @@ pub enum DNSError {
     OutputFormat,
     ResolveError(ResolveError),
     WrongAnswer(String),
-    WrongSpec
+    WrongSpec,
+    Reqwest(reqwest::Error),
+    UpdateConfigExpectationError,
 }
 
 pub fn add(config: &FaytheConfig, name: &DNSName, proof: &String) -> Result<(), DNSError> {
     let zone = name.find_zone(&config)?;
-    let command = add_cmd(zone, &name, &proof);
-    update_dns(&command, &zone)
+    match &zone.update_config {
+        UpdateConfig::NSUpdate{ key } => {
+            let command = add_cmd(zone, &name, &proof);
+            update_dns(&command, &key)
+        },
+        UpdateConfig::Concealed{ baseurl } => {
+            invoke_concealed(&baseurl, &zone, &name, &proof)
+        },
+    }
 }
 
 fn add_cmd(zone: &Zone, name: &DNSName, proof: &String) -> String {
@@ -41,14 +51,29 @@ fn add_cmd(zone: &Zone, name: &DNSName, proof: &String) -> String {
 
 pub fn delete(config: &FaytheConfig, spec: &CertSpec) -> Result<(), DNSError> {
     let zone = spec.cn.find_zone(&config)?;
-    let command = delete_cmd(zone, &spec.cn);
-    update_dns(&command, &zone)?;
-    for s in &spec.sans {
-        let zone = s.find_zone(&config)?;
-        let command = delete_cmd(zone, &s);
-        update_dns(&command, &zone)?
+    match &zone.update_config {
+        UpdateConfig::NSUpdate{ key } => {
+            let command = delete_cmd(zone, &spec.cn);
+            update_dns(&command, &key)?;
+            for s in &spec.sans {
+                let zone = s.find_zone(&config)?;
+                let key = expect_ns_update_key(&zone)?;
+                let command = delete_cmd(zone, &s);
+                update_dns(&command, &key)?
+            }
+        },
+        UpdateConfig::Concealed{ .. } => {
+            // No-op, as existing records will always be overriden by "add"
+        },
     }
     Ok(())
+}
+
+fn expect_ns_update_key(zone: &Zone) -> Result<String, DNSError>  {
+    match &zone.update_config {
+        UpdateConfig::NSUpdate{ key } => Ok(key.to_owned()),
+        _ => Err(DNSError::UpdateConfigExpectationError),
+    }
 }
 
 fn delete_cmd(zone: &Zone, name: &DNSName) -> String {
@@ -93,10 +118,10 @@ fn challenge_host(host: &DNSName, zone: Option<&Zone>) -> String {
     format!("_acme-challenge.{}{}.", &host.to_parent_domain_string(), &suffix)
 }
 
-fn update_dns(command: &String, zone: &Zone) -> Result<(), DNSError> {
+fn update_dns(command: &String, key: &String) -> Result<(), DNSError> {
     let mut cmd = Command::new("nsupdate");
     let mut child = cmd.arg("-k")
-        .arg(&zone.key)
+        .arg(&key)
         .stdin(Stdio::piped())
         .spawn_ok()?;
     {
@@ -106,10 +131,28 @@ fn update_dns(command: &String, zone: &Zone) -> Result<(), DNSError> {
     Ok(child.wait()?)
 }
 
+fn invoke_concealed(base_url: &str, zone: &Zone, name: &DNSName, proof: &str) -> Result<(), DNSError> {
+    let client = reqwest::blocking::Client::new();
+    let url = format!("{}/TXT/{}", &base_url, &challenge_host(&name, Some(&zone)));
+    let proof = proof.to_owned();
+    client
+        .put(&url)
+        .body(proof)
+        .send()
+        .and(Ok(()))
+        .map_err(std::convert::Into::into)
+}
+
 
 impl From<std::io::Error> for DNSError {
     fn from(e: std::io::Error) -> DNSError {
         DNSError::IO(e)
+    }
+}
+
+impl From<reqwest::Error> for DNSError {
+    fn from(e: reqwest::Error) -> DNSError {
+        DNSError::Reqwest(e)
     }
 }
 

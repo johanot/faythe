@@ -58,10 +58,18 @@ pub struct ConfigContainer {
 #[derive(Clone, Deserialize, Debug)]
 pub struct Zone {
     pub server: String,
-    pub key: String,
+    pub update_config: UpdateConfig,
     pub challenge_suffix: Option<String>,
     #[serde(default = "default_issue_wildcard_certs")]
     pub issue_wildcard_certs: bool,
+}
+
+#[derive(Clone, Deserialize, Debug)]
+pub enum UpdateConfig {
+    #[serde(rename = "nsupdate")]
+    NSUpdate{ key: String },
+    #[serde(rename = "concealed")]
+    Concealed{ baseurl: String, },
 }
 
 impl ConfigContainer {

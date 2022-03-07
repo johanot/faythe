@@ -384,7 +384,7 @@ pub mod tests {
     use std::collections::HashMap;
     use crate::set;
     use super::DNSName;
-    use crate::config::{KubeMonitorConfig, FileMonitorConfig, MonitorConfig};
+    use crate::config::{KubeMonitorConfig, FileMonitorConfig, MonitorConfig, UpdateConfig};
 
     const TIME_FORMAT: &str = "%Y-%m-%dT%H:%M:%S%z"; // 2019-10-09T11:50:22+0200
 
@@ -419,19 +419,25 @@ pub mod tests {
         let mut zones = HashMap::new();
         zones.insert(String::from("unit.test"), Zone{
             server: String::from("ns.unit.test"),
-            key: String::new(),
+            update_config: UpdateConfig::NSUpdate{
+                key: String::from(""),
+            },
             challenge_suffix: None,
             issue_wildcard_certs
         });
         zones.insert(String::from("alternative.unit.test"), Zone{
             server: String::from("ns.alternative.unit.test"),
-            key: String::new(),
+            update_config: UpdateConfig::NSUpdate{
+                key: String::from(""),
+            },
             challenge_suffix: None,
             issue_wildcard_certs
         });
         zones.insert(String::from("suffixed.unit.test"), Zone{
             server: String::from("ns.suffixed.unit.test"),
-            key: String::new(),
+            update_config: UpdateConfig::NSUpdate{
+                key: String::from(""),
+            },
             challenge_suffix: Some(String::from("acme.example.com")),
             issue_wildcard_certs
         });
