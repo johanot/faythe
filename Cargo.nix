@@ -4272,9 +4272,9 @@ rec {
       };
       "regex" = rec {
         crateName = "regex";
-        version = "1.5.4";
+        version = "1.5.5";
         edition = "2018";
-        sha256 = "0qf479kjbmb582h4d1d6gfl75h0j8aq2nrdi5wg6zdcy6llqcynh";
+        sha256 = "11kjfh41h7i33sskb8i36kl03260rrjw74nb2njhbzr5ddxn848s";
         authors = [
           "The Rust Project Developers"
         ];
@@ -6011,9 +6011,9 @@ rec {
       };
       "tracing" = rec {
         crateName = "tracing";
-        version = "0.1.31";
+        version = "0.1.32";
         edition = "2018";
-        sha256 = "17wvxyppvkqgs1cc583sjrd4q8nirchks0vgff9xvlhcxyl51ipn";
+        sha256 = "0zyaila5mnkqjr7ywjxrhqs4fzy7yqrj478yf2zjp2n2lxady6sa";
         authors = [
           "Eliza Weisman <eliza@buoyant.io>"
           "Tokio Contributors <team@tokio.rs>"
@@ -6055,9 +6055,9 @@ rec {
       };
       "tracing-core" = rec {
         crateName = "tracing-core";
-        version = "0.1.22";
+        version = "0.1.23";
         edition = "2018";
-        sha256 = "08wssa1n70vg02nfw6ykfzjhind88ws8vjqi64nsfch6718wpkq3";
+        sha256 = "0v3hy8bg4s3b4axz6l6adb3g73rf0795s5nqji6w629cljgnccda";
         authors = [
           "Tokio Contributors <team@tokio.rs>"
         ];
