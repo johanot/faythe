@@ -1141,9 +1141,9 @@ rec {
       };
       "erased-serde" = rec {
         crateName = "erased-serde";
-        version = "0.3.18";
+        version = "0.3.20";
         edition = "2018";
-        sha256 = "12mxh2iaz20knyf038v66nm63jdw6zbyry92r9sq04dbw5c7012n";
+        sha256 = "1zbzqr50vj05q0gphygrwls4pldaj4qwp1kxils4ddfhs3c2s4xd";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -2694,9 +2694,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.119";
+        version = "0.2.120";
         edition = "2015";
-        sha256 = "195a2q4lfhg7dc72vmchma3mzdcxpkiz6xpak3hchmrlpdjy3whv";
+        sha256 = "028c71ww2h32ywr92075v0ywb7z562cs8v1y06fr7l2r0zl18p5d";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3789,9 +3789,9 @@ rec {
       };
       "quote" = rec {
         crateName = "quote";
-        version = "1.0.15";
+        version = "1.0.16";
         edition = "2018";
-        sha256 = "0id1q0875pvhkg0mlb5z8gzdm2g2rbbz76bfzhv331lrm2b3wkc6";
+        sha256 = "0mysqcqshvcvwr720lffp6bvks5c4mqg31p80zgzqcs5f722xbxl";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -5181,9 +5181,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.86";
+        version = "1.0.89";
         edition = "2018";
-        sha256 = "0sqwa4nqxzm89nj8xd8sk4iz0hbrw3mb17b6hyc2w2d0zzsb6rca";
+        sha256 = "0m4zzg6vdcya02vivb1m2wv6shyfkwh5mqbwq3f9h8ym43i7naga";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
