@@ -2694,9 +2694,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.120";
+        version = "0.2.121";
         edition = "2015";
-        sha256 = "028c71ww2h32ywr92075v0ywb7z562cs8v1y06fr7l2r0zl18p5d";
+        sha256 = "0kzz2l87069gnij2vbw6a1kdjl8pbs4y677jdgmyhprv1wq7papg";
         authors = [
           "The Rust Project Developers"
         ];
@@ -2741,9 +2741,9 @@ rec {
       };
       "log" = rec {
         crateName = "log";
-        version = "0.4.14";
+        version = "0.4.16";
         edition = "2015";
-        sha256 = "04175hv0v62shd82qydq58a48k3bjijmk54v38zgqlbxqkkbpfai";
+        sha256 = "1f62871i8phpphfk9chr5s4wia8kr55y4nlhpqbbrxczhj8c92b3";
         authors = [
           "The Rust Project Developers"
         ];
@@ -4253,11 +4253,11 @@ rec {
         ];
 
       };
-      "redox_syscall 0.2.11" = rec {
+      "redox_syscall 0.2.12" = rec {
         crateName = "redox_syscall";
-        version = "0.2.11";
+        version = "0.2.12";
         edition = "2018";
-        sha256 = "0g2gcdqp462827ywwk51jx7sgy706wbz86vvfkq484jma80zx043";
+        sha256 = "1w7ccknxglmqpx49x3nl8vz4pc688ys1wgkrq7q4kh863gy87qca";
         libName = "syscall";
         authors = [
           "Jeremy Soller <jackpot51@gmail.com>"
@@ -5275,7 +5275,7 @@ rec {
           }
           {
             name = "redox_syscall";
-            packageId = "redox_syscall 0.2.11";
+            packageId = "redox_syscall 0.2.12";
             target = { target, features }: (target."os" == "redox");
           }
           {
