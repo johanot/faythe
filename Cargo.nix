@@ -216,9 +216,9 @@ rec {
       };
       "async-trait" = rec {
         crateName = "async-trait";
-        version = "0.1.52";
+        version = "0.1.53";
         edition = "2018";
-        sha256 = "1qv5l9izrd96zcrlcr4x1kh41ylq1d9702f3vl8w11m2rb67l6h6";
+        sha256 = "003nzwgwb2apz6nww5wmh66k8f47npifll8c33zgkz1d999a6spd";
         procMacro = true;
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
@@ -1761,11 +1761,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "std" ];
       };
-      "getrandom 0.2.5" = rec {
+      "getrandom 0.2.6" = rec {
         crateName = "getrandom";
-        version = "0.2.5";
+        version = "0.2.6";
         edition = "2018";
-        sha256 = "0xqfjd779yklms48j222jknmw2a2lx6fhynb3zx18w8r00wxk76k";
+        sha256 = "1b8588g2z36s1082licl623lclbdz9jp03gnz39bi0qwjnc0rrwv";
         authors = [
           "The Rand Project Developers"
         ];
@@ -2526,9 +2526,9 @@ rec {
       };
       "indexmap" = rec {
         crateName = "indexmap";
-        version = "1.8.0";
+        version = "1.8.1";
         edition = "2018";
-        sha256 = "08s2rdps98z4qggzad2cf58nx012lnznn0b5q02a9arcf93n4ai8";
+        sha256 = "1vpnb7yq9ckdil8vnzh0p2w62j7gpfvyvlwvq9nqn7xavwr70r0g";
         authors = [
           "bluss"
           "Josh Stone <cuviper@gmail.com>"
@@ -3009,9 +3009,9 @@ rec {
       };
       "native-tls" = rec {
         crateName = "native-tls";
-        version = "0.2.8";
+        version = "0.2.10";
         edition = "2015";
-        sha256 = "0kdj0drgp8cqk3v430c5ac7dfpzvhm1621w96cpz985m35vrzfj8";
+        sha256 = "1ad4dhkbc3r9rbqdym1cl5zwkqzfa9i8bs0p1c79hzsm30v2yzpx";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
         ];
@@ -3660,9 +3660,9 @@ rec {
       };
       "pkg-config" = rec {
         crateName = "pkg-config";
-        version = "0.3.24";
+        version = "0.3.25";
         edition = "2015";
-        sha256 = "1ghcyjp5537r7qigmgl3dj62j01arlpddaq93a3i414v3iskz2aq";
+        sha256 = "1bh3vij79cshj884py4can1f8rvk52niaii1vwxya9q69gnc9y0x";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
         ];
@@ -3789,9 +3789,9 @@ rec {
       };
       "quote" = rec {
         crateName = "quote";
-        version = "1.0.16";
+        version = "1.0.17";
         edition = "2018";
-        sha256 = "0mysqcqshvcvwr720lffp6bvks5c4mqg31p80zgzqcs5f722xbxl";
+        sha256 = "0n1z06kngl0h24d4n6f1cv690js8rlbb92za6dps6x7qyyzh4bb3";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -4253,11 +4253,11 @@ rec {
         ];
 
       };
-      "redox_syscall 0.2.12" = rec {
+      "redox_syscall 0.2.13" = rec {
         crateName = "redox_syscall";
-        version = "0.2.12";
+        version = "0.2.13";
         edition = "2018";
-        sha256 = "1w7ccknxglmqpx49x3nl8vz4pc688ys1wgkrq7q4kh863gy87qca";
+        sha256 = "0hpgwvgjlg1j9z7bjf5y18fkd8ag7y4znhqxg85hnpp5qz25pwk2";
         libName = "syscall";
         authors = [
           "Jeremy Soller <jackpot51@gmail.com>"
@@ -5181,9 +5181,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.89";
+        version = "1.0.90";
         edition = "2018";
-        sha256 = "0m4zzg6vdcya02vivb1m2wv6shyfkwh5mqbwq3f9h8ym43i7naga";
+        sha256 = "0vz8gqldin3j19p2q9c5rbmg95pqsqf1fgyki36p55ck51vg4kbh";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -5275,7 +5275,7 @@ rec {
           }
           {
             name = "redox_syscall";
-            packageId = "redox_syscall 0.2.12";
+            packageId = "redox_syscall 0.2.13";
             target = { target, features }: (target."os" == "redox");
           }
           {
@@ -6503,7 +6503,7 @@ rec {
         dependencies = [
           {
             name = "getrandom";
-            packageId = "getrandom 0.2.5";
+            packageId = "getrandom 0.2.6";
             optional = true;
           }
         ];
