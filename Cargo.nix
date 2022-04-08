@@ -1051,9 +1051,9 @@ rec {
       };
       "encoding_rs" = rec {
         crateName = "encoding_rs";
-        version = "0.8.30";
+        version = "0.8.31";
         edition = "2018";
-        sha256 = "1pqirqhlj8mbaln0pv4dk65yr22clpx509ci6gdgs3r5pf5dr5kq";
+        sha256 = "0azc6rblf75vd862ymjahdfch27j1sshb7zynshrx7ywi5an6llq";
         authors = [
           "Henri Sivonen <hsivonen@hsivonen.fi>"
         ];
@@ -2643,9 +2643,9 @@ rec {
       };
       "js-sys" = rec {
         crateName = "js-sys";
-        version = "0.3.56";
+        version = "0.3.57";
         edition = "2018";
-        sha256 = "010g8jkj5avy3xd77i3cprjzzpfa6z9z2ay0fkllqmpx617c53x3";
+        sha256 = "15rksw2lq0lccb1cfc4zijwibzds0gfz2hq7fnic45yv43w2c6k7";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -2694,9 +2694,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.121";
+        version = "0.2.122";
         edition = "2015";
-        sha256 = "0kzz2l87069gnij2vbw6a1kdjl8pbs4y677jdgmyhprv1wq7papg";
+        sha256 = "0ngjp0kyzn1yl2sl61c9ds8id4lss7qf9kcbiki741xzw9kphr7c";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3683,9 +3683,9 @@ rec {
       };
       "proc-macro2" = rec {
         crateName = "proc-macro2";
-        version = "1.0.36";
+        version = "1.0.37";
         edition = "2018";
-        sha256 = "0adh6gvs31x6pfwmygypmzrv1jc7kjq568vsqcfaxk7vhdc2sd67";
+        sha256 = "1ldg6l97xlr4dal4kmk0c4l8kn7nn8w1a17wd8hdlpwd8cc74xgc";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
           "Alex Crichton <alex@alexcrichton.com>"
@@ -5065,9 +5065,9 @@ rec {
       };
       "slab" = rec {
         crateName = "slab";
-        version = "0.4.5";
+        version = "0.4.6";
         edition = "2018";
-        sha256 = "1ddg01hf8h4bpfm027h0snhb7jfcs1jzi497083y13q13vyr3vwx";
+        sha256 = "0cmvcy9ppsh3dz8mi6jljx7bxyknvgpas4aid2ayxk1vjpz3qw7b";
         authors = [
           "Carl Lerche <me@carllerche.com>"
         ];
@@ -5181,9 +5181,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.90";
+        version = "1.0.91";
         edition = "2018";
-        sha256 = "0vz8gqldin3j19p2q9c5rbmg95pqsqf1fgyki36p55ck51vg4kbh";
+        sha256 = "0kflvi0r456s42n3z0d5snilsab2q9ns0dkwnwwg9vn84nwb50xn";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -6055,9 +6055,9 @@ rec {
       };
       "tracing-core" = rec {
         crateName = "tracing-core";
-        version = "0.1.23";
+        version = "0.1.24";
         edition = "2018";
-        sha256 = "0v3hy8bg4s3b4axz6l6adb3g73rf0795s5nqji6w629cljgnccda";
+        sha256 = "1vmlkd6nip65vcwcq5zlwch9ljighjp75vj8nphwjmrgxs2jji4h";
         authors = [
           "Tokio Contributors <team@tokio.rs>"
         ];
@@ -6676,9 +6676,9 @@ rec {
       };
       "wasm-bindgen" = rec {
         crateName = "wasm-bindgen";
-        version = "0.2.79";
+        version = "0.2.80";
         edition = "2018";
-        sha256 = "01kc4lj2vlf0ra2w63izrgdlv8p6f8p15086hhyqln6q4dsazw95";
+        sha256 = "1b88vhwy2fdskh04wck82d2yczwk9vs2dglz38zmxi87r6bh2dr7";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6704,9 +6704,9 @@ rec {
       };
       "wasm-bindgen-backend" = rec {
         crateName = "wasm-bindgen-backend";
-        version = "0.2.79";
+        version = "0.2.80";
         edition = "2018";
-        sha256 = "1jpdrl5jj01961jxhmvj7v25ws928fyfj8ms7izifnhg0ggw08cb";
+        sha256 = "1x6kfhvvy74smy2qjd1zaw4q8f9kbq1gacm57lkpk9x3py2l3q2k";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6748,9 +6748,9 @@ rec {
       };
       "wasm-bindgen-macro" = rec {
         crateName = "wasm-bindgen-macro";
-        version = "0.2.79";
+        version = "0.2.80";
         edition = "2018";
-        sha256 = "00gdh0dlf2r77mxwh08q0z01vz2z7mvrllmj4gjjx9a0kvb06hig";
+        sha256 = "1xaihb09jxnwld8bipj93c8k9w7ccvkwy4bnzsi86zjdg3zygjhp";
         procMacro = true;
         authors = [
           "The wasm-bindgen Developers"
@@ -6773,9 +6773,9 @@ rec {
       };
       "wasm-bindgen-macro-support" = rec {
         crateName = "wasm-bindgen-macro-support";
-        version = "0.2.79";
+        version = "0.2.80";
         edition = "2018";
-        sha256 = "1g1fjqvrkrf3j20z8nxsf60cypxg9dfvpbachl2b53908q6s7a5z";
+        sha256 = "02z2xjrwkq1ajmzv42irj79krlkqyprbkcda671gyvvmlk3hvv4r";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6810,9 +6810,9 @@ rec {
       };
       "wasm-bindgen-shared" = rec {
         crateName = "wasm-bindgen-shared";
-        version = "0.2.79";
+        version = "0.2.80";
         edition = "2018";
-        sha256 = "18h67l9b9jn06iw9r2p7bh9i0brh24lilcp4f26f4f24bh1qv59x";
+        sha256 = "0i37ljck1c6l4xypx042ybjcm2lb3xfdjs4lk96rdrfy63svfm6m";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -6820,9 +6820,9 @@ rec {
       };
       "web-sys" = rec {
         crateName = "web-sys";
-        version = "0.3.56";
+        version = "0.3.57";
         edition = "2018";
-        sha256 = "1sxqmwq773ss5m6vz7z95fdm6bqlix0s2awsy0j5gllxy8cv6q60";
+        sha256 = "10y237lkvxg6w5p39y1bqck2qjiivqc5np5c4jywhw1ccr0yf5vv";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -7025,6 +7025,7 @@ rec {
           "IdbVersionChangeEvent" = [ "Event" ];
           "IirFilterNode" = [ "AudioNode" "EventTarget" ];
           "ImageCaptureErrorEvent" = [ "Event" ];
+          "ImageTrack" = [ "EventTarget" ];
           "InputEvent" = [ "Event" "UiEvent" ];
           "KeyboardEvent" = [ "Event" "UiEvent" ];
           "KeyframeEffect" = [ "AnimationEffect" ];
