@@ -320,7 +320,7 @@ rec {
           }
           {
             name = "miniz_oxide";
-            packageId = "miniz_oxide";
+            packageId = "miniz_oxide 0.4.4";
             usesDefaultFeatures = false;
           }
           {
@@ -1325,9 +1325,9 @@ rec {
       };
       "flate2" = rec {
         crateName = "flate2";
-        version = "1.0.22";
+        version = "1.0.23";
         edition = "2018";
-        sha256 = "0gy5iwfqylb2f0dd9n7r8w2xwbzlrqlsairvyj2w9jf1jzl8hs8y";
+        sha256 = "1bq9vavadgqqr72z5bzbp952c4q67a71kfc4r55qzlw6cvlj55dk";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
           "Josh Triplett <josh@joshtriplett.org>"
@@ -1347,13 +1347,13 @@ rec {
           }
           {
             name = "miniz_oxide";
-            packageId = "miniz_oxide";
+            packageId = "miniz_oxide 0.5.1";
             optional = true;
             usesDefaultFeatures = false;
           }
           {
             name = "miniz_oxide";
-            packageId = "miniz_oxide";
+            packageId = "miniz_oxide 0.5.1";
             usesDefaultFeatures = false;
             target = { target, features }: ((target."arch" == "wasm32") && (!(target."os" == "emscripten")));
           }
@@ -1362,7 +1362,6 @@ rec {
           "cloudflare_zlib" = [ "any_zlib" "cloudflare-zlib-sys" ];
           "default" = [ "rust_backend" ];
           "rust_backend" = [ "miniz_oxide" ];
-          "tokio" = [ "tokio-io" "futures" ];
           "zlib" = [ "any_zlib" "libz-sys" ];
           "zlib-ng-compat" = [ "zlib" "libz-sys/zlib-ng" ];
         };
@@ -2120,9 +2119,9 @@ rec {
       };
       "httparse" = rec {
         crateName = "httparse";
-        version = "1.6.0";
+        version = "1.7.0";
         edition = "2015";
-        sha256 = "1i66wqc7lkfsi8h26sm8s6kirzzh1xgpx2dlrkzbfpz1h944204i";
+        sha256 = "1fmr81r28flk4fwn6zw077n4fwdv3y8q54vdzbrmkj6qdfiyhc33";
         authors = [
           "Sean McArthur <sean@seanmonstar.com>"
         ];
@@ -2694,9 +2693,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.122";
+        version = "0.2.123";
         edition = "2015";
-        sha256 = "0ngjp0kyzn1yl2sl61c9ds8id4lss7qf9kcbiki741xzw9kphr7c";
+        sha256 = "1gb3qw2dnhygl7i6wfvy8bf11pmgx9k21d652ny8md3sg9s1lsfb";
         authors = [
           "The Rust Project Developers"
         ];
@@ -2887,7 +2886,7 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "rev-mappings" ];
       };
-      "miniz_oxide" = rec {
+      "miniz_oxide 0.4.4" = rec {
         crateName = "miniz_oxide";
         version = "0.4.4";
         edition = "2018";
@@ -2911,6 +2910,27 @@ rec {
         ];
         features = {
           "rustc-dep-of-std" = [ "core" "alloc" "compiler_builtins" "adler/rustc-dep-of-std" ];
+        };
+      };
+      "miniz_oxide 0.5.1" = rec {
+        crateName = "miniz_oxide";
+        version = "0.5.1";
+        edition = "2018";
+        sha256 = "10phz3ppw4p8pz4rwniy3qkw95wiq64kbvpb0l8kjcrzpka9pcnj";
+        authors = [
+          "Frommi <daniil.liferenko@gmail.com>"
+          "oyvindln <oyvindln@users.noreply.github.com>"
+        ];
+        dependencies = [
+          {
+            name = "adler";
+            packageId = "adler";
+            usesDefaultFeatures = false;
+          }
+        ];
+        features = {
+          "rustc-dep-of-std" = [ "core" "alloc" "compiler_builtins" "adler/rustc-dep-of-std" "simd-adler32/std" ];
+          "simd" = [ "simd-adler32" ];
         };
       };
       "mio" = rec {
@@ -3789,9 +3809,9 @@ rec {
       };
       "quote" = rec {
         crateName = "quote";
-        version = "1.0.17";
+        version = "1.0.18";
         edition = "2018";
-        sha256 = "0n1z06kngl0h24d4n6f1cv690js8rlbb92za6dps6x7qyyzh4bb3";
+        sha256 = "1lca4xnwdc2sp76bf4n50kifmi5phhxr9520w623mfcksr7bbzm1";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -6011,9 +6031,9 @@ rec {
       };
       "tracing" = rec {
         crateName = "tracing";
-        version = "0.1.32";
+        version = "0.1.34";
         edition = "2018";
-        sha256 = "0zyaila5mnkqjr7ywjxrhqs4fzy7yqrj478yf2zjp2n2lxady6sa";
+        sha256 = "02bx698j7p50dcg01s3x26swpjs2lcrly32ghklhz7x78k5ws3jx";
         authors = [
           "Eliza Weisman <eliza@buoyant.io>"
           "Tokio Contributors <team@tokio.rs>"
@@ -6055,9 +6075,9 @@ rec {
       };
       "tracing-core" = rec {
         crateName = "tracing-core";
-        version = "0.1.24";
+        version = "0.1.26";
         edition = "2018";
-        sha256 = "1vmlkd6nip65vcwcq5zlwch9ljighjp75vj8nphwjmrgxs2jji4h";
+        sha256 = "0bq7c1y28hi7mli25pj9iljam4vcnlqk7zf2k3a8c67822kqqk7m";
         authors = [
           "Tokio Contributors <team@tokio.rs>"
         ];
