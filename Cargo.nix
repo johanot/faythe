@@ -297,9 +297,9 @@ rec {
       };
       "backtrace" = rec {
         crateName = "backtrace";
-        version = "0.3.64";
+        version = "0.3.65";
         edition = "2018";
-        sha256 = "07y3z67h9mybdw4l1cjrlqw3ng7h7m4y374d4jmk7ki3h3p1s4jy";
+        sha256 = "0qggp0d8pbw5vfnpm0r7lrn6wmh5yjiz4yc4bzynb8l26i2pv88i";
         authors = [
           "The Rust Project Developers"
         ];
@@ -320,7 +320,7 @@ rec {
           }
           {
             name = "miniz_oxide";
-            packageId = "miniz_oxide 0.4.4";
+            packageId = "miniz_oxide";
             usesDefaultFeatures = false;
           }
           {
@@ -1347,13 +1347,13 @@ rec {
           }
           {
             name = "miniz_oxide";
-            packageId = "miniz_oxide 0.5.1";
+            packageId = "miniz_oxide";
             optional = true;
             usesDefaultFeatures = false;
           }
           {
             name = "miniz_oxide";
-            packageId = "miniz_oxide 0.5.1";
+            packageId = "miniz_oxide";
             usesDefaultFeatures = false;
             target = { target, features }: ((target."arch" == "wasm32") && (!(target."os" == "emscripten")));
           }
@@ -2693,9 +2693,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.123";
+        version = "0.2.124";
         edition = "2015";
-        sha256 = "1gb3qw2dnhygl7i6wfvy8bf11pmgx9k21d652ny8md3sg9s1lsfb";
+        sha256 = "0l0f1gvhxp9xpx5w5bd8aj55x8sg59idlqfiqsqpmwlqkpniz911";
         authors = [
           "The Rust Project Developers"
         ];
@@ -2886,33 +2886,7 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "rev-mappings" ];
       };
-      "miniz_oxide 0.4.4" = rec {
-        crateName = "miniz_oxide";
-        version = "0.4.4";
-        edition = "2018";
-        sha256 = "0jsfv00hl5rmx1nijn59sr9jmjd4rjnjhh4kdjy8d187iklih9d9";
-        authors = [
-          "Frommi <daniil.liferenko@gmail.com>"
-          "oyvindln <oyvindln@users.noreply.github.com>"
-        ];
-        dependencies = [
-          {
-            name = "adler";
-            packageId = "adler";
-            usesDefaultFeatures = false;
-          }
-        ];
-        buildDependencies = [
-          {
-            name = "autocfg";
-            packageId = "autocfg 1.1.0";
-          }
-        ];
-        features = {
-          "rustc-dep-of-std" = [ "core" "alloc" "compiler_builtins" "adler/rustc-dep-of-std" ];
-        };
-      };
-      "miniz_oxide 0.5.1" = rec {
+      "miniz_oxide" = rec {
         crateName = "miniz_oxide";
         version = "0.5.1";
         edition = "2018";
@@ -3384,9 +3358,9 @@ rec {
       };
       "object" = rec {
         crateName = "object";
-        version = "0.27.1";
+        version = "0.28.3";
         edition = "2018";
-        sha256 = "1ygv9zgi9wz6q5f2z9xn72i0c97jjr1dgj30kbyicdhxk8zivb37";
+        sha256 = "0mnllk6kwznchzryczyfmvlixzhz6f20n4dayycmyn8ll05wggj0";
         dependencies = [
           {
             name = "memchr";
@@ -3398,14 +3372,15 @@ rec {
           "all" = [ "read" "write" "std" "compression" "wasm" ];
           "compression" = [ "flate2" "std" ];
           "default" = [ "read" "compression" ];
-          "doc" = [ "read_core" "write_core" "std" "compression" "archive" "coff" "elf" "macho" "pe" "wasm" ];
+          "doc" = [ "read_core" "write_std" "std" "compression" "archive" "coff" "elf" "macho" "pe" "wasm" ];
           "pe" = [ "coff" ];
           "read" = [ "read_core" "archive" "coff" "elf" "macho" "pe" "unaligned" ];
           "rustc-dep-of-std" = [ "core" "compiler_builtins" "alloc" "memchr/rustc-dep-of-std" ];
           "std" = [ "memchr/std" ];
           "wasm" = [ "wasmparser" ];
-          "write" = [ "write_core" "coff" "elf" "macho" "pe" ];
-          "write_core" = [ "crc32fast" "indexmap/std" "std" ];
+          "write" = [ "write_std" "coff" "elf" "macho" "pe" ];
+          "write_core" = [ "crc32fast" "indexmap" "hashbrown" ];
+          "write_std" = [ "write_core" "std" "indexmap/std" "crc32fast/std" ];
         };
         resolvedDefaultFeatures = [ "archive" "coff" "elf" "macho" "pe" "read_core" "unaligned" ];
       };
