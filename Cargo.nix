@@ -1701,7 +1701,7 @@ rec {
           }
           {
             name = "pin-project-lite";
-            packageId = "pin-project-lite 0.2.8";
+            packageId = "pin-project-lite 0.2.9";
           }
           {
             name = "pin-utils";
@@ -1893,7 +1893,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.6";
+            packageId = "http 0.2.7";
           }
           {
             name = "indexmap";
@@ -2040,11 +2040,11 @@ rec {
         ];
 
       };
-      "http 0.2.6" = rec {
+      "http 0.2.7" = rec {
         crateName = "http";
-        version = "0.2.6";
+        version = "0.2.7";
         edition = "2018";
-        sha256 = "00zxqk6m9qksxmlajmhnhgryw6xmqn9riimwx87nz1l4cmscdx1i";
+        sha256 = "1fxzyvspr6g8znc6i0kif0bhpih8ibhy7xc6k984j8pm19bp11pz";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
           "Carl Lerche <me@carllerche.com>"
@@ -2112,16 +2112,16 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.6";
+            packageId = "http 0.2.7";
           }
         ];
 
       };
       "httparse" = rec {
         crateName = "httparse";
-        version = "1.7.0";
+        version = "1.7.1";
         edition = "2015";
-        sha256 = "1fmr81r28flk4fwn6zw077n4fwdv3y8q54vdzbrmkj6qdfiyhc33";
+        sha256 = "0k60q1hx96cvmjn6k3yjkff87fz0ga2a4z0g9ss8a9x5nndy4v29";
         authors = [
           "Sean McArthur <sean@seanmonstar.com>"
         ];
@@ -2306,7 +2306,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.6";
+            packageId = "http 0.2.7";
           }
           {
             name = "http-body";
@@ -3243,9 +3243,9 @@ rec {
       };
       "num-iter" = rec {
         crateName = "num-iter";
-        version = "0.1.42";
+        version = "0.1.43";
         edition = "2015";
-        sha256 = "0ndd9wb9qar50fdr16xm3i1zk6h2g9br56nml2n22kd56y1iq0mj";
+        sha256 = "0lp22isvzmmnidbq9n5kbdh8gj0zm3yhxv1ddsn5rp65530fc0vx";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3636,11 +3636,11 @@ rec {
         ];
 
       };
-      "pin-project-lite 0.2.8" = rec {
+      "pin-project-lite 0.2.9" = rec {
         crateName = "pin-project-lite";
-        version = "0.2.8";
+        version = "0.2.9";
         edition = "2018";
-        sha256 = "0v2c5ds2jqr84q0nc94dfhv8fs7lachl9sarf9992b66gkkzp072";
+        sha256 = "05n1z851l356hpgqadw4ar64mjanaxq1qlwqsf2k05ziq8xax9z0";
 
       };
       "pin-utils" = rec {
@@ -3719,7 +3719,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.6";
+            packageId = "http 0.2.7";
           }
           {
             name = "hyper";
@@ -5176,9 +5176,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.91";
+        version = "1.0.92";
         edition = "2018";
-        sha256 = "0kflvi0r456s42n3z0d5snilsab2q9ns0dkwnwwg9vn84nwb50xn";
+        sha256 = "0licp4sr5avlg7lqjbvwhmc4l2bzqb88lvx0jrcl848zc29cbxvz";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -5397,9 +5397,9 @@ rec {
       };
       "tinyvec" = rec {
         crateName = "tinyvec";
-        version = "1.5.1";
+        version = "1.6.0";
         edition = "2018";
-        sha256 = "1lnqnva56673r0d40586rkzyl2qqcz19wm29q8h5a95n89d1s71c";
+        sha256 = "0l6bl2h62a5m44jdnpn7lmj14rd44via8180i7121fvm73mmrk47";
         authors = [
           "Lokathor <zefria@gmail.com>"
         ];
@@ -5414,6 +5414,8 @@ rec {
           "alloc" = [ "tinyvec_macros" ];
           "real_blackbox" = [ "criterion/real_blackbox" ];
           "rustc_1_55" = [ "rustc_1_40" ];
+          "rustc_1_57" = [ "rustc_1_55" ];
+          "std" = [ "alloc" ];
         };
         resolvedDefaultFeatures = [ "alloc" "default" "tinyvec_macros" ];
       };
@@ -6025,7 +6027,7 @@ rec {
           }
           {
             name = "pin-project-lite";
-            packageId = "pin-project-lite 0.2.8";
+            packageId = "pin-project-lite 0.2.9";
           }
           {
             name = "tracing-core";
@@ -6324,19 +6326,19 @@ rec {
       };
       "unicode-bidi" = rec {
         crateName = "unicode-bidi";
-        version = "0.3.7";
+        version = "0.3.8";
         edition = "2018";
-        sha256 = "13v7v8pp7mdqqf0ypk73va78c3b4xzpryvbls9p47nz3cd34008s";
+        sha256 = "14p95n9kw9p7psp0vsp0j9yfkfg6sn1rlnymvmwmya0x60l736q9";
         libName = "unicode_bidi";
         authors = [
           "The Servo Project Developers"
         ];
         features = {
-          "default" = [ "std" ];
+          "default" = [ "std" "hardcoded-data" ];
           "flame_it" = [ "flame" "flamer" ];
           "with_serde" = [ "serde" ];
         };
-        resolvedDefaultFeatures = [ "default" "std" ];
+        resolvedDefaultFeatures = [ "default" "hardcoded-data" "std" ];
       };
       "unicode-normalization" = rec {
         crateName = "unicode-normalization";
