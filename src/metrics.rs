@@ -10,37 +10,37 @@ struct MyOptions {}
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum MetricsType {
-  Success,
-  Failure,
+    Success,
+    Failure,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct MetricsEvent {
-  pub cert_name: String,
-  pub event_type: MetricsType,
+    pub cert_name: String,
+    pub event_type: MetricsType,
 }
 
 lazy_static! {
-  static ref EVENTS: RwLock<HashMap<MetricsEvent, u64>> = RwLock::new(HashMap::new());
+    static ref EVENTS: RwLock<HashMap<MetricsEvent, u64>> = RwLock::new(HashMap::new());
 }
 
 pub fn new_event(cert_name: &str, event_type: MetricsType) {
-  let event = MetricsEvent{
-    cert_name: cert_name.to_string(),
-    event_type,
-  };
-  let mut guard = EVENTS.write().unwrap();
-  let new_value = match guard.remove(&event) {
-    Some(old_value) => old_value+1,
-    None => 1
-  };
-  guard.insert(event, new_value);
+    let event = MetricsEvent {
+        cert_name: cert_name.to_string(),
+        event_type,
+    };
+    let mut guard = EVENTS.write().unwrap();
+    let new_value = match guard.remove(&event) {
+        Some(old_value) => old_value + 1,
+        None => 1,
+    };
+    guard.insert(event, new_value);
 }
 
 #[tokio::main]
 pub async fn serve(port: u16) {
-  let addr = ([0, 0, 0, 0], port).into();
-  log::info(&format!("starting metrics server on port: {}", port));
+    let addr = ([0, 0, 0, 0], port).into();
+    log::info(&format!("starting metrics server on port: {}", port));
 
     render_prometheus(
         addr,
@@ -64,18 +64,14 @@ pub async fn serve(port: u16) {
                         successes.render_and_append_instance(
                             &PrometheusInstance::new()
                                 .with_label("cert", event.cert_name.as_str())
-                                .with_value(count.clone())
-                                .with_current_timestamp()
-                                .expect("error getting the UNIX epoch"),
+                                .with_value(count.clone()),
                         );
                     }
                     MetricsType::Failure => {
                         failures.render_and_append_instance(
                             &PrometheusInstance::new()
                                 .with_label("cert", event.cert_name.as_str())
-                                .with_value(count.clone())
-                                .with_current_timestamp()
-                                .expect("error getting the UNIX epoch"),
+                                .with_value(count.clone()),
                         );
                     }
                 }
