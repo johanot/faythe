@@ -1,26 +1,29 @@
-#[macro_use] extern crate serde_derive;
-#[macro_use] extern crate lazy_static;
+#[macro_use]
+extern crate serde_derive;
+#[macro_use]
+extern crate lazy_static;
 
 extern crate clap;
 
-use std::{thread, process};
+use std::{process, thread};
 
-use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc;
+use std::sync::mpsc::{Receiver, Sender};
 
 use crate::common::CertSpec;
-use crate::config::{FaytheConfig, ConfigContainer, MonitorConfig};
+use crate::config::{ConfigContainer, FaytheConfig, MonitorConfig};
 
-use dbc_rust_modules::{log, exec};
+use dbc_rust_modules::{exec, log};
 
 mod common;
 mod config;
-mod monitor;
+mod dns;
+mod file;
 mod issuer;
 mod kube;
-mod file;
-mod dns;
 mod metrics;
+mod monitor;
+mod vault;
 
 #[macro_export]
 macro_rules! set {
@@ -76,12 +79,24 @@ fn run(config: &FaytheConfig) {
         threads.push(thread::spawn(move || { monitor::monitor_k8s(container,tx_) }));
     }
     for c in &config.file_monitor_configs {
-        let container = ConfigContainer{
+        let container = ConfigContainer {
             faythe_config: config.clone(),
-            monitor_config: MonitorConfig::File(c.to_owned())
+            monitor_config: MonitorConfig::File(c.to_owned()),
         };
         let tx_ = tx.clone();
-        threads.push(thread::spawn(move || { monitor::monitor_files(container,tx_) }));
+        threads.push(thread::spawn(move || {
+            monitor::monitor_files(container, tx_)
+        }));
+    }
+    for c in &config.vault_monitor_configs {
+        let container = ConfigContainer {
+            faythe_config: config.clone(),
+            monitor_config: MonitorConfig::Vault(c.to_owned()),
+        };
+        let tx_ = tx.clone();
+        threads.push(thread::spawn(move || {
+            monitor::monitor_vault(container, tx_)
+        }));
     }
     let config_ = config.clone();
     threads.push(thread::spawn(move || { issuer::process(config_, rx) }));

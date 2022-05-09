@@ -1,24 +1,25 @@
-
 extern crate time;
 
 use std::thread;
 use std::time::Duration;
 
-use crate::{kube};
-use crate::{file};
-use crate::log;
 use crate::config::ConfigContainer;
+use crate::file;
+use crate::kube;
+use crate::log;
+use crate::vault::VaultError;
 
 use std::result::Result;
 
 use std::sync::mpsc::Sender;
 
-use crate::common::{CertSpec, CertName};
-use std::collections::HashMap;
+use crate::common::{CertName, CertSpec};
 use crate::common::{CertSpecable, ValidityVerifier};
-use crate::kube::KubeError;
-use std::prelude::v1::Vec;
 use crate::file::FileError;
+use crate::kube::KubeError;
+use crate::vault::VaultCert;
+use std::collections::HashMap;
+use std::prelude::v1::Vec;
 
 use crate::metrics;
 use crate::metrics::MetricsType;
@@ -50,6 +51,18 @@ pub fn monitor_files(config: ConfigContainer, tx: Sender<CertSpec>) {
     }
 }
 
+pub fn monitor_vault(config: ConfigContainer, tx: Sender<CertSpec>) {
+    log::info("vault monitoring-started");
+    let monitor_config = config.get_vault_monitor_config().unwrap();
+    loop {
+        let _ = || -> Result<(), VaultError> {
+            let certs: HashMap<CertName, VaultCert> = crate::vault::list(&monitor_config)?;
+            inspect(&config, &tx, &monitor_config.specs, certs);
+            Ok(())
+        }();
+        thread::sleep(Duration::from_millis(config.faythe_config.monitor_interval));
+    }
+}
 
 fn inspect<CS, VV>(config: &ConfigContainer, tx: &Sender<CertSpec>, objects: &Vec<CS>, certs: HashMap<CertName, VV>)
     where CS: CertSpecable, VV: ValidityVerifier {

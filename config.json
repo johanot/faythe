@@ -1,30 +1,25 @@
 {
-   "kube_monitor_configs": [{
-     "secret_namespace": "shelob",
-     "secret_hostlabel": "ingress.hostname"
-   }],
-   "file_monitor_configs": [{
-     "directory": "/faythe/certs",
-     "prune": false,
-     "specs": [{
-       "name": "jth-test",
-       "cn": "jth-test.pzz.dk",
-       "sans": [
-         "san1.jth-test.pzz.dk",
-         "san2.jth-testfun-pzz.dk"
-       ]
-     }]
-   }],
+  "vault_monitor_configs": [{
+    "role_id_path": "role-id",
+    "secret_id_path": "secret-id",
+    "vault_addr": "https://vault-stg.dbccloud.dk:8200",
+    "key_prefix": "platform-vault-secrets/letsencrypt/staging",
+    "specs": [{
+      "name": "jth-test",
+      "cn": "jth.faythe-test.acme.dbccloud.dk",
+      "sans": [
+        "san1.jth.faythe-test.acme.dbccloud.dk",
+        "san2.jth.faythe-test.acme.dbccloud.dk"
+      ]
+    }]
+  }],
    "lets_encrypt_url": "https://acme-staging-v02.api.letsencrypt.org/directory",
-   "lets_encrypt_proxy": "http://dmzproxy.dbc.dk:3128",
    "lets_encrypt_email": "jth@dbc.dk",
    "zones": {
-      "k8s.dbc.dk": { "server": "ns.dbc.dk", "key": "k8s.dbc.dk.key", "issue_wildcard_certs": true },
-      "dbc.dk": {
-        "server": "ns.dbc.dk",
-        "key": "acme.dbc.dk.key",
-        "challenge_suffix": "acme.dbc.dk"
+      "acme.dbccloud.dk": {
+        "server": "pnz-p01.pzz.dk",
+        "key": "acme.dbccloud.dk.key"
       }
     },
-   "val_dns_servers": ["ns1.gratisdns.dk","ns2.gratisdns.dk","ns3.gratisdns.dk","ns4.gratisdns.dk","ns5.gratisdns.dk"]
+   "val_dns_servers": ["8.8.8.8", "8.8.4.4"]
 }
