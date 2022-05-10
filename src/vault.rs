@@ -29,6 +29,10 @@ struct VaultAppRoleSecretID {
 
 type CertName = String;
 
+// Vault spec is parsed alongside the config, and combining fields
+// corresponds to a path in vault.
+// /<kv_mount>/<secret_prefix>/<key_infix>/<*_suffix>
+
 #[derive(Clone, Deserialize, Serialize, Debug)]
 pub struct VaultSpec {
     pub name: String,
@@ -42,11 +46,6 @@ pub struct VaultSpec {
     #[serde(default = "default_private_key_suffix")]
     pub private_key_suffix: String,
 }
-
-// /<kv_mount>/<secret_prefix>/<key_infix>/<*_suffix>
-// /kv/platform-vault-secrets/letsencrypt/prod/artifactory.dbccloud.dk/cert
-// /kv/platform-vault-secrets/letsencrypt/prod/artifactory.dbccloud.dk/private
-// /kv/platform-vault-secrets/letsencrypt/prod/artifactory.dbccloud.dk/meta
 
 fn default_cert_suffix() -> String {
     "cert".to_string()
@@ -101,9 +100,8 @@ impl std::convert::From<ClientError> for VaultError {
     }
 }
 
+// Returns a hashmap that associates a certificate with it's path name in vault
 pub fn list(config: &VaultMonitorConfig) -> Result<HashMap<CertName, VaultCert>, VaultError> {
-    // TODO: Do we want to prune vault like files?
-    // TODO: Is this key value pair even correct :
     let rt = tokio::runtime::Runtime::new()?;
     let certs: Result<HashMap<CertName, VaultCert>, VaultError> = rt.block_on(async {
         let client = authenticate(
@@ -133,7 +131,9 @@ pub fn list(config: &VaultMonitorConfig) -> Result<HashMap<CertName, VaultCert>,
                         &err,
                     ),
                 },
-                Err(_err @ ClientError::APIError { code: 404, .. }) => {} // vault key not found is fine
+                // If faythe does not find a certificate, a new one will be issued.
+                // So don't propagate this 404.
+                Err(_err @ ClientError::APIError { code: 404, .. }) => {}
                 Err(err) => log::error(
                     &format!(
                         "LIST: failed to vault-kv-get raw cert data for path: {}",
@@ -181,17 +181,19 @@ impl std::convert::From<&KeyNames> for VaultKVSettings {
     }
 }
 
+// Only login to vault if current client is unhealthy
 pub async fn authenticate(
     role_id_path: &Path,
     secret_id_path: &Path,
     vault_addr: &Url,
-    vault_kv_settings: &VaultKVSettings
+    vault_kv_settings: &VaultKVSettings,
 ) -> Result<Arc<VaultClient>, VaultError> {
-
     let mut existing_client = CLIENT.lock().map_err(|_| VaultError::LockPoison)?;
     let client_health = match &*existing_client {
         Some(client) => {
             let data: Result<Vec<String>, _> =
+                // No suitable healthcheck method in vaultrs,
+                // so health is checked with vault list here
                 kv2::list(&**client, &vault_kv_settings.kv_mount, &vault_kv_settings.key_prefix).await;
             match data {
                 Ok(_) => true,
@@ -218,7 +220,6 @@ pub async fn login(
     secret_id_path: &Path,
     vault_addr: &Url,
 ) -> Result<VaultClient, VaultError> {
-    // Token unwrapping
     let role_id = read_to_string(&role_id_path)?;
     let secret_id = read_to_string(&secret_id_path)?;
     let role_id = role_id.trim();
@@ -244,16 +245,7 @@ pub async fn login(
 struct Secret {
     value: String,
 }
-/*
-pub async fn read(mount: &str, key: &str) -> Result<String, VaultError> {
-    let client = authenticate().await?;
-
-    kv2::read(client, mount, key)
-        .await
-        .map(|secret: Secret| secret.value)
-}
-*/
-
+// This trait implementation used by the issuer to persist certificates
 pub fn persist(persist_spec: &VaultPersistSpec, cert: Certificate) -> Result<(), PersistError> {
     let rt = tokio::runtime::Runtime::new()?;
     let vault_write: Result<(), VaultError> = rt.block_on(async {
@@ -261,7 +253,7 @@ pub fn persist(persist_spec: &VaultPersistSpec, cert: Certificate) -> Result<(),
             &persist_spec.role_id_path,
             &persist_spec.secret_id_path,
             &persist_spec.vault_addr,
-            &(&persist_spec.paths).into()
+            &(&persist_spec.paths).into(),
         )
         .await?;
 
@@ -308,8 +300,8 @@ impl VaultMonitorConfig {
     }
 }
 
-// GL & HF
-
+// Convenience method creates complete vault path
+// to the cert, the key and meta (faythe) file.
 fn default_key_names(config: &VaultMonitorConfig, spec: &VaultSpec) -> KeyNames {
     let cert = [
         config.key_prefix.as_str(),
@@ -332,7 +324,9 @@ fn default_key_names(config: &VaultMonitorConfig, spec: &VaultSpec) -> KeyNames 
 
     KeyNames {
         kv_settings: config.into(),
-        cert, key, meta
+        cert,
+        key,
+        meta,
     }
 }
 
@@ -372,7 +366,7 @@ impl CertSpecable for VaultSpec {
             persist_spec: PersistSpec::VAULT(monitor_config.to_persist_spec(&self)),
         })
     }
-
+    // Write meta file, meta file just contains a rfc3339 timestamp
     fn touch(&self, config: &ConfigContainer) -> Result<(), TouchError> {
         let monitor_config = config.get_vault_monitor_config()?;
         let persist_spec = monitor_config.to_persist_spec(&self);
@@ -401,7 +395,8 @@ impl CertSpecable for VaultSpec {
             TouchError::Failed
         })
     }
-
+    // Check if meta file is too old, and a new certicate
+    // must be issued.
     fn should_retry(&self, config: &ConfigContainer) -> bool {
         match || -> Result<(), VaultError> {
             let monitor_config = config.get_vault_monitor_config()?;
