@@ -204,7 +204,7 @@ pub async fn authenticate(
         _ => false,
     };
 
-    Ok(if client_health && existing_client.is_some() {
+    Ok(if client_health {
         (*existing_client).as_ref().unwrap().clone()
     } else {
         log::info("vault client unhealthy or uninitialized, trying to authenticate...");
