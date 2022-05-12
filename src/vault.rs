@@ -183,13 +183,11 @@ impl std::convert::From<&KeyNames> for VaultKVSettings {
 
 #[inline(always)]
 async fn renew_client(client: &VaultClient) -> Result<(), ClientError> {
-    // TODO: what's a sane value for this?
-    let token_renew_threshold = 3 * 60 * 60;
     let token_resp = vaultrs::client::Client::lookup(client).await?;
-    if token_resp.ttl < token_renew_threshold {
+    if token_resp.ttl < (token_resp.creation_ttl / 2) {
         // empty string means increment token endpoint by default ttl value
         let auth_info = vaultrs::client::Client::renew(client, Some("")).await?;
-        log::data("Client endpoint extended. Lease duration extended by {}s", &auth_info.lease_duration);
+        log::info("Client endpoint extended. Lease duration extended by default token ttl value.");
     }
     Ok(())
 }
