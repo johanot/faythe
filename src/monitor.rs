@@ -66,7 +66,7 @@ pub fn monitor_vault(config: ConfigContainer, tx: Sender<CertSpec>) {
             )
             .await
         })
-        .unwrap();
+        .map_err(|_| std::process::exit(1));
     // enter monitor loop
     loop {
         let _ = || -> Result<(), VaultError> {
