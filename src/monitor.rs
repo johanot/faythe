@@ -64,9 +64,15 @@ pub fn monitor_vault(config: ConfigContainer, tx: Sender<CertSpec>) {
     }
 }
 
-fn inspect<CS, VV>(config: &ConfigContainer, tx: &Sender<CertSpec>, objects: &Vec<CS>, certs: HashMap<CertName, VV>)
-    where CS: CertSpecable, VV: ValidityVerifier {
-
+fn inspect<CS, VV>(
+    config: &ConfigContainer,
+    tx: &Sender<CertSpec>,
+    objects: &Vec<CS>,
+    certs: HashMap<CertName, VV>,
+) where
+    CS: CertSpecable,
+    VV: ValidityVerifier,
+{
     let faythe_config = &config.faythe_config;
     for o in objects {
         let spec = o.to_cert_spec(&config);
@@ -89,15 +95,15 @@ fn inspect<CS, VV>(config: &ConfigContainer, tx: &Sender<CertSpec>, objects: &Ve
                             log::data("(re-)issuing", &spec.name); //TODO: improve logging
                             tx.send(spec.to_owned()).unwrap()
                         }
-                    },
+                    }
                     Err(e) => {
                         log::error("failed to touch object, bailing out.", &e);
                         metrics::new_event(&spec.name, MetricsType::Failure);
                     }
                 };
-            },
-            Ok(_) => {}, // not time for issuing
-            Err(e) => log::error("certspec invalid", &e)
+            }
+            Ok(_) => {} // not time for issuing
+            Err(e) => log::error("certspec invalid", &e),
         }
     }
 }
@@ -106,40 +112,41 @@ fn inspect<CS, VV>(config: &ConfigContainer, tx: &Sender<CertSpec>, objects: &Ve
 mod tests {
     // Note this useful idiom: importing names from outer (for mod tests) scope.
     use super::*;
-    use crate::common::{Cert, DNSName};
     use crate::common::tests::*;
-    use crate::mpsc;
-    use crate::mpsc::{Sender, Receiver};
+    use crate::common::{Cert, DNSName};
     use crate::kube::{Ingress, Secret};
-    use std::ops::Add;
+    use crate::mpsc;
+    use crate::mpsc::{Receiver, Sender};
     use std::collections::HashSet;
+    use std::ops::Add;
 
     fn create_channel() -> (Sender<CertSpec>, Receiver<CertSpec>) {
         mpsc::channel()
     }
 
     fn create_ingress(host: &String) -> Vec<Ingress> {
-        [Ingress{
+        [Ingress {
             name: "test".to_string(),
             namespace: "test".to_string(),
             touched: time::empty_tm(),
             hosts: [host.clone()].to_vec(),
-        }].to_vec()
+        }]
+        .to_vec()
     }
 
     fn create_secret(host: &String, valid_days: i64) -> Secret {
         let mut sans = HashSet::new();
         sans.insert(host.clone());
-        Secret{
+        Secret {
             name: String::from("test"),
             namespace: String::from("test"),
-            cert: Cert{
+            cert: Cert {
                 cn: host.clone(),
                 sans,
                 valid_from: time::now_utc(),
-                valid_to: time::now_utc().add(time::Duration::days(valid_days))
+                valid_to: time::now_utc().add(time::Duration::days(valid_days)),
             },
-            key: vec![]
+            key: vec![],
         }
     }
 
@@ -151,9 +158,7 @@ mod tests {
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host);
         let secrets: HashMap<String, kube::Secret> = HashMap::new();
-        let thread = thread::spawn(move || {
-            inspect(&config,&tx, &ingresses, secrets)
-        });
+        let thread = thread::spawn(move || inspect(&config, &tx, &ingresses, secrets));
 
         let spec = rx.recv().unwrap();
         assert_eq!(spec.cn.to_domain_string(), host);
@@ -169,13 +174,14 @@ mod tests {
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host);
         let secrets: HashMap<String, kube::Secret> = HashMap::new();
-        let thread = thread::spawn(move || {
-            inspect(&config,&tx, &ingresses, secrets)
-        });
+        let thread = thread::spawn(move || inspect(&config, &tx, &ingresses, secrets));
 
         let spec = rx.recv().unwrap();
         assert_eq!(spec.name, name);
-        assert_eq!(spec.cn.to_domain_string(), String::from("*.subdivision.unit.test"));
+        assert_eq!(
+            spec.cn.to_domain_string(),
+            String::from("*.subdivision.unit.test")
+        );
         thread.join().unwrap();
     }
 
@@ -187,9 +193,7 @@ mod tests {
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host);
         let secrets: HashMap<String, kube::Secret> = HashMap::new();
-        let thread = thread::spawn(move || {
-            inspect(&config, &tx, &ingresses, secrets)
-        });
+        let thread = thread::spawn(move || inspect(&config, &tx, &ingresses, secrets));
 
         assert!(rx.try_recv().is_err()); // it is not allowed to ask for a wildcard cert in k8s ingress specs
         thread.join().unwrap();
@@ -203,9 +207,7 @@ mod tests {
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host);
         let secrets: HashMap<String, kube::Secret> = HashMap::new();
-        let thread = thread::spawn(move || {
-            inspect(&config, &tx, &ingresses, secrets)
-        });
+        let thread = thread::spawn(move || inspect(&config, &tx, &ingresses, secrets));
 
         assert!(rx.recv().is_err()); // faythe must know an authoritative ns server for the domain in question
         thread.join().unwrap();
@@ -221,9 +223,7 @@ mod tests {
         let mut secrets: HashMap<String, kube::Secret> = HashMap::new();
         secrets.insert(host.clone(), create_secret(&host, 20));
 
-        let thread = thread::spawn(move || {
-            inspect(&config,&tx, &ingresses, secrets)
-        });
+        let thread = thread::spawn(move || inspect(&config, &tx, &ingresses, secrets));
 
         let spec = rx.recv().unwrap();
         assert_eq!(spec.cn.to_domain_string(), host);
@@ -241,9 +241,7 @@ mod tests {
         let mut secrets: HashMap<String, kube::Secret> = HashMap::new();
         secrets.insert(name, create_secret(&host, 40));
 
-        let thread = thread::spawn(move || {
-            inspect(&config,&tx, &ingresses, secrets)
-        });
+        let thread = thread::spawn(move || inspect(&config, &tx, &ingresses, secrets));
 
         assert!(rx.recv().is_err()); // there should be nothing to issue
         thread.join().unwrap();
@@ -260,11 +258,12 @@ mod tests {
         let (tx, rx) = create_channel();
         let ingresses = create_ingress(&host.to_domain_string());
         let mut secrets: HashMap<String, kube::Secret> = HashMap::new();
-        secrets.insert(name, create_secret(&host.to_wildcard().unwrap().to_domain_string(), 40));
+        secrets.insert(
+            name,
+            create_secret(&host.to_wildcard().unwrap().to_domain_string(), 40),
+        );
 
-        let thread = thread::spawn(move || {
-            inspect(&config,&tx, &ingresses, secrets)
-        });
+        let thread = thread::spawn(move || inspect(&config, &tx, &ingresses, secrets));
 
         assert!(rx.recv().is_err()); // there should be nothing to issue
         thread.join().unwrap();
