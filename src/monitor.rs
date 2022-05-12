@@ -53,7 +53,21 @@ pub fn monitor_files(config: ConfigContainer, tx: Sender<CertSpec>) {
 
 pub fn monitor_vault(config: ConfigContainer, tx: Sender<CertSpec>) {
     log::info("vault monitoring-started");
+    // just crash if we cant authenticate vault client on startup
     let monitor_config = config.get_vault_monitor_config().unwrap();
+    let rt = tokio::runtime::Runtime::new().unwrap();
+    let _ = rt
+        .block_on(async {
+            crate::vault::authenticate(
+                &monitor_config.role_id_path,
+                &monitor_config.secret_id_path,
+                &monitor_config.vault_addr,
+                &monitor_config.into(),
+            )
+            .await
+        })
+        .unwrap();
+    // enter monitor loop
     loop {
         let _ = || -> Result<(), VaultError> {
             let certs: HashMap<CertName, VaultCert> = crate::vault::list(&monitor_config)?;
