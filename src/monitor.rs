@@ -62,7 +62,6 @@ pub fn monitor_vault(config: ConfigContainer, tx: Sender<CertSpec>) {
                 &monitor_config.role_id_path,
                 &monitor_config.secret_id_path,
                 &monitor_config.vault_addr,
-                &monitor_config.into(),
             )
             .await
         })

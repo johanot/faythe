@@ -108,7 +108,6 @@ pub fn list(config: &VaultMonitorConfig) -> Result<HashMap<CertName, VaultCert>,
             &config.role_id_path,
             &config.secret_id_path,
             &config.vault_addr,
-            &config.into(),
         )
         .await?;
 
@@ -186,7 +185,7 @@ async fn renew_client(client: &VaultClient) -> Result<(), ClientError> {
     let token_resp = vaultrs::client::Client::lookup(client).await?;
     if token_resp.ttl < (token_resp.creation_ttl / 2) {
         // empty string means increment token endpoint by default ttl value
-        let auth_info = vaultrs::client::Client::renew(client, Some("")).await?;
+        let _auth_info = vaultrs::client::Client::renew(client, Some("")).await?;
         log::info("Client endpoint extended. Lease duration extended by default token ttl value.");
     }
     Ok(())
@@ -197,7 +196,6 @@ pub async fn authenticate(
     role_id_path: &Path,
     secret_id_path: &Path,
     vault_addr: &Url,
-    vault_kv_settings: &VaultKVSettings,
 ) -> Result<Arc<VaultClient>, VaultError> {
     let mut existing_client = CLIENT.lock().map_err(|_| VaultError::LockPoison)?;
     let client_health = match &*existing_client {
@@ -264,7 +262,6 @@ pub fn persist(persist_spec: &VaultPersistSpec, cert: Certificate) -> Result<(),
             &persist_spec.role_id_path,
             &persist_spec.secret_id_path,
             &persist_spec.vault_addr,
-            &(&persist_spec.paths).into(),
         )
         .await?;
 
@@ -387,7 +384,6 @@ impl CertSpecable for VaultSpec {
                 &persist_spec.role_id_path,
                 &persist_spec.secret_id_path,
                 &persist_spec.vault_addr,
-                &monitor_config.into(),
             )
             .await?;
 
@@ -419,7 +415,6 @@ impl CertSpecable for VaultSpec {
                     &persist_spec.role_id_path,
                     &persist_spec.secret_id_path,
                     &persist_spec.vault_addr,
-                    &monitor_config.into(),
                 )
                 .await?;
 
