@@ -181,6 +181,19 @@ impl std::convert::From<&KeyNames> for VaultKVSettings {
     }
 }
 
+#[inline(always)]
+async fn renew_client(client: &VaultClient) -> Result<(), ClientError> {
+    // TODO: what's a sane value for this?
+    let token_renew_threshold = 3 * 60 * 60;
+    let token_resp = vaultrs::client::Client::lookup(client).await?;
+    if token_resp.ttl < token_renew_threshold {
+        // empty string means increment token endpoint by default ttl value
+        let auth_info = vaultrs::client::Client::renew(client, Some("")).await?;
+        log::data("Client endpoint extended. Lease duration extended by {}s", &auth_info.lease_duration);
+    }
+    Ok(())
+}
+
 // Only login to vault if current client is unhealthy
 pub async fn authenticate(
     role_id_path: &Path,
@@ -191,11 +204,11 @@ pub async fn authenticate(
     let mut existing_client = CLIENT.lock().map_err(|_| VaultError::LockPoison)?;
     let client_health = match &*existing_client {
         Some(client) => {
-            let data: Result<Vec<String>, _> =
-                // No suitable healthcheck method in vaultrs,
-                // so health is checked with vault list here
-                kv2::list(&**client, &vault_kv_settings.kv_mount, &vault_kv_settings.key_prefix).await;
-            match data {
+            // Derefence and take lock from client
+            let client = &**client;
+            let renewed_client = renew_client(client).await;
+
+            match renewed_client {
                 Ok(_) => true,
                 Err(ClientError::APIError { code: 404, .. }) => true,
                 _ => false,
