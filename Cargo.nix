@@ -3358,9 +3358,9 @@ rec {
       };
       "object" = rec {
         crateName = "object";
-        version = "0.28.3";
+        version = "0.28.4";
         edition = "2018";
-        sha256 = "0mnllk6kwznchzryczyfmvlixzhz6f20n4dayycmyn8ll05wggj0";
+        sha256 = "0964501nlfh806mik3f9v6n05mx74qa0w7byvn0sqpwm5lprhb74";
         dependencies = [
           {
             name = "memchr";
@@ -5211,9 +5211,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.92";
+        version = "1.0.93";
         edition = "2018";
-        sha256 = "0licp4sr5avlg7lqjbvwhmc4l2bzqb88lvx0jrcl848zc29cbxvz";
+        sha256 = "1wpc7mb6j0h27j4lhcbpd2qm9s9n4jjs2r9dyijyqwlbas4na1h4";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
