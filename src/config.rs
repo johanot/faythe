@@ -11,6 +11,7 @@ use url::Url;
 use serde::Serializer;
 
 #[derive(Clone, Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
 pub struct FaytheConfig {
     #[serde(default = "default_metrics_port")]
     pub metrics_port: u16,
@@ -34,6 +35,7 @@ pub struct FaytheConfig {
 }
 
 #[derive(Clone, Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
 pub struct KubeMonitorConfig {
     pub secret_namespace: String,
     pub secret_hostlabel: String,
@@ -44,6 +46,7 @@ pub struct KubeMonitorConfig {
 }
 
 #[derive(Clone, Deserialize, Serialize, Debug)]
+#[serde(deny_unknown_fields)]
 pub struct VaultMonitorConfig {
     pub role_id_path: PathBuf,
     pub secret_id_path: PathBuf,
@@ -56,6 +59,7 @@ pub struct VaultMonitorConfig {
 }
 
 #[derive(Clone, Deserialize, Serialize, Debug)]
+#[serde(deny_unknown_fields)]
 pub struct VaultPersistSpec {
     pub role_id_path: PathBuf,
     pub secret_id_path: PathBuf,
@@ -66,6 +70,7 @@ pub struct VaultPersistSpec {
 }
 
 #[derive(Clone, Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
 pub struct FileMonitorConfig {
     pub directory: String,
     pub specs: Vec<FileSpec>,
@@ -84,6 +89,7 @@ pub struct ConfigContainer {
 }
 
 #[derive(Clone, Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
 pub struct Zone {
     pub server: String,
     pub key: String,
