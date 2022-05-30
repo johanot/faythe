@@ -237,6 +237,7 @@ pub async fn login(
     let mut client = VaultClient::new(
         VaultClientSettingsBuilder::default()
             .address(vault_addr.as_str())
+            .timeout(Some(std::time::Duration::from_secs(10)))
             .build()
             .unwrap(),
     )?;
