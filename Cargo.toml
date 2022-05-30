@@ -22,8 +22,12 @@ prometheus_exporter_base = { version = "1.0", features = ["hyper_server"] }
 tokio = { version = "1", features = [ "full" ] }
 async-trait = { version = "0.1" }
 dbc-rust-modules = { git = "https://github.com/dbcdk/rust-modules", branch = "main" }
-vaultrs = "0.6"
+vaultrs = "=0.6.2" # remove pin on v0.6.2 when on nixpkgs-22.05
 vaultrs-login = "0.1"
 url = "2"
 chrono = "0.4"
 num-traits = "0.2"
+
+# remove this when on nixpkgs-22.05
+[replace]
+"vaultrs:0.6.2" = { git = "https://github.com/johanot/vaultrs", branch = "v0.6.2-with-support-for-older-rust" }
