@@ -950,9 +950,9 @@ rec {
       };
       "darling" = rec {
         crateName = "darling";
-        version = "0.12.4";
-        edition = "2015";
-        sha256 = "0g4bkxpwl6i5jav5qqzny39yd5a1fdlh5l0mj020njza6ksl6b2z";
+        version = "0.14.1";
+        edition = "2018";
+        sha256 = "00mc7svmwphywkwndzkjxsqaxhygrm8f4jv1p1lngzd7vn5naaa5";
         authors = [
           "Ted Driggs <ted.driggs@outlook.com>"
         ];
@@ -975,9 +975,9 @@ rec {
       };
       "darling_core" = rec {
         crateName = "darling_core";
-        version = "0.12.4";
-        edition = "2015";
-        sha256 = "0dpscl87s75h6yhrmzdsapx86lc4y16m554xg4hiq2l3hrdlb4cf";
+        version = "0.14.1";
+        edition = "2018";
+        sha256 = "0vyvkx7qkz6ap5dwgsz8dg588xjigny8s7mrkz0fmcg806y93734";
         authors = [
           "Ted Driggs <ted.driggs@outlook.com>"
         ];
@@ -1016,9 +1016,9 @@ rec {
       };
       "darling_macro" = rec {
         crateName = "darling_macro";
-        version = "0.12.4";
-        edition = "2015";
-        sha256 = "0nn9mxl7gs827rx5s6lbjvvghipxjdg2qpdjyxk7yym3vvqard99";
+        version = "0.14.1";
+        edition = "2018";
+        sha256 = "1dag2f4bq38vdn886slqczip5qzhvb95317kl04zrlnbpz2nkz6x";
         procMacro = true;
         authors = [
           "Ted Driggs <ted.driggs@outlook.com>"
@@ -1096,9 +1096,9 @@ rec {
       };
       "derive_builder" = rec {
         crateName = "derive_builder";
-        version = "0.10.2";
+        version = "0.11.2";
         edition = "2015";
-        sha256 = "0c2v6vi0lih3fwwgwx92pspcmkrjz8wxfqwhmr01060ipvg04cni";
+        sha256 = "18q4jx8zvg2pkx2d1nmlklx8m48bwrghyg8rdg1irdwkw5xxyynh";
         authors = [
           "Colin Kiegel <kiegel@gmx.de>"
           "Pascal Hertleif <killercup@gmail.com>"
@@ -1119,9 +1119,9 @@ rec {
       };
       "derive_builder_core" = rec {
         crateName = "derive_builder_core";
-        version = "0.10.2";
+        version = "0.11.2";
         edition = "2015";
-        sha256 = "1r9ngcrfcvqv5l5p86bzg9v863bjf5nlmippin1fv1v1iy2idrk6";
+        sha256 = "1i5gmf5lglbg7agj1khc6k9swf1clfs5fg6w0icw1w91m77x948z";
         authors = [
           "Colin Kiegel <kiegel@gmx.de>"
           "Pascal Hertleif <killercup@gmail.com>"
@@ -1152,9 +1152,9 @@ rec {
       };
       "derive_builder_macro" = rec {
         crateName = "derive_builder_macro";
-        version = "0.10.2";
+        version = "0.11.2";
         edition = "2015";
-        sha256 = "0wwdm4cgd4vlvabj5xsjjr4vvkqhnd3fi9wp3v5mlb09jp74maaq";
+        sha256 = "0s6xfgsybd9wbk39hbgqjcn7d1l36a33q6v7d0x5y17d5fvi80wg";
         procMacro = true;
         authors = [
           "Colin Kiegel <kiegel@gmx.de>"
@@ -2683,7 +2683,7 @@ rec {
           "webpki-tokio" = [ "tokio-runtime" "webpki-roots" ];
         };
       };
-      "hyper-tls 0.3.2" = rec {
+      "hyper-tls" = rec {
         crateName = "hyper-tls";
         version = "0.3.2";
         edition = "2015";
@@ -2711,55 +2711,6 @@ rec {
           {
             name = "tokio-io";
             packageId = "tokio-io";
-          }
-        ];
-        features = {
-          "vendored" = [ "native-tls/vendored" ];
-        };
-      };
-      "hyper-tls 0.5.0" = rec {
-        crateName = "hyper-tls";
-        version = "0.5.0";
-        edition = "2018";
-        sha256 = "01crgy13102iagakf6q4mb75dprzr7ps1gj0l5hxm1cvm7gks66n";
-        authors = [
-          "Sean McArthur <sean@seanmonstar.com>"
-        ];
-        dependencies = [
-          {
-            name = "bytes";
-            packageId = "bytes 1.1.0";
-          }
-          {
-            name = "hyper";
-            packageId = "hyper 0.14.18";
-            usesDefaultFeatures = false;
-            features = [ "tcp" "client" ];
-          }
-          {
-            name = "native-tls";
-            packageId = "native-tls";
-          }
-          {
-            name = "tokio";
-            packageId = "tokio 1.17.0";
-          }
-          {
-            name = "tokio-native-tls";
-            packageId = "tokio-native-tls";
-          }
-        ];
-        devDependencies = [
-          {
-            name = "hyper";
-            packageId = "hyper 0.14.18";
-            usesDefaultFeatures = false;
-            features = [ "http1" ];
-          }
-          {
-            name = "tokio";
-            packageId = "tokio 1.17.0";
-            features = [ "io-std" "macros" "io-util" ];
           }
         ];
         features = {
@@ -4897,12 +4848,6 @@ rec {
             target = { target, features }: (!(target."arch" == "wasm32"));
           }
           {
-            name = "hyper-tls";
-            packageId = "hyper-tls 0.5.0";
-            optional = true;
-            target = { target, features }: (!(target."arch" == "wasm32"));
-          }
-          {
             name = "ipnet";
             packageId = "ipnet";
             target = { target, features }: (!(target."arch" == "wasm32"));
@@ -4925,13 +4870,6 @@ rec {
           {
             name = "mime";
             packageId = "mime";
-            target = { target, features }: (!(target."arch" == "wasm32"));
-          }
-          {
-            name = "native-tls";
-            packageId = "native-tls";
-            rename = "native-tls-crate";
-            optional = true;
             target = { target, features }: (!(target."arch" == "wasm32"));
           }
           {
@@ -4981,12 +4919,6 @@ rec {
             usesDefaultFeatures = false;
             target = { target, features }: (!(target."arch" == "wasm32"));
             features = [ "net" "time" ];
-          }
-          {
-            name = "tokio-native-tls";
-            packageId = "tokio-native-tls";
-            optional = true;
-            target = { target, features }: (!(target."arch" == "wasm32"));
           }
           {
             name = "tokio-rustls";
@@ -5076,7 +5008,7 @@ rec {
           "stream" = [ "tokio/fs" "tokio-util" ];
           "trust-dns" = [ "trust-dns-resolver" ];
         };
-        resolvedDefaultFeatures = [ "__rustls" "__tls" "default-tls" "hyper-rustls" "hyper-tls" "native-tls-crate" "rustls" "rustls-pemfile" "rustls-tls" "rustls-tls-webpki-roots" "tokio-native-tls" "tokio-rustls" "webpki-roots" ];
+        resolvedDefaultFeatures = [ "__rustls" "__tls" "hyper-rustls" "rustls" "rustls-pemfile" "rustls-tls" "rustls-tls-webpki-roots" "tokio-rustls" "webpki-roots" ];
       };
       "reqwest 0.9.24" = rec {
         crateName = "reqwest";
@@ -5127,7 +5059,7 @@ rec {
           }
           {
             name = "hyper-tls";
-            packageId = "hyper-tls 0.3.2";
+            packageId = "hyper-tls";
             optional = true;
           }
           {
@@ -5424,7 +5356,7 @@ rec {
           "default" = [ "reqwest/default-tls" ];
           "rustls-tls" = [ "reqwest/rustls-tls" ];
         };
-        resolvedDefaultFeatures = [ "default" "reqwest" ];
+        resolvedDefaultFeatures = [ "reqwest" "rustls-tls" ];
       };
       "rustify_derive" = rec {
         crateName = "rustify_derive";
@@ -6742,33 +6674,6 @@ rec {
         ];
 
       };
-      "tokio-native-tls" = rec {
-        crateName = "tokio-native-tls";
-        version = "0.3.0";
-        edition = "2018";
-        sha256 = "0yvikgmph2qjq0ni2h2wfaxkzhbnc09c2544av0zidyj1dk9bngp";
-        authors = [
-          "Tokio Contributors <team@tokio.rs>"
-        ];
-        dependencies = [
-          {
-            name = "native-tls";
-            packageId = "native-tls";
-          }
-          {
-            name = "tokio";
-            packageId = "tokio 1.17.0";
-          }
-        ];
-        devDependencies = [
-          {
-            name = "tokio";
-            packageId = "tokio 1.17.0";
-            features = [ "macros" "rt" "rt-multi-thread" "io-util" "net" ];
-          }
-        ];
-
-      };
       "tokio-reactor" = rec {
         crateName = "tokio-reactor";
         version = "0.1.12";
@@ -7615,9 +7520,14 @@ rec {
       };
       "vaultrs" = rec {
         crateName = "vaultrs";
-        version = "0.6.0";
+        version = "0.6.2";
         edition = "2018";
-        sha256 = "1m999b173hhh2ckmb9fx13jz9pz36729gzlrf0ms1fdqpvplfw80";
+        workspace_member = null;
+        src = pkgs.fetchgit {
+          url = "https://github.com/johanot/vaultrs";
+          rev = "786ed1b62de783a3b3facc3e552c2bf152104873";
+          sha256 = "1rwqag3zqh5sflap0kc83ss663xbvkw2s652xaqfzkw0ng38dkwf";
+        };
         authors = [
           "Joshua Gilman <joshuagilman@gmail.com>"
         ];
@@ -7647,6 +7557,8 @@ rec {
           {
             name = "rustify";
             packageId = "rustify";
+            usesDefaultFeatures = false;
+            features = [ "rustls-tls" ];
           }
           {
             name = "rustify_derive";
