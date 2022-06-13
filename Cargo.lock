@@ -521,10 +521,10 @@ dependencies = [
  "serde_derive",
  "serde_json",
  "time",
- "tokio 1.18.2",
+ "tokio 1.19.2",
  "trust-dns-resolver",
  "url 2.2.2",
- "vaultrs 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "vaultrs",
  "vaultrs-login",
  "walkdir",
 ]
@@ -742,10 +742,10 @@ dependencies = [
  "futures-core",
  "futures-sink",
  "futures-util",
- "http 0.2.7",
+ "http 0.2.8",
  "indexmap",
  "slab",
- "tokio 1.18.2",
+ "tokio 1.19.2",
  "tokio-util",
  "tracing",
 ]
@@ -795,9 +795,9 @@ dependencies = [
 
 [[package]]
 name = "http"
-version = "0.2.7"
+version = "0.2.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ff8670570af52249509a86f5e3e18a08c60b177071826898fde8997cf5f6bfbb"
+checksum = "75f43d41e26995c17e71ee126451dd3941010b0514a81a9d11f3b341debc2399"
 dependencies = [
  "bytes 1.1.0",
  "fnv",
@@ -823,7 +823,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d5f38f16d184e36f2408a55281cd658ecbd3ca05cce6d6510a176eca393e26d1"
 dependencies = [
  "bytes 1.1.0",
- "http 0.2.7",
+ "http 0.2.8",
  "pin-project-lite 0.2.9",
 ]
 
@@ -889,14 +889,14 @@ dependencies = [
  "futures-core",
  "futures-util",
  "h2 0.3.13",
- "http 0.2.7",
+ "http 0.2.8",
  "http-body 0.4.5",
  "httparse",
  "httpdate",
  "itoa 1.0.2",
  "pin-project-lite 0.2.9",
  "socket2 0.4.4",
- "tokio 1.18.2",
+ "tokio 1.19.2",
  "tower-service",
  "tracing",
  "want 0.3.0",
@@ -914,7 +914,7 @@ dependencies = [
  "log",
  "rustls 0.19.1",
  "rustls-native-certs",
- "tokio 1.18.2",
+ "tokio 1.19.2",
  "tokio-rustls 0.22.0",
  "webpki 0.21.4",
 ]
@@ -925,10 +925,10 @@ version = "0.23.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d87c48c02e0dc5e3b849a2041db3029fd066650f8f717c07bf8ed78ccb895cac"
 dependencies = [
- "http 0.2.7",
+ "http 0.2.8",
  "hyper 0.14.19",
  "rustls 0.20.6",
- "tokio 1.18.2",
+ "tokio 1.19.2",
  "tokio-rustls 0.23.4",
 ]
 
@@ -1490,7 +1490,7 @@ checksum = "05b214e11b8c1d9a9d659eb097b77326cb74fcde851477adb97d145222d17585"
 dependencies = [
  "clap",
  "env_logger",
- "http 0.2.7",
+ "http 0.2.8",
  "hyper 0.14.19",
  "hyper-rustls 0.22.1",
  "log",
@@ -1768,7 +1768,7 @@ dependencies = [
  "futures-core",
  "futures-util",
  "h2 0.3.13",
- "http 0.2.7",
+ "http 0.2.8",
  "http-body 0.4.5",
  "hyper 0.14.19",
  "hyper-rustls 0.23.0",
@@ -1784,7 +1784,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_urlencoded 0.7.1",
- "tokio 1.18.2",
+ "tokio 1.19.2",
  "tokio-rustls 0.23.4",
  "url 2.2.2",
  "wasm-bindgen",
@@ -1843,7 +1843,7 @@ dependencies = [
  "anyhow",
  "async-trait",
  "bytes 1.1.0",
- "http 0.2.7",
+ "http 0.2.8",
  "reqwest 0.11.10",
  "rustify_derive",
  "serde",
@@ -2272,9 +2272,9 @@ dependencies = [
 
 [[package]]
 name = "tokio"
-version = "1.18.2"
+version = "1.19.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4903bf0427cf68dddd5aa6a93220756f8be0c34fcfa9f5e6191e103e15a31395"
+checksum = "c51a52ed6686dd62c320f9b89299e9dfb46f730c7a48e635c19f21d116cb1439"
 dependencies = [
  "bytes 1.1.0",
  "libc",
@@ -2334,9 +2334,9 @@ dependencies = [
 
 [[package]]
 name = "tokio-macros"
-version = "1.7.0"
+version = "1.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b557f72f448c511a979e2564e55d74e6c4432fc96ff4f6241bc6bded342643b7"
+checksum = "9724f9a975fb987ef7a3cd9be0350edcbe130698af5b8f7a631e23d42d052484"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2369,7 +2369,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bc6844de72e57df1980054b38be3a9f4702aba4858be64dd700181a8a6d0e1b6"
 dependencies = [
  "rustls 0.19.1",
- "tokio 1.18.2",
+ "tokio 1.19.2",
  "webpki 0.21.4",
 ]
 
@@ -2380,7 +2380,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c43ee83903113e03984cb9e5cebe6c04a5116269e900e3ddba8f068a62adda59"
 dependencies = [
  "rustls 0.20.6",
- "tokio 1.18.2",
+ "tokio 1.19.2",
  "webpki 0.22.0",
 ]
 
@@ -2439,15 +2439,15 @@ dependencies = [
 
 [[package]]
 name = "tokio-util"
-version = "0.7.2"
+version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f988a1a1adc2fb21f9c12aa96441da33a1728193ae0b95d2be22dbd17fcb4e5c"
+checksum = "cc463cd8deddc3770d20f9852143d50bf6094e640b485cb2e189a2099085ff45"
 dependencies = [
  "bytes 1.1.0",
  "futures-core",
  "futures-sink",
  "pin-project-lite 0.2.9",
- "tokio 1.18.2",
+ "tokio 1.19.2",
  "tracing",
 ]
 
@@ -2459,9 +2459,9 @@ checksum = "360dfd1d6d30e05fda32ace2c8c70e9c0a9da713275777f5a4dbb8a1893930c6"
 
 [[package]]
 name = "tracing"
-version = "0.1.34"
+version = "0.1.35"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5d0ecdcb44a79f0fe9844f0c4f33a342cbcbb5117de8001e6ba0dc2351327d09"
+checksum = "a400e31aa60b9d44a52a8ee0343b5b18566b03a8321e0d321f695cf56e940160"
 dependencies = [
  "cfg-if 1.0.0",
  "log",
@@ -2483,11 +2483,11 @@ dependencies = [
 
 [[package]]
 name = "tracing-core"
-version = "0.1.26"
+version = "0.1.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f54c8ca710e81886d498c2fd3331b56c93aa248d49de2222ad2742247c60072f"
+checksum = "7709595b8878a4965ce5e87ebf880a7d39c9afc6837721b21a5a816a8117d921"
 dependencies = [
- "lazy_static",
+ "once_cell",
 ]
 
 [[package]]
@@ -2639,17 +2639,11 @@ name = "vaultrs"
 version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "267f958930e08323a44c12e6c5461f3eaaa16d88785e9ec8550215b8aafc3d0b"
-replace = "vaultrs 0.6.2 (git+https://github.com/johanot/vaultrs?branch=v0.6.2-with-support-for-older-rust)"
-
-[[package]]
-name = "vaultrs"
-version = "0.6.2"
-source = "git+https://github.com/johanot/vaultrs?branch=v0.6.2-with-support-for-older-rust#786ed1b62de783a3b3facc3e552c2bf152104873"
 dependencies = [
  "async-trait",
  "bytes 1.1.0",
  "derive_builder",
- "http 0.2.7",
+ "http 0.2.8",
  "reqwest 0.11.10",
  "rustify",
  "rustify_derive",
@@ -2670,7 +2664,7 @@ dependencies = [
  "serde",
  "tracing",
  "url 2.2.2",
- "vaultrs 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "vaultrs",
 ]
 
 [[package]]
