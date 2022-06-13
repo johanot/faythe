@@ -1,5 +1,4 @@
 {
   "acme-lib 0.8.1 (git+https://github.com/DBCDK/acme-lib?branch=v0.8.1-reqwest#84a3b8ccf58660d33984fe0e8ff04c9b46de9ad8)": "0jkavyqcpnm6dx6scx366ha1pigffzm3k48dzqifc22g86mpgw5i",
-  "dbc-rust-modules 0.1.0 (git+https://github.com/dbcdk/rust-modules?branch=main#fc8fcd2d5bc7029108418579a2702ed28189c607)": "1cc6hw021jam389j45fjxmi7hd0df0aq69f2a72v64wg1d0rwhh4",
-  "vaultrs 0.6.2 (git+https://github.com/johanot/vaultrs?branch=v0.6.2-with-support-for-older-rust#786ed1b62de783a3b3facc3e552c2bf152104873)": "1rwqag3zqh5sflap0kc83ss663xbvkw2s652xaqfzkw0ng38dkwf"
+  "dbc-rust-modules 0.1.0 (git+https://github.com/dbcdk/rust-modules?branch=main#fc8fcd2d5bc7029108418579a2702ed28189c607)": "1cc6hw021jam389j45fjxmi7hd0df0aq69f2a72v64wg1d0rwhh4"
 }

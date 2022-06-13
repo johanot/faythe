@@ -151,8 +151,16 @@ rec {
           }
         ];
         features = {
+          "alloc" = [ "dep:alloc" ];
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
+          "cpp_demangle" = [ "dep:cpp_demangle" ];
           "default" = [ "rustc-demangle" "cpp_demangle" "std-object" "fallible-iterator" "smallvec" ];
+          "fallible-iterator" = [ "dep:fallible-iterator" ];
+          "object" = [ "dep:object" ];
+          "rustc-demangle" = [ "dep:rustc-demangle" ];
           "rustc-dep-of-std" = [ "core" "alloc" "compiler_builtins" "gimli/rustc-dep-of-std" ];
+          "smallvec" = [ "dep:smallvec" ];
           "std" = [ "gimli/std" ];
           "std-object" = [ "std" "object" "object/std" "object/compression" "gimli/endian-reader" ];
         };
@@ -166,6 +174,8 @@ rec {
           "Jonas Schievink <jonasschievink@gmail.com>"
         ];
         features = {
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
           "default" = [ "std" ];
           "rustc-dep-of-std" = [ "core" "compiler_builtins" ];
         };
@@ -212,6 +222,7 @@ rec {
         ];
         features = {
           "derive_serde_style" = [ "serde" ];
+          "serde" = [ "dep:serde" ];
         };
       };
       "anyhow" = rec {
@@ -223,6 +234,7 @@ rec {
           "David Tolnay <dtolnay@gmail.com>"
         ];
         features = {
+          "backtrace" = [ "dep:backtrace" ];
           "default" = [ "std" ];
         };
         resolvedDefaultFeatures = [ "default" "std" ];
@@ -354,10 +366,14 @@ rec {
           }
         ];
         features = {
+          "cpp_demangle" = [ "dep:cpp_demangle" ];
           "default" = [ "std" ];
+          "rustc-serialize" = [ "dep:rustc-serialize" ];
+          "serde" = [ "dep:serde" ];
           "serialize-rustc" = [ "rustc-serialize" ];
           "serialize-serde" = [ "serde" ];
           "verify-winapi" = [ "winapi/dbghelp" "winapi/handleapi" "winapi/libloaderapi" "winapi/memoryapi" "winapi/minwindef" "winapi/processthreadsapi" "winapi/synchapi" "winapi/tlhelp32" "winapi/winbase" "winapi/winnt" ];
+          "winapi" = [ "dep:winapi" ];
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
@@ -415,6 +431,8 @@ rec {
           "The Rust Project Developers"
         ];
         features = {
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
           "rustc-dep-of-std" = [ "core" "compiler_builtins" ];
         };
         resolvedDefaultFeatures = [ "default" ];
@@ -469,7 +487,9 @@ rec {
           }
         ];
         features = {
+          "either" = [ "dep:either" ];
           "i128" = [ "byteorder/i128" ];
+          "serde" = [ "dep:serde" ];
         };
         resolvedDefaultFeatures = [ "either" ];
       };
@@ -484,6 +504,7 @@ rec {
         ];
         features = {
           "default" = [ "std" ];
+          "serde" = [ "dep:serde" ];
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
@@ -498,6 +519,7 @@ rec {
         ];
         features = {
           "default" = [ "std" ];
+          "serde" = [ "dep:serde" ];
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
@@ -511,6 +533,7 @@ rec {
           "Alex Crichton <alex@alexcrichton.com>"
         ];
         features = {
+          "jobserver" = [ "dep:jobserver" ];
           "parallel" = [ "jobserver" ];
         };
       };
@@ -523,6 +546,8 @@ rec {
           "Alex Crichton <alex@alexcrichton.com>"
         ];
         features = {
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
           "rustc-dep-of-std" = [ "core" "compiler_builtins" ];
         };
       };
@@ -535,6 +560,8 @@ rec {
           "Alex Crichton <alex@alexcrichton.com>"
         ];
         features = {
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
           "rustc-dep-of-std" = [ "core" "compiler_builtins" ];
         };
       };
@@ -579,9 +606,17 @@ rec {
         features = {
           "clock" = [ "libc" "std" "winapi" ];
           "default" = [ "clock" "std" "oldtime" ];
+          "js-sys" = [ "dep:js-sys" ];
+          "libc" = [ "dep:libc" ];
           "oldtime" = [ "time" ];
+          "pure-rust-locales" = [ "dep:pure-rust-locales" ];
+          "rustc-serialize" = [ "dep:rustc-serialize" ];
+          "serde" = [ "dep:serde" ];
+          "time" = [ "dep:time" ];
           "unstable-locales" = [ "pure-rust-locales" "alloc" ];
+          "wasm-bindgen" = [ "dep:wasm-bindgen" ];
           "wasmbind" = [ "wasm-bindgen" "js-sys" ];
+          "winapi" = [ "dep:winapi" ];
         };
         resolvedDefaultFeatures = [ "clock" "default" "libc" "oldtime" "std" "time" "winapi" ];
       };
@@ -629,12 +664,19 @@ rec {
           }
         ];
         features = {
+          "ansi_term" = [ "dep:ansi_term" ];
+          "atty" = [ "dep:atty" ];
+          "clippy" = [ "dep:clippy" ];
           "color" = [ "ansi_term" "atty" ];
           "default" = [ "suggestions" "color" "vec_map" ];
           "doc" = [ "yaml" ];
+          "strsim" = [ "dep:strsim" ];
           "suggestions" = [ "strsim" ];
+          "term_size" = [ "dep:term_size" ];
+          "vec_map" = [ "dep:vec_map" ];
           "wrap_help" = [ "term_size" "textwrap/term_size" ];
           "yaml" = [ "yaml-rust" ];
+          "yaml-rust" = [ "dep:yaml-rust" ];
         };
         resolvedDefaultFeatures = [ "ansi_term" "atty" "color" "default" "strsim" "suggestions" "vec_map" ];
       };
@@ -655,6 +697,7 @@ rec {
           }
         ];
         features = {
+          "bitflags" = [ "dep:bitflags" ];
           "default" = [ "bitflags" ];
         };
         resolvedDefaultFeatures = [ "bitflags" "default" ];
@@ -680,8 +723,11 @@ rec {
           }
         ];
         features = {
+          "base64" = [ "dep:base64" ];
           "percent-encode" = [ "url" ];
+          "ring" = [ "dep:ring" ];
           "secure" = [ "ring" "base64" ];
+          "url" = [ "dep:url" ];
         };
         resolvedDefaultFeatures = [ "percent-encode" "url" ];
       };
@@ -759,8 +805,10 @@ rec {
           }
         ];
         features = {
+          "chrono" = [ "dep:chrono" ];
           "mac_os_10_7_support" = [ "core-foundation-sys/mac_os_10_7_support" ];
           "mac_os_10_8_features" = [ "core-foundation-sys/mac_os_10_8_features" ];
+          "uuid" = [ "dep:uuid" ];
           "with-chrono" = [ "chrono" ];
           "with-uuid" = [ "uuid" ];
         };
@@ -866,6 +914,7 @@ rec {
         features = {
           "alloc" = [ "crossbeam-utils/alloc" ];
           "default" = [ "std" ];
+          "lazy_static" = [ "dep:lazy_static" ];
           "nightly" = [ "crossbeam-utils/nightly" ];
           "std" = [ "crossbeam-utils/std" "lazy_static" ];
         };
@@ -928,6 +977,7 @@ rec {
         ];
         features = {
           "default" = [ "std" ];
+          "lazy_static" = [ "dep:lazy_static" ];
           "std" = [ "lazy_static" ];
         };
         resolvedDefaultFeatures = [ "default" "lazy_static" "std" ];
@@ -1010,6 +1060,7 @@ rec {
           }
         ];
         features = {
+          "strsim" = [ "dep:strsim" ];
           "suggestions" = [ "strsim" ];
         };
         resolvedDefaultFeatures = [ "strsim" "suggestions" ];
@@ -1088,9 +1139,16 @@ rec {
           }
         ];
         features = {
+          "chrono" = [ "dep:chrono" ];
           "default" = [ "exec" "log" ];
+          "erased-serde" = [ "dep:erased-serde" ];
           "exec" = [ "serde" "serde_derive" "serde_json" ];
           "log" = [ "chrono" "erased-serde" "once_cell" "serde" "serde_derive" "serde_json" "uuid" ];
+          "once_cell" = [ "dep:once_cell" ];
+          "serde" = [ "dep:serde" ];
+          "serde_derive" = [ "dep:serde_derive" ];
+          "serde_json" = [ "dep:serde_json" ];
+          "uuid" = [ "dep:uuid" ];
         };
         resolvedDefaultFeatures = [ "chrono" "default" "erased-serde" "exec" "log" "once_cell" "serde" "serde_derive" "serde_json" "uuid" ];
       };
@@ -1197,6 +1255,7 @@ rec {
         ];
         features = {
           "default" = [ "use_std" ];
+          "serde" = [ "dep:serde" ];
         };
         resolvedDefaultFeatures = [ "default" "use_std" ];
       };
@@ -1217,6 +1276,8 @@ rec {
         features = {
           "default" = [ "alloc" ];
           "fast-legacy-encode" = [ "fast-hangul-encode" "fast-hanja-encode" "fast-kanji-encode" "fast-gb-hanzi-encode" "fast-big5-hanzi-encode" ];
+          "packed_simd" = [ "dep:packed_simd" ];
+          "serde" = [ "dep:serde" ];
           "simd-accel" = [ "packed_simd" "packed_simd/into_bits" ];
         };
         resolvedDefaultFeatures = [ "alloc" "default" ];
@@ -1286,7 +1347,11 @@ rec {
           }
         ];
         features = {
+          "atty" = [ "dep:atty" ];
           "default" = [ "termcolor" "atty" "humantime" "regex" ];
+          "humantime" = [ "dep:humantime" ];
+          "regex" = [ "dep:regex" ];
+          "termcolor" = [ "dep:termcolor" ];
         };
         resolvedDefaultFeatures = [ "atty" "default" "humantime" "regex" "termcolor" ];
       };
@@ -1333,8 +1398,10 @@ rec {
           }
         ];
         features = {
+          "backtrace" = [ "dep:backtrace" ];
           "default" = [ "std" "derive" ];
           "derive" = [ "failure_derive" ];
+          "failure_derive" = [ "dep:failure_derive" ];
           "std" = [ "backtrace" ];
         };
         resolvedDefaultFeatures = [ "backtrace" "default" "derive" "failure_derive" "std" ];
@@ -1473,7 +1540,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
             features = [ "full" ];
           }
           {
@@ -1527,9 +1594,13 @@ rec {
           }
         ];
         features = {
+          "cloudflare-zlib-sys" = [ "dep:cloudflare-zlib-sys" ];
           "cloudflare_zlib" = [ "any_zlib" "cloudflare-zlib-sys" ];
           "default" = [ "rust_backend" ];
+          "libz-ng-sys" = [ "dep:libz-ng-sys" ];
+          "libz-sys" = [ "dep:libz-sys" ];
           "miniz-sys" = [ "rust_backend" ];
+          "miniz_oxide" = [ "dep:miniz_oxide" ];
           "rust_backend" = [ "miniz_oxide" ];
           "zlib" = [ "any_zlib" "libz-sys" ];
           "zlib-ng" = [ "any_zlib" "libz-ng-sys" ];
@@ -1696,6 +1767,7 @@ rec {
           "compat" = [ "std" "futures-util/compat" ];
           "default" = [ "std" "async-await" "executor" ];
           "executor" = [ "std" "futures-executor/std" ];
+          "futures-executor" = [ "dep:futures-executor" ];
           "io-compat" = [ "compat" "futures-util/io-compat" ];
           "std" = [ "alloc" "futures-core/std" "futures-task/std" "futures-io/std" "futures-sink/std" "futures-util/std" "futures-util/io" "futures-util/channel" ];
           "thread-pool" = [ "executor" "futures-executor/thread-pool" ];
@@ -1725,6 +1797,7 @@ rec {
         features = {
           "alloc" = [ "futures-core/alloc" ];
           "default" = [ "std" ];
+          "futures-sink" = [ "dep:futures-sink" ];
           "sink" = [ "futures-sink" ];
           "std" = [ "alloc" "futures-core/std" ];
         };
@@ -1889,10 +1962,18 @@ rec {
           "channel" = [ "std" "futures-channel" ];
           "compat" = [ "std" "futures_01" ];
           "default" = [ "std" "async-await" "async-await-macro" ];
+          "futures-channel" = [ "dep:futures-channel" ];
+          "futures-io" = [ "dep:futures-io" ];
+          "futures-macro" = [ "dep:futures-macro" ];
+          "futures-sink" = [ "dep:futures-sink" ];
+          "futures_01" = [ "dep:futures_01" ];
           "io" = [ "std" "futures-io" "memchr" ];
           "io-compat" = [ "io" "compat" "tokio-io" ];
+          "memchr" = [ "dep:memchr" ];
           "sink" = [ "futures-sink" ];
+          "slab" = [ "dep:slab" ];
           "std" = [ "alloc" "futures-core/std" "futures-task/std" "slab" ];
+          "tokio-io" = [ "dep:tokio-io" ];
           "unstable" = [ "futures-core/unstable" "futures-task/unstable" ];
           "write-all-vectored" = [ "io" ];
         };
@@ -1924,7 +2005,13 @@ rec {
           }
         ];
         features = {
+          "bindgen" = [ "dep:bindgen" ];
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
+          "js-sys" = [ "dep:js-sys" ];
+          "log" = [ "dep:log" ];
           "rustc-dep-of-std" = [ "compiler_builtins" "core" ];
+          "stdweb" = [ "dep:stdweb" ];
           "test-in-browser" = [ "wasm-bindgen" ];
           "wasm-bindgen" = [ "bindgen" "js-sys" ];
         };
@@ -1956,8 +2043,12 @@ rec {
           }
         ];
         features = {
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
           "js" = [ "wasm-bindgen" "js-sys" ];
+          "js-sys" = [ "dep:js-sys" ];
           "rustc-dep-of-std" = [ "compiler_builtins" "core" "libc/rustc-dep-of-std" "wasi/rustc-dep-of-std" ];
+          "wasm-bindgen" = [ "dep:wasm-bindgen" ];
         };
       };
       "gimli" = rec {
@@ -1966,10 +2057,16 @@ rec {
         edition = "2018";
         sha256 = "1m0vi36ypv4gx9gzcw6y456yqnlypizhwlcqrmg6vkwd0lnkgk3q";
         features = {
+          "alloc" = [ "dep:alloc" ];
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
           "default" = [ "read" "write" "std" "fallible-iterator" "endian-reader" ];
           "endian-reader" = [ "read" "stable_deref_trait" ];
+          "fallible-iterator" = [ "dep:fallible-iterator" ];
+          "indexmap" = [ "dep:indexmap" ];
           "read" = [ "read-core" ];
           "rustc-dep-of-std" = [ "core" "alloc" "compiler_builtins" ];
+          "stable_deref_trait" = [ "dep:stable_deref_trait" ];
           "std" = [ "fallible-iterator/std" "stable_deref_trait/std" ];
           "write" = [ "indexmap" ];
         };
@@ -2063,7 +2160,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.7";
+            packageId = "http 0.2.8";
           }
           {
             name = "indexmap";
@@ -2076,7 +2173,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
             features = [ "io-util" ];
           }
           {
@@ -2094,7 +2191,7 @@ rec {
         devDependencies = [
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
             features = [ "rt-multi-thread" "macros" "sync" "net" ];
           }
         ];
@@ -2110,9 +2207,16 @@ rec {
           "Amanieu d'Antras <amanieu@gmail.com>"
         ];
         features = {
+          "ahash" = [ "dep:ahash" ];
           "ahash-compile-time-rng" = [ "ahash/compile-time-rng" ];
+          "alloc" = [ "dep:alloc" ];
+          "bumpalo" = [ "dep:bumpalo" ];
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
           "default" = [ "ahash" "inline-more" ];
+          "rayon" = [ "dep:rayon" ];
           "rustc-dep-of-std" = [ "nightly" "core" "compiler_builtins" "alloc" "rustc-internal-api" ];
+          "serde" = [ "dep:serde" ];
         };
         resolvedDefaultFeatures = [ "raw" ];
       };
@@ -2126,6 +2230,7 @@ rec {
         ];
         features = {
           "unicode" = [ "unicode-segmentation" ];
+          "unicode-segmentation" = [ "dep:unicode-segmentation" ];
         };
         resolvedDefaultFeatures = [ "default" ];
       };
@@ -2145,6 +2250,8 @@ rec {
           }
         ];
         features = {
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
           "rustc-dep-of-std" = [ "core" "compiler_builtins/rustc-dep-of-std" "libc/rustc-dep-of-std" ];
         };
         resolvedDefaultFeatures = [ "default" ];
@@ -2205,11 +2312,11 @@ rec {
         ];
 
       };
-      "http 0.2.7" = rec {
+      "http 0.2.8" = rec {
         crateName = "http";
-        version = "0.2.7";
+        version = "0.2.8";
         edition = "2018";
-        sha256 = "1fxzyvspr6g8znc6i0kif0bhpih8ibhy7xc6k984j8pm19bp11pz";
+        sha256 = "1693pkg43czk26fima0l0l5h2h9rvm8n84pff5zc35b9w90kvx3m";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
           "Carl Lerche <me@carllerche.com>"
@@ -2277,7 +2384,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.7";
+            packageId = "http 0.2.8";
           }
           {
             name = "pin-project-lite";
@@ -2437,7 +2544,15 @@ rec {
         ];
         features = {
           "default" = [ "__internal_flaky_tests" "runtime" ];
+          "futures-cpupool" = [ "dep:futures-cpupool" ];
+          "net2" = [ "dep:net2" ];
           "runtime" = [ "futures-cpupool" "net2" "tokio" "tokio-executor" "tokio-reactor" "tokio-tcp" "tokio-threadpool" "tokio-timer" ];
+          "tokio" = [ "dep:tokio" ];
+          "tokio-executor" = [ "dep:tokio-executor" ];
+          "tokio-reactor" = [ "dep:tokio-reactor" ];
+          "tokio-tcp" = [ "dep:tokio-tcp" ];
+          "tokio-threadpool" = [ "dep:tokio-threadpool" ];
+          "tokio-timer" = [ "dep:tokio-timer" ];
         };
         resolvedDefaultFeatures = [ "__internal_flaky_tests" "default" "futures-cpupool" "net2" "runtime" "tokio" "tokio-executor" "tokio-reactor" "tokio-tcp" "tokio-threadpool" "tokio-timer" ];
       };
@@ -2475,7 +2590,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.7";
+            packageId = "http 0.2.8";
           }
           {
             name = "http-body";
@@ -2504,7 +2619,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
             features = [ "sync" ];
           }
           {
@@ -2531,15 +2646,18 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
             features = [ "fs" "macros" "io-std" "io-util" "rt" "rt-multi-thread" "sync" "time" "test-util" ];
           }
         ];
         features = {
           "ffi" = [ "libc" ];
           "full" = [ "client" "http1" "http2" "server" "stream" "runtime" ];
+          "h2" = [ "dep:h2" ];
           "http2" = [ "h2" ];
+          "libc" = [ "dep:libc" ];
           "runtime" = [ "tcp" "tokio/rt" "tokio/time" ];
+          "socket2" = [ "dep:socket2" ];
           "tcp" = [ "socket2" "tokio/net" "tokio/rt" "tokio/time" ];
         };
         resolvedDefaultFeatures = [ "client" "default" "h2" "http1" "http2" "runtime" "server" "socket2" "tcp" ];
@@ -2583,7 +2701,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
           }
           {
             name = "tokio-rustls";
@@ -2602,14 +2720,17 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
             features = [ "io-std" "macros" "net" "rt-multi-thread" ];
           }
         ];
         features = {
+          "ct-logs" = [ "dep:ct-logs" ];
           "default" = [ "native-tokio" ];
           "native-tokio" = [ "tokio-runtime" "rustls-native-certs" ];
+          "rustls-native-certs" = [ "dep:rustls-native-certs" ];
           "tokio-runtime" = [ "hyper/runtime" "ct-logs" ];
+          "webpki-roots" = [ "dep:webpki-roots" ];
           "webpki-tokio" = [ "tokio-runtime" "webpki-roots" ];
         };
         resolvedDefaultFeatures = [ "ct-logs" "default" "native-tokio" "rustls-native-certs" "tokio-runtime" ];
@@ -2625,7 +2746,7 @@ rec {
         dependencies = [
           {
             name = "http";
-            packageId = "http 0.2.7";
+            packageId = "http 0.2.8";
           }
           {
             name = "hyper";
@@ -2640,7 +2761,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
           }
           {
             name = "tokio-rustls";
@@ -2662,7 +2783,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
             features = [ "io-std" "macros" "net" "rt-multi-thread" ];
           }
         ];
@@ -2670,10 +2791,13 @@ rec {
           "default" = [ "native-tokio" "http1" "tls12" "logging" ];
           "http1" = [ "hyper/http1" ];
           "http2" = [ "hyper/http2" ];
+          "log" = [ "dep:log" ];
           "logging" = [ "log" "tokio-rustls/logging" "rustls/logging" ];
           "native-tokio" = [ "tokio-runtime" "rustls-native-certs" ];
+          "rustls-native-certs" = [ "dep:rustls-native-certs" ];
           "tls12" = [ "tokio-rustls/tls12" "rustls/tls12" ];
           "tokio-runtime" = [ "hyper/runtime" ];
+          "webpki-roots" = [ "dep:webpki-roots" ];
           "webpki-tokio" = [ "tokio-runtime" "webpki-roots" ];
         };
       };
@@ -2793,6 +2917,9 @@ rec {
           }
         ];
         features = {
+          "rayon" = [ "dep:rayon" ];
+          "rustc-rayon" = [ "dep:rustc-rayon" ];
+          "serde" = [ "dep:serde" ];
           "serde-1" = [ "serde" ];
         };
         resolvedDefaultFeatures = [ "std" ];
@@ -2812,7 +2939,11 @@ rec {
           }
         ];
         features = {
+          "js-sys" = [ "dep:js-sys" ];
+          "stdweb" = [ "dep:stdweb" ];
           "wasm-bindgen" = [ "js-sys" "wasm-bindgen_rs" "web-sys" ];
+          "wasm-bindgen_rs" = [ "dep:wasm-bindgen_rs" ];
+          "web-sys" = [ "dep:web-sys" ];
         };
       };
       "iovec" = rec {
@@ -2874,6 +3005,8 @@ rec {
         ];
         features = {
           "json" = [ "serde" "schemars" ];
+          "schemars" = [ "dep:schemars" ];
+          "serde" = [ "dep:serde" ];
         };
         resolvedDefaultFeatures = [ "default" ];
       };
@@ -2948,6 +3081,7 @@ rec {
           "Marvin Löbel <loebel.marvin@gmail.com>"
         ];
         features = {
+          "spin" = [ "dep:spin" ];
           "spin_no_std" = [ "spin" ];
         };
       };
@@ -2962,6 +3096,7 @@ rec {
         features = {
           "default" = [ "std" ];
           "rustc-dep-of-std" = [ "align" "rustc-std-workspace-core" ];
+          "rustc-std-workspace-core" = [ "dep:rustc-std-workspace-core" ];
           "use_std" = [ "std" ];
         };
         resolvedDefaultFeatures = [ "align" "default" "std" ];
@@ -2976,8 +3111,12 @@ rec {
           "Andrew Paseltiner <apaseltiner@gmail.com>"
         ];
         features = {
+          "clippy" = [ "dep:clippy" ];
+          "heapsize" = [ "dep:heapsize" ];
           "heapsize_impl" = [ "heapsize" ];
+          "serde" = [ "dep:serde" ];
           "serde_impl" = [ "serde" "serde_test" ];
+          "serde_test" = [ "dep:serde_test" ];
         };
       };
       "lock_api 0.3.4" = rec {
@@ -2996,6 +3135,8 @@ rec {
           }
         ];
         features = {
+          "owning_ref" = [ "dep:owning_ref" ];
+          "serde" = [ "dep:serde" ];
         };
       };
       "lock_api 0.4.7" = rec {
@@ -3020,6 +3161,8 @@ rec {
           }
         ];
         features = {
+          "owning_ref" = [ "dep:owning_ref" ];
+          "serde" = [ "dep:serde" ];
         };
       };
       "log" = rec {
@@ -3041,6 +3184,9 @@ rec {
           "kv_unstable_serde" = [ "kv_unstable_std" "value-bag/serde" "serde" ];
           "kv_unstable_std" = [ "std" "kv_unstable" "value-bag/error" ];
           "kv_unstable_sval" = [ "kv_unstable" "value-bag/sval" "sval" ];
+          "serde" = [ "dep:serde" ];
+          "sval" = [ "dep:sval" ];
+          "value-bag" = [ "dep:value-bag" ];
         };
         resolvedDefaultFeatures = [ "std" ];
       };
@@ -3059,6 +3205,7 @@ rec {
           }
         ];
         features = {
+          "heapsize" = [ "dep:heapsize" ];
           "heapsize_impl" = [ "heapsize" "linked-hash-map/heapsize_impl" ];
         };
       };
@@ -3107,7 +3254,10 @@ rec {
           "bluss"
         ];
         features = {
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
           "default" = [ "std" ];
+          "libc" = [ "dep:libc" ];
           "rustc-dep-of-std" = [ "core" "compiler_builtins" ];
           "use_std" = [ "std" ];
         };
@@ -3187,8 +3337,12 @@ rec {
           }
         ];
         features = {
+          "alloc" = [ "dep:alloc" ];
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
           "rustc-dep-of-std" = [ "core" "alloc" "compiler_builtins" "adler/rustc-dep-of-std" ];
           "simd" = [ "simd-adler32" ];
+          "simd-adler32" = [ "dep:simd-adler32" ];
         };
       };
       "mio 0.6.23" = rec {
@@ -3395,6 +3549,7 @@ rec {
         ];
         features = {
           "alpn" = [ "security-framework/alpn" ];
+          "openssl-src" = [ "dep:openssl-src" ];
           "vendored" = [ "openssl/vendored" ];
         };
       };
@@ -3472,6 +3627,7 @@ rec {
         features = {
           "default" = [ "std" ];
           "i128" = [ "num-bigint/i128" "num-complex/i128" "num-integer/i128" "num-iter/i128" "num-rational/i128" "num-traits/i128" ];
+          "num-bigint" = [ "dep:num-bigint" ];
           "rand" = [ "num-bigint/rand" "num-complex/rand" ];
           "serde" = [ "num-bigint/serde" "num-complex/serde" "num-rational/serde" ];
           "std" = [ "num-bigint/std" "num-complex/std" "num-integer/std" "num-iter/std" "num-rational/std" "num-rational/bigint" "num-traits/std" ];
@@ -3507,6 +3663,10 @@ rec {
         features = {
           "default" = [ "std" ];
           "i128" = [ "num-integer/i128" "num-traits/i128" ];
+          "quickcheck" = [ "dep:quickcheck" ];
+          "quickcheck_macros" = [ "dep:quickcheck_macros" ];
+          "rand" = [ "dep:rand" ];
+          "serde" = [ "dep:serde" ];
           "std" = [ "num-integer/std" "num-traits/std" ];
         };
         resolvedDefaultFeatures = [ "std" ];
@@ -3535,6 +3695,8 @@ rec {
         features = {
           "default" = [ "std" ];
           "i128" = [ "num-traits/i128" ];
+          "rand" = [ "dep:rand" ];
+          "serde" = [ "dep:serde" ];
           "std" = [ "num-traits/std" ];
         };
         resolvedDefaultFeatures = [ "std" ];
@@ -3637,6 +3799,8 @@ rec {
           "bigint-std" = [ "bigint" "num-bigint/std" ];
           "default" = [ "bigint-std" "std" ];
           "i128" = [ "num-integer/i128" "num-traits/i128" ];
+          "num-bigint" = [ "dep:num-bigint" ];
+          "serde" = [ "dep:serde" ];
           "std" = [ "num-integer/std" "num-traits/std" ];
         };
         resolvedDefaultFeatures = [ "bigint" "num-bigint" "std" ];
@@ -3657,6 +3821,7 @@ rec {
         ];
         features = {
           "default" = [ "std" ];
+          "libm" = [ "dep:libm" ];
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
@@ -3696,14 +3861,22 @@ rec {
         ];
         features = {
           "all" = [ "read" "write" "std" "compression" "wasm" ];
+          "alloc" = [ "dep:alloc" ];
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
           "compression" = [ "flate2" "std" ];
+          "core" = [ "dep:core" ];
+          "crc32fast" = [ "dep:crc32fast" ];
           "default" = [ "read" "compression" ];
           "doc" = [ "read_core" "write_std" "std" "compression" "archive" "coff" "elf" "macho" "pe" "wasm" ];
+          "flate2" = [ "dep:flate2" ];
+          "hashbrown" = [ "dep:hashbrown" ];
+          "indexmap" = [ "dep:indexmap" ];
           "pe" = [ "coff" ];
           "read" = [ "read_core" "archive" "coff" "elf" "macho" "pe" "unaligned" ];
           "rustc-dep-of-std" = [ "core" "compiler_builtins" "alloc" "memchr/rustc-dep-of-std" ];
           "std" = [ "memchr/std" ];
           "wasm" = [ "wasmparser" ];
+          "wasmparser" = [ "dep:wasmparser" ];
           "write" = [ "write_std" "coff" "elf" "macho" "pe" ];
           "write_core" = [ "crc32fast" "indexmap" "hashbrown" ];
           "write_std" = [ "write_core" "std" "indexmap/std" "crc32fast/std" ];
@@ -3720,8 +3893,10 @@ rec {
         ];
         features = {
           "alloc" = [ "race" ];
+          "atomic-polyfill" = [ "dep:atomic-polyfill" ];
           "default" = [ "std" ];
           "parking_lot" = [ "parking_lot_core" ];
+          "parking_lot_core" = [ "dep:parking_lot_core" ];
           "std" = [ "alloc" ];
         };
         resolvedDefaultFeatures = [ "alloc" "default" "race" "std" ];
@@ -3839,6 +4014,8 @@ rec {
           }
         ];
         features = {
+          "bindgen" = [ "dep:bindgen" ];
+          "openssl-src" = [ "dep:openssl-src" ];
           "vendored" = [ "openssl-src" ];
         };
       };
@@ -3947,7 +4124,10 @@ rec {
           }
         ];
         features = {
+          "backtrace" = [ "dep:backtrace" ];
           "deadlock_detection" = [ "petgraph" "thread-id" "backtrace" ];
+          "petgraph" = [ "dep:petgraph" ];
+          "thread-id" = [ "dep:thread-id" ];
         };
       };
       "parking_lot_core 0.9.3" = rec {
@@ -3985,7 +4165,10 @@ rec {
           }
         ];
         features = {
+          "backtrace" = [ "dep:backtrace" ];
           "deadlock_detection" = [ "petgraph" "thread-id" "backtrace" ];
+          "petgraph" = [ "dep:petgraph" ];
+          "thread-id" = [ "dep:thread-id" ];
         };
       };
       "percent-encoding 1.0.1" = rec {
@@ -4099,7 +4282,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.7";
+            packageId = "http 0.2.8";
             optional = true;
           }
           {
@@ -4135,6 +4318,9 @@ rec {
           }
         ];
         features = {
+          "http" = [ "dep:http" ];
+          "hyper" = [ "dep:hyper" ];
+          "hyper-rustls" = [ "dep:hyper-rustls" ];
           "hyper_server" = [ "hyper" "hyper-rustls" "http" ];
         };
         resolvedDefaultFeatures = [ "http" "hyper" "hyper-rustls" "hyper_server" ];
@@ -4159,6 +4345,7 @@ rec {
         ];
         features = {
           "default" = [ "remote_list" ];
+          "native-tls" = [ "dep:native-tls" ];
           "remote_list" = [ "native-tls" ];
         };
       };
@@ -4259,7 +4446,10 @@ rec {
         features = {
           "alloc" = [ "rand_core/alloc" ];
           "default" = [ "std" ];
+          "log" = [ "dep:log" ];
           "nightly" = [ "simd_support" ];
+          "packed_simd" = [ "dep:packed_simd" ];
+          "rand_os" = [ "dep:rand_os" ];
           "serde1" = [ "rand_core/serde1" "rand_isaac/serde1" "rand_xorshift/serde1" ];
           "simd_support" = [ "packed_simd" ];
           "std" = [ "rand_core/std" "alloc" "rand_os" "rand_jitter/std" ];
@@ -4317,7 +4507,12 @@ rec {
           "alloc" = [ "rand_core/alloc" ];
           "default" = [ "std" ];
           "getrandom" = [ "getrandom_package" "rand_core/getrandom" ];
+          "getrandom_package" = [ "dep:getrandom_package" ];
+          "libc" = [ "dep:libc" ];
+          "log" = [ "dep:log" ];
           "nightly" = [ "simd_support" ];
+          "packed_simd" = [ "dep:packed_simd" ];
+          "rand_pcg" = [ "dep:rand_pcg" ];
           "simd_support" = [ "packed_simd" ];
           "small_rng" = [ "rand_pcg" ];
           "std" = [ "rand_core/std" "rand_chacha/std" "alloc" "getrandom" "libc" ];
@@ -4410,7 +4605,9 @@ rec {
           "The Rust Project Developers"
         ];
         features = {
+          "serde" = [ "dep:serde" ];
           "serde1" = [ "serde" "serde_derive" ];
+          "serde_derive" = [ "dep:serde_derive" ];
           "std" = [ "alloc" ];
         };
         resolvedDefaultFeatures = [ "alloc" "std" ];
@@ -4432,6 +4629,8 @@ rec {
           }
         ];
         features = {
+          "getrandom" = [ "dep:getrandom" ];
+          "serde" = [ "dep:serde" ];
           "serde1" = [ "serde" ];
           "std" = [ "alloc" "getrandom" "getrandom/std" ];
         };
@@ -4487,7 +4686,9 @@ rec {
           }
         ];
         features = {
+          "serde" = [ "dep:serde" ];
           "serde1" = [ "serde" "serde_derive" "rand_core/serde1" ];
+          "serde_derive" = [ "dep:serde_derive" ];
         };
       };
       "rand_jitter" = rec {
@@ -4517,6 +4718,7 @@ rec {
           }
         ];
         features = {
+          "log" = [ "dep:log" ];
           "std" = [ "rand_core/std" ];
         };
         resolvedDefaultFeatures = [ "std" ];
@@ -4562,7 +4764,11 @@ rec {
             features = [ "minwindef" "ntsecapi" "winnt" ];
           }
         ];
-
+        features = {
+          "log" = [ "dep:log" ];
+          "stdweb" = [ "dep:stdweb" ];
+          "wasm-bindgen" = [ "dep:wasm-bindgen" ];
+        };
       };
       "rand_pcg" = rec {
         crateName = "rand_pcg";
@@ -4585,7 +4791,9 @@ rec {
           }
         ];
         features = {
+          "serde" = [ "dep:serde" ];
           "serde1" = [ "serde" "serde_derive" ];
+          "serde_derive" = [ "dep:serde_derive" ];
         };
       };
       "rand_xorshift" = rec {
@@ -4605,7 +4813,9 @@ rec {
           }
         ];
         features = {
+          "serde" = [ "dep:serde" ];
           "serde1" = [ "serde" "serde_derive" ];
+          "serde_derive" = [ "dep:serde_derive" ];
         };
       };
       "rdrand" = rec {
@@ -4682,7 +4892,9 @@ rec {
           }
         ];
         features = {
+          "aho-corasick" = [ "dep:aho-corasick" ];
           "default" = [ "std" "perf" "unicode" "regex-syntax/default" ];
+          "memchr" = [ "dep:memchr" ];
           "perf" = [ "perf-cache" "perf-dfa" "perf-inline" "perf-literal" ];
           "perf-literal" = [ "aho-corasick" "memchr" ];
           "unicode" = [ "unicode-age" "unicode-bool" "unicode-case" "unicode-gencat" "unicode-perl" "unicode-script" "unicode-segment" "regex-syntax/unicode" ];
@@ -4772,7 +4984,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.7";
+            packageId = "http 0.2.8";
           }
           {
             name = "http-body";
@@ -4861,7 +5073,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
             usesDefaultFeatures = false;
             target = { target, features }: (!(target."arch" == "wasm32"));
             features = [ "net" "time" ];
@@ -4920,7 +5132,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
             usesDefaultFeatures = false;
             target = {target, features}: (!(target."arch" == "wasm32"));
             features = [ "macros" "rt-multi-thread" ];
@@ -4934,25 +5146,43 @@ rec {
         ];
         features = {
           "__rustls" = [ "hyper-rustls" "tokio-rustls" "rustls" "__tls" "rustls-pemfile" ];
+          "async-compression" = [ "dep:async-compression" ];
           "blocking" = [ "futures-util/io" "tokio/rt-multi-thread" "tokio/sync" ];
           "brotli" = [ "async-compression" "async-compression/brotli" "tokio-util" ];
+          "cookie_crate" = [ "dep:cookie_crate" ];
+          "cookie_store" = [ "dep:cookie_store" ];
           "cookies" = [ "cookie_crate" "cookie_store" "proc-macro-hack" ];
           "default" = [ "default-tls" ];
           "default-tls" = [ "hyper-tls" "native-tls-crate" "__tls" "tokio-native-tls" ];
           "deflate" = [ "async-compression" "async-compression/zlib" "tokio-util" ];
           "gzip" = [ "async-compression" "async-compression/gzip" "tokio-util" ];
+          "hyper-rustls" = [ "dep:hyper-rustls" ];
+          "hyper-tls" = [ "dep:hyper-tls" ];
           "json" = [ "serde_json" ];
+          "mime_guess" = [ "dep:mime_guess" ];
           "multipart" = [ "mime_guess" ];
           "native-tls" = [ "default-tls" ];
           "native-tls-alpn" = [ "native-tls" "native-tls-crate/alpn" ];
+          "native-tls-crate" = [ "dep:native-tls-crate" ];
           "native-tls-vendored" = [ "native-tls" "native-tls-crate/vendored" ];
+          "proc-macro-hack" = [ "dep:proc-macro-hack" ];
+          "rustls" = [ "dep:rustls" ];
+          "rustls-native-certs" = [ "dep:rustls-native-certs" ];
+          "rustls-pemfile" = [ "dep:rustls-pemfile" ];
           "rustls-tls" = [ "rustls-tls-webpki-roots" ];
           "rustls-tls-manual-roots" = [ "__rustls" ];
           "rustls-tls-native-roots" = [ "rustls-native-certs" "__rustls" ];
           "rustls-tls-webpki-roots" = [ "webpki-roots" "__rustls" ];
+          "serde_json" = [ "dep:serde_json" ];
           "socks" = [ "tokio-socks" ];
           "stream" = [ "tokio/fs" "tokio-util" ];
+          "tokio-native-tls" = [ "dep:tokio-native-tls" ];
+          "tokio-rustls" = [ "dep:tokio-rustls" ];
+          "tokio-socks" = [ "dep:tokio-socks" ];
+          "tokio-util" = [ "dep:tokio-util" ];
           "trust-dns" = [ "trust-dns-resolver" ];
+          "trust-dns-resolver" = [ "dep:trust-dns-resolver" ];
+          "webpki-roots" = [ "dep:webpki-roots" ];
         };
         resolvedDefaultFeatures = [ "__rustls" "__tls" "hyper-rustls" "rustls" "rustls-pemfile" "rustls-tls" "rustls-tls-webpki-roots" "tokio-rustls" "webpki-roots" ];
       };
@@ -5100,8 +5330,17 @@ rec {
           "default-tls" = [ "hyper-tls" "native-tls" "tls" ];
           "default-tls-vendored" = [ "default-tls" "native-tls/vendored" ];
           "hyper-011" = [ "hyper-old-types" ];
+          "hyper-old-types" = [ "dep:hyper-old-types" ];
+          "hyper-rustls" = [ "dep:hyper-rustls" ];
+          "hyper-tls" = [ "dep:hyper-tls" ];
+          "native-tls" = [ "dep:native-tls" ];
+          "rustls" = [ "dep:rustls" ];
           "rustls-tls" = [ "hyper-rustls" "tokio-rustls" "webpki-roots" "rustls" "tls" ];
+          "socks" = [ "dep:socks" ];
+          "tokio-rustls" = [ "dep:tokio-rustls" ];
           "trust-dns" = [ "trust-dns-resolver" ];
+          "trust-dns-resolver" = [ "dep:trust-dns-resolver" ];
+          "webpki-roots" = [ "dep:webpki-roots" ];
         };
         resolvedDefaultFeatures = [ "default" "default-tls" "hyper-tls" "native-tls" "tls" ];
       };
@@ -5126,6 +5365,7 @@ rec {
           }
         ];
         features = {
+          "hostname" = [ "dep:hostname" ];
           "system" = [ "hostname" ];
         };
         resolvedDefaultFeatures = [ "hostname" "system" ];
@@ -5203,6 +5443,7 @@ rec {
         features = {
           "default" = [ "alloc" "dev_urandom_fallback" ];
           "dev_urandom_fallback" = [ "once_cell" ];
+          "once_cell" = [ "dep:once_cell" ];
           "std" = [ "alloc" ];
         };
         resolvedDefaultFeatures = [ "alloc" "default" "dev_urandom_fallback" "once_cell" ];
@@ -5216,6 +5457,8 @@ rec {
           "Alex Crichton <alex@alexcrichton.com>"
         ];
         features = {
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
           "rustc-dep-of-std" = [ "core" "compiler_builtins" ];
         };
       };
@@ -5258,7 +5501,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.7";
+            packageId = "http 0.2.8";
           }
           {
             name = "reqwest";
@@ -5300,6 +5543,7 @@ rec {
         features = {
           "blocking" = [ "reqwest/blocking" ];
           "default" = [ "reqwest/default-tls" ];
+          "reqwest" = [ "dep:reqwest" ];
           "rustls-tls" = [ "reqwest/rustls-tls" ];
         };
         resolvedDefaultFeatures = [ "reqwest" "rustls-tls" ];
@@ -5380,6 +5624,7 @@ rec {
         ];
         features = {
           "default" = [ "logging" ];
+          "log" = [ "dep:log" ];
           "logging" = [ "log" ];
         };
         resolvedDefaultFeatures = [ "default" "log" "logging" ];
@@ -5417,8 +5662,10 @@ rec {
         ];
         features = {
           "default" = [ "logging" "tls12" ];
+          "log" = [ "dep:log" ];
           "logging" = [ "log" ];
           "read_buf" = [ "rustversion" ];
+          "rustversion" = [ "dep:rustversion" ];
         };
         resolvedDefaultFeatures = [ "dangerous_configuration" "default" "log" "logging" "tls12" ];
       };
@@ -5454,6 +5701,7 @@ rec {
         ];
         features = {
           "default" = [ "rustls" ];
+          "rustls" = [ "dep:rustls" ];
         };
         resolvedDefaultFeatures = [ "default" "rustls" ];
       };
@@ -5482,6 +5730,7 @@ rec {
           "David Tolnay <dtolnay@gmail.com>"
         ];
         features = {
+          "no-panic" = [ "dep:no-panic" ];
         };
       };
       "same-file" = rec {
@@ -5622,6 +5871,8 @@ rec {
           "OSX_10_14" = [ "OSX_10_13" "security-framework-sys/OSX_10_14" ];
           "OSX_10_9" = [ "security-framework-sys/OSX_10_9" ];
           "default" = [ "OSX_10_9" ];
+          "log" = [ "dep:log" ];
+          "num-bigint" = [ "dep:num-bigint" ];
           "serial-number-bigint" = [ "num-bigint" ];
         };
         resolvedDefaultFeatures = [ "OSX_10_9" "default" ];
@@ -5672,6 +5923,7 @@ rec {
         ];
         features = {
           "ci" = [ "serde" ];
+          "serde" = [ "dep:serde" ];
         };
         resolvedDefaultFeatures = [ "default" ];
       };
@@ -5710,6 +5962,7 @@ rec {
         features = {
           "default" = [ "std" ];
           "derive" = [ "serde_derive" ];
+          "serde_derive" = [ "dep:serde_derive" ];
         };
         resolvedDefaultFeatures = [ "default" "derive" "serde_derive" "std" ];
       };
@@ -5775,6 +6028,7 @@ rec {
         features = {
           "alloc" = [ "serde/alloc" ];
           "default" = [ "std" ];
+          "indexmap" = [ "dep:indexmap" ];
           "preserve_order" = [ "indexmap" "std" ];
           "std" = [ "serde/std" ];
         };
@@ -5863,6 +6117,7 @@ rec {
         ];
         features = {
           "default" = [ "std" ];
+          "serde" = [ "dep:serde" ];
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
@@ -5883,6 +6138,7 @@ rec {
         ];
         features = {
           "default" = [ "std" ];
+          "serde" = [ "dep:serde" ];
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
@@ -5895,7 +6151,9 @@ rec {
           "The Servo Project Developers"
         ];
         features = {
+          "arbitrary" = [ "dep:arbitrary" ];
           "const_new" = [ "const_generics" ];
+          "serde" = [ "dep:serde" ];
         };
       };
       "socket2 0.3.19" = rec {
@@ -5981,6 +6239,7 @@ rec {
           }
         ];
         features = {
+          "bytes" = [ "dep:bytes" ];
           "default" = [ "bytes" ];
         };
         resolvedDefaultFeatures = [ "bytes" "default" ];
@@ -6034,6 +6293,7 @@ rec {
           "default" = [ "derive" "parsing" "printing" "clone-impls" "proc-macro" ];
           "printing" = [ "quote" ];
           "proc-macro" = [ "proc-macro2/proc-macro" "quote/proc-macro" ];
+          "quote" = [ "dep:quote" ];
           "test" = [ "syn-test-suite/all-features" ];
         };
         resolvedDefaultFeatures = [ "clone-impls" "default" "derive" "extra-traits" "full" "parsing" "printing" "proc-macro" "quote" "visit" "visit-mut" ];
@@ -6149,7 +6409,10 @@ rec {
             packageId = "unicode-width";
           }
         ];
-
+        features = {
+          "hyphenation" = [ "dep:hyphenation" ];
+          "term_size" = [ "dep:term_size" ];
+        };
       };
       "thiserror" = rec {
         crateName = "thiserror";
@@ -6224,7 +6487,9 @@ rec {
             features = [ "std" "processthreadsapi" "winbase" ];
           }
         ];
-
+        features = {
+          "rustc-serialize" = [ "dep:rustc-serialize" ];
+        };
       };
       "tinyvec" = rec {
         crateName = "tinyvec";
@@ -6243,10 +6508,13 @@ rec {
         ];
         features = {
           "alloc" = [ "tinyvec_macros" ];
+          "arbitrary" = [ "dep:arbitrary" ];
           "real_blackbox" = [ "criterion/real_blackbox" ];
           "rustc_1_55" = [ "rustc_1_40" ];
           "rustc_1_57" = [ "rustc_1_55" ];
+          "serde" = [ "dep:serde" ];
           "std" = [ "alloc" ];
+          "tinyvec_macros" = [ "dep:tinyvec_macros" ];
         };
         resolvedDefaultFeatures = [ "alloc" "default" "tinyvec_macros" ];
       };
@@ -6331,16 +6599,32 @@ rec {
           }
         ];
         features = {
+          "bytes" = [ "dep:bytes" ];
           "codec" = [ "io" "tokio-codec" ];
           "default" = [ "codec" "fs" "io" "reactor" "rt-full" "sync" "tcp" "timer" "udp" "uds" ];
           "experimental-tracing" = [ "tracing-core" ];
           "fs" = [ "tokio-fs" ];
           "io" = [ "bytes" "tokio-io" ];
+          "mio" = [ "dep:mio" ];
+          "num_cpus" = [ "dep:num_cpus" ];
           "reactor" = [ "io" "mio" "tokio-reactor" ];
           "rt-full" = [ "num_cpus" "reactor" "timer" "tokio-current-thread" "tokio-executor" "tokio-threadpool" ];
           "sync" = [ "tokio-sync" ];
           "tcp" = [ "tokio-tcp" ];
           "timer" = [ "tokio-timer" ];
+          "tokio-codec" = [ "dep:tokio-codec" ];
+          "tokio-current-thread" = [ "dep:tokio-current-thread" ];
+          "tokio-executor" = [ "dep:tokio-executor" ];
+          "tokio-fs" = [ "dep:tokio-fs" ];
+          "tokio-io" = [ "dep:tokio-io" ];
+          "tokio-reactor" = [ "dep:tokio-reactor" ];
+          "tokio-sync" = [ "dep:tokio-sync" ];
+          "tokio-tcp" = [ "dep:tokio-tcp" ];
+          "tokio-threadpool" = [ "dep:tokio-threadpool" ];
+          "tokio-timer" = [ "dep:tokio-timer" ];
+          "tokio-udp" = [ "dep:tokio-udp" ];
+          "tokio-uds" = [ "dep:tokio-uds" ];
+          "tracing-core" = [ "dep:tracing-core" ];
           "udp" = [ "tokio-udp" ];
           "uds" = [ "tokio-uds" ];
         };
@@ -6387,31 +6671,47 @@ rec {
         features = {
           "blocking" = [ "rt-core" ];
           "dns" = [ "rt-core" ];
+          "fnv" = [ "dep:fnv" ];
           "fs" = [ "rt-core" "io-util" ];
           "full" = [ "blocking" "dns" "fs" "io-driver" "io-util" "io-std" "macros" "net" "process" "rt-core" "rt-util" "rt-threaded" "signal" "stream" "sync" "time" ];
+          "futures-core" = [ "dep:futures-core" ];
           "io-driver" = [ "mio" "lazy_static" ];
           "io-std" = [ "rt-core" ];
           "io-util" = [ "memchr" ];
+          "iovec" = [ "dep:iovec" ];
+          "lazy_static" = [ "dep:lazy_static" ];
+          "libc" = [ "dep:libc" ];
           "macros" = [ "tokio-macros" ];
+          "memchr" = [ "dep:memchr" ];
+          "mio" = [ "dep:mio" ];
+          "mio-named-pipes" = [ "dep:mio-named-pipes" ];
+          "mio-uds" = [ "dep:mio-uds" ];
           "net" = [ "dns" "tcp" "udp" "uds" ];
+          "num_cpus" = [ "dep:num_cpus" ];
+          "parking_lot" = [ "dep:parking_lot" ];
           "process" = [ "io-driver" "libc" "mio-named-pipes" "signal" "winapi/consoleapi" "winapi/minwindef" "winapi/threadpoollegacyapiset" "winapi/winerror" ];
           "rt-core" = [ "slab" ];
           "rt-threaded" = [ "num_cpus" "rt-core" ];
           "signal" = [ "io-driver" "lazy_static" "libc" "mio-uds" "signal-hook-registry" "winapi/consoleapi" "winapi/minwindef" ];
+          "signal-hook-registry" = [ "dep:signal-hook-registry" ];
+          "slab" = [ "dep:slab" ];
           "stream" = [ "futures-core" ];
           "sync" = [ "fnv" ];
           "tcp" = [ "io-driver" "iovec" ];
           "time" = [ "slab" ];
+          "tokio-macros" = [ "dep:tokio-macros" ];
+          "tracing" = [ "dep:tracing" ];
           "udp" = [ "io-driver" ];
           "uds" = [ "io-driver" "mio-uds" "libc" ];
+          "winapi" = [ "dep:winapi" ];
         };
         resolvedDefaultFeatures = [ "default" "io-driver" "iovec" "lazy_static" "mio" "rt-core" "slab" "tcp" "time" "udp" ];
       };
-      "tokio 1.18.2" = rec {
+      "tokio 1.19.2" = rec {
         crateName = "tokio";
-        version = "1.18.2";
+        version = "1.19.2";
         edition = "2018";
-        sha256 = "158klcakw40y37kgbafg9z1y12vgflh35ad6bbfxss6g4w2by0s9";
+        sha256 = "0f8lrcbd28czq4sycj3s1irnzd6zx6cr5f7r431n5pc6cvnm46n5";
         authors = [
           "Tokio Contributors <team@tokio.rs>"
         ];
@@ -6495,15 +6795,27 @@ rec {
           }
         ];
         features = {
+          "bytes" = [ "dep:bytes" ];
           "full" = [ "fs" "io-util" "io-std" "macros" "net" "parking_lot" "process" "rt" "rt-multi-thread" "signal" "sync" "time" ];
           "io-util" = [ "memchr" "bytes" ];
+          "libc" = [ "dep:libc" ];
           "macros" = [ "tokio-macros" ];
+          "memchr" = [ "dep:memchr" ];
+          "mio" = [ "dep:mio" ];
           "net" = [ "libc" "mio/os-poll" "mio/os-ext" "mio/net" "socket2" "winapi/namedpipeapi" ];
+          "num_cpus" = [ "dep:num_cpus" ];
+          "once_cell" = [ "dep:once_cell" ];
+          "parking_lot" = [ "dep:parking_lot" ];
           "process" = [ "bytes" "once_cell" "libc" "mio/os-poll" "mio/os-ext" "mio/net" "signal-hook-registry" "winapi/threadpoollegacyapiset" ];
           "rt" = [ "once_cell" ];
           "rt-multi-thread" = [ "num_cpus" "rt" ];
           "signal" = [ "once_cell" "libc" "mio/os-poll" "mio/net" "mio/os-ext" "signal-hook-registry" "winapi/consoleapi" ];
+          "signal-hook-registry" = [ "dep:signal-hook-registry" ];
+          "socket2" = [ "dep:socket2" ];
           "test-util" = [ "rt" "sync" "time" ];
+          "tokio-macros" = [ "dep:tokio-macros" ];
+          "tracing" = [ "dep:tracing" ];
+          "winapi" = [ "dep:winapi" ];
         };
         resolvedDefaultFeatures = [ "bytes" "default" "fs" "full" "io-std" "io-util" "libc" "macros" "memchr" "mio" "net" "num_cpus" "once_cell" "parking_lot" "process" "rt" "rt-multi-thread" "signal" "signal-hook-registry" "socket2" "sync" "time" "tokio-macros" "winapi" ];
       };
@@ -6532,6 +6844,7 @@ rec {
         ];
         features = {
           "default" = [ "util" ];
+          "either" = [ "dep:either" ];
           "util" = [ "bytes/either" "either" ];
         };
         resolvedDefaultFeatures = [ "default" "either" "util" ];
@@ -6602,9 +6915,9 @@ rec {
       };
       "tokio-macros" = rec {
         crateName = "tokio-macros";
-        version = "1.7.0";
+        version = "1.8.0";
         edition = "2018";
-        sha256 = "1ds34qsfvgf63cjgdx3gr4pl7i76fifyar15ksbillcc8hpzfmxm";
+        sha256 = "11140lnx88qycdx8ynxgk0317gnw1qsy16ydlgvpx67vfnlzj94p";
         procMacro = true;
         authors = [
           "Tokio Contributors <team@tokio.rs>"
@@ -6703,7 +7016,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
           }
           {
             name = "webpki";
@@ -6713,7 +7026,7 @@ rec {
         devDependencies = [
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
             features = [ "full" ];
           }
         ];
@@ -6737,7 +7050,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
           }
           {
             name = "webpki";
@@ -6747,7 +7060,7 @@ rec {
         devDependencies = [
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
             features = [ "full" ];
           }
         ];
@@ -6893,9 +7206,9 @@ rec {
       };
       "tokio-util" = rec {
         crateName = "tokio-util";
-        version = "0.7.2";
+        version = "0.7.3";
         edition = "2018";
-        sha256 = "0p2frdzx3nr2pv99a2xfjf0p589kv90n9a9aq7wj3yy2mnhs327r";
+        sha256 = "0igzhn80k8l9w6r5qj0bci70kxhbsm1j31gr406pghyxvvc3qinc";
         authors = [
           "Tokio Contributors <team@tokio.rs>"
         ];
@@ -6918,19 +7231,21 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
             features = [ "sync" ];
           }
           {
             name = "tracing";
             packageId = "tracing";
             optional = true;
+            usesDefaultFeatures = false;
+            features = [ "std" ];
           }
         ];
         devDependencies = [
           {
             name = "tokio";
-            packageId = "tokio 1.18.2";
+            packageId = "tokio 1.19.2";
             features = [ "full" ];
           }
         ];
@@ -6939,10 +7254,15 @@ rec {
           "codec" = [ "tracing" ];
           "compat" = [ "futures-io" ];
           "full" = [ "codec" "compat" "io-util" "time" "net" "rt" ];
+          "futures-io" = [ "dep:futures-io" ];
+          "futures-util" = [ "dep:futures-util" ];
+          "hashbrown" = [ "dep:hashbrown" ];
           "io-util" = [ "io" "tokio/rt" "tokio/io-util" ];
           "net" = [ "tokio/net" ];
-          "rt" = [ "tokio/rt" "tokio/sync" "futures-util" ];
+          "rt" = [ "tokio/rt" "tokio/sync" "futures-util" "hashbrown" ];
+          "slab" = [ "dep:slab" ];
           "time" = [ "tokio/time" "slab" ];
+          "tracing" = [ "dep:tracing" ];
         };
         resolvedDefaultFeatures = [ "codec" "default" "tracing" ];
       };
@@ -6958,9 +7278,9 @@ rec {
       };
       "tracing" = rec {
         crateName = "tracing";
-        version = "0.1.34";
+        version = "0.1.35";
         edition = "2018";
-        sha256 = "02bx698j7p50dcg01s3x26swpjs2lcrly32ghklhz7x78k5ws3jx";
+        sha256 = "0q01jipgap393wr0s7ijm01nnmhqbcxk9q4f5ajl978blqdf6054";
         authors = [
           "Eliza Weisman <eliza@buoyant.io>"
           "Tokio Contributors <team@tokio.rs>"
@@ -6999,8 +7319,10 @@ rec {
         features = {
           "attributes" = [ "tracing-attributes" ];
           "default" = [ "std" "attributes" ];
+          "log" = [ "dep:log" ];
           "log-always" = [ "log" ];
           "std" = [ "tracing-core/std" ];
+          "tracing-attributes" = [ "dep:tracing-attributes" ];
           "valuable" = [ "tracing-core/valuable" ];
         };
         resolvedDefaultFeatures = [ "attributes" "default" "log" "std" "tracing-attributes" ];
@@ -7037,24 +7359,26 @@ rec {
       };
       "tracing-core" = rec {
         crateName = "tracing-core";
-        version = "0.1.26";
+        version = "0.1.27";
         edition = "2018";
-        sha256 = "0bq7c1y28hi7mli25pj9iljam4vcnlqk7zf2k3a8c67822kqqk7m";
+        sha256 = "08fr2y0nm0as3ar22xw3qspwjfbx1a4byzp8wmf9d93qi1dmj2bp";
         authors = [
           "Tokio Contributors <team@tokio.rs>"
         ];
         dependencies = [
           {
-            name = "lazy_static";
-            packageId = "lazy_static";
+            name = "once_cell";
+            packageId = "once_cell";
             optional = true;
           }
         ];
         features = {
           "default" = [ "std" "valuable/std" ];
-          "std" = [ "lazy_static" ];
+          "once_cell" = [ "dep:once_cell" ];
+          "std" = [ "once_cell" ];
+          "valuable" = [ "dep:valuable" ];
         };
-        resolvedDefaultFeatures = [ "lazy_static" "std" ];
+        resolvedDefaultFeatures = [ "once_cell" "std" ];
       };
       "trust-dns-proto" = rec {
         crateName = "trust-dns-proto";
@@ -7137,14 +7461,23 @@ rec {
           }
         ];
         features = {
+          "backtrace" = [ "dep:backtrace" ];
+          "data-encoding" = [ "dep:data-encoding" ];
           "default" = [ "tokio-runtime" ];
           "dnssec" = [ "data-encoding" ];
           "dnssec-openssl" = [ "dnssec" "openssl" ];
           "dnssec-ring" = [ "dnssec" "ring" ];
+          "js-sys" = [ "dep:js-sys" ];
           "mdns" = [ "socket2/reuseport" ];
+          "openssl" = [ "dep:openssl" ];
+          "ring" = [ "dep:ring" ];
+          "serde" = [ "dep:serde" ];
           "serde-config" = [ "serde" ];
+          "socket2" = [ "dep:socket2" ];
+          "tokio" = [ "dep:tokio" ];
           "tokio-runtime" = [ "tokio/rt-core" "tokio/udp" "tokio/tcp" "tokio/time" ];
           "wasm-bindgen" = [ "wasm-bindgen-crate" "js-sys" ];
+          "wasm-bindgen-crate" = [ "dep:wasm-bindgen-crate" ];
         };
         resolvedDefaultFeatures = [ "backtrace" "tokio" "tokio-runtime" ];
       };
@@ -7228,10 +7561,23 @@ rec {
           "dns-over-rustls" = [ "dns-over-tls" "rustls" "tokio-rustls" "trust-dns-rustls" "webpki-roots" ];
           "dnssec-openssl" = [ "dnssec" "trust-dns-proto/dnssec-openssl" ];
           "dnssec-ring" = [ "dnssec" "trust-dns-proto/dnssec-ring" ];
+          "ipconfig" = [ "dep:ipconfig" ];
           "mdns" = [ "trust-dns-proto/mdns" ];
+          "resolv-conf" = [ "dep:resolv-conf" ];
+          "rustls" = [ "dep:rustls" ];
+          "serde" = [ "dep:serde" ];
           "serde-config" = [ "serde" "trust-dns-proto/serde-config" ];
           "system-config" = [ "ipconfig" "resolv-conf" ];
+          "tokio" = [ "dep:tokio" ];
+          "tokio-openssl" = [ "dep:tokio-openssl" ];
           "tokio-runtime" = [ "tokio/rt-core" "trust-dns-proto/tokio-runtime" ];
+          "tokio-rustls" = [ "dep:tokio-rustls" ];
+          "tokio-tls" = [ "dep:tokio-tls" ];
+          "trust-dns-https" = [ "dep:trust-dns-https" ];
+          "trust-dns-native-tls" = [ "dep:trust-dns-native-tls" ];
+          "trust-dns-openssl" = [ "dep:trust-dns-openssl" ];
+          "trust-dns-rustls" = [ "dep:trust-dns-rustls" ];
+          "webpki-roots" = [ "dep:webpki-roots" ];
         };
         resolvedDefaultFeatures = [ "backtrace" "default" "ipconfig" "resolv-conf" "system-config" "tokio" "tokio-runtime" ];
       };
@@ -7290,7 +7636,10 @@ rec {
         ];
         features = {
           "default" = [ "std" "hardcoded-data" ];
+          "flame" = [ "dep:flame" ];
           "flame_it" = [ "flame" "flamer" ];
+          "flamer" = [ "dep:flamer" ];
+          "serde" = [ "dep:serde" ];
           "with_serde" = [ "serde" ];
         };
         resolvedDefaultFeatures = [ "default" "hardcoded-data" "std" ];
@@ -7336,7 +7685,10 @@ rec {
           "Manish Goregaokar <manishsmail@gmail.com>"
         ];
         features = {
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
           "rustc-dep-of-std" = [ "std" "core" "compiler_builtins" ];
+          "std" = [ "dep:std" ];
         };
         resolvedDefaultFeatures = [ "default" ];
       };
@@ -7388,8 +7740,12 @@ rec {
           }
         ];
         features = {
+          "encoding" = [ "dep:encoding" ];
           "heap_size" = [ "heapsize" ];
+          "heapsize" = [ "dep:heapsize" ];
           "query_encoding" = [ "encoding" ];
+          "rustc-serialize" = [ "dep:rustc-serialize" ];
+          "serde" = [ "dep:serde" ];
         };
       };
       "url 2.2.2" = rec {
@@ -7418,7 +7774,9 @@ rec {
             packageId = "percent-encoding 2.1.0";
           }
         ];
-
+        features = {
+          "serde" = [ "dep:serde" ];
+        };
       };
       "uuid 0.7.4" = rec {
         crateName = "uuid";
@@ -7439,15 +7797,22 @@ rec {
           }
         ];
         features = {
+          "byteorder" = [ "dep:byteorder" ];
           "const_fn" = [ "nightly" ];
           "default" = [ "std" ];
           "guid" = [ "winapi" ];
+          "md5" = [ "dep:md5" ];
+          "rand" = [ "dep:rand" ];
+          "serde" = [ "dep:serde" ];
+          "sha1" = [ "dep:sha1" ];
+          "slog" = [ "dep:slog" ];
           "stdweb" = [ "rand/stdweb" ];
           "u128" = [ "byteorder" ];
           "v3" = [ "md5" ];
           "v4" = [ "rand" ];
           "v5" = [ "sha1" ];
           "wasm-bindgen" = [ "rand/wasm-bindgen" ];
+          "winapi" = [ "dep:winapi" ];
         };
         resolvedDefaultFeatures = [ "default" "rand" "std" "v4" ];
       };
@@ -7471,12 +7836,18 @@ rec {
         ];
         features = {
           "default" = [ "std" ];
+          "getrandom" = [ "dep:getrandom" ];
           "guid" = [ "winapi" ];
+          "md5" = [ "dep:md5" ];
+          "serde" = [ "dep:serde" ];
+          "sha1" = [ "dep:sha1" ];
+          "slog" = [ "dep:slog" ];
           "stdweb" = [ "getrandom" "getrandom/js" ];
           "v3" = [ "md5" ];
           "v4" = [ "getrandom" ];
           "v5" = [ "sha1" ];
           "wasm-bindgen" = [ "getrandom" "getrandom/js" ];
+          "winapi" = [ "dep:winapi" ];
         };
         resolvedDefaultFeatures = [ "default" "getrandom" "std" "v4" ];
       };
@@ -7484,12 +7855,7 @@ rec {
         crateName = "vaultrs";
         version = "0.6.2";
         edition = "2018";
-        workspace_member = null;
-        src = pkgs.fetchgit {
-          url = "https://github.com/johanot/vaultrs";
-          rev = "786ed1b62de783a3b3facc3e552c2bf152104873";
-          sha256 = "1rwqag3zqh5sflap0kc83ss663xbvkw2s652xaqfzkw0ng38dkwf";
-        };
+        sha256 = "02rxzjmbh582ap49wpkqi1ns3aiy3x3cbrhj9jj270z0624razr6";
         authors = [
           "Joshua Gilman <joshuagilman@gmail.com>"
         ];
@@ -7508,7 +7874,7 @@ rec {
           }
           {
             name = "http";
-            packageId = "http 0.2.7";
+            packageId = "http 0.2.8";
           }
           {
             name = "reqwest";
@@ -7583,6 +7949,8 @@ rec {
         ];
         features = {
           "oidc" = [ "tiny_http" "tokio" ];
+          "tiny_http" = [ "dep:tiny_http" ];
+          "tokio" = [ "dep:tokio" ];
         };
       };
       "vcpkg" = rec {
@@ -7630,6 +7998,7 @@ rec {
         ];
         features = {
           "eders" = [ "serde" ];
+          "serde" = [ "dep:serde" ];
         };
       };
       "version_check" = rec {
@@ -7722,8 +8091,11 @@ rec {
           "The Cranelift Project Developers"
         ];
         features = {
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
           "default" = [ "std" ];
           "rustc-dep-of-std" = [ "compiler_builtins" "core" "rustc-std-workspace-alloc" ];
+          "rustc-std-workspace-alloc" = [ "dep:rustc-std-workspace-alloc" ];
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
@@ -7736,8 +8108,11 @@ rec {
           "The Cranelift Project Developers"
         ];
         features = {
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
           "default" = [ "std" ];
           "rustc-dep-of-std" = [ "compiler_builtins" "core" "rustc-std-workspace-alloc" ];
+          "rustc-std-workspace-alloc" = [ "dep:rustc-std-workspace-alloc" ];
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
@@ -7750,8 +8125,11 @@ rec {
           "The Cranelift Project Developers"
         ];
         features = {
+          "compiler_builtins" = [ "dep:compiler_builtins" ];
+          "core" = [ "dep:core" ];
           "default" = [ "std" ];
           "rustc-dep-of-std" = [ "compiler_builtins" "core" "rustc-std-workspace-alloc" ];
+          "rustc-std-workspace-alloc" = [ "dep:rustc-std-workspace-alloc" ];
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
@@ -7776,7 +8154,9 @@ rec {
         features = {
           "default" = [ "spans" "std" ];
           "enable-interning" = [ "std" ];
+          "serde" = [ "dep:serde" ];
           "serde-serialize" = [ "serde" "serde_json" "std" ];
+          "serde_json" = [ "dep:serde_json" ];
           "spans" = [ "wasm-bindgen-macro/spans" ];
           "strict-macro" = [ "wasm-bindgen-macro/strict-macro" ];
           "xxx_debug_only_print_generated_code" = [ "wasm-bindgen-macro/xxx_debug_only_print_generated_code" ];
@@ -7856,6 +8236,7 @@ rec {
           }
         ];
         features = {
+          "futures-core" = [ "dep:futures-core" ];
           "futures-core-03-stream" = [ "futures-core" ];
         };
       };
@@ -9345,6 +9726,8 @@ rec {
           }
         ];
         features = {
+          "chrono" = [ "dep:chrono" ];
+          "serde" = [ "dep:serde" ];
           "serialization-serde" = [ "transactions" "serde" ];
           "transactions" = [ "winapi/ktmw32" ];
         };
@@ -9365,6 +9748,8 @@ rec {
           }
         ];
         features = {
+          "chrono" = [ "dep:chrono" ];
+          "serde" = [ "dep:serde" ];
           "serialization-serde" = [ "transactions" "serde" ];
           "transactions" = [ "winapi/ktmw32" ];
         };
