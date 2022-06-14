@@ -2,7 +2,7 @@
   description = "faythe";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-21.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
     ci.url = "git+https://gitlab.dbc.dk/platform/bump-o-matic.git";
     ci.inputs.nixpkgs.follows = "nixpkgs";
     ci.inputs.utils.follows = "utils";
