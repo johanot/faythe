@@ -2017,11 +2017,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "std" ];
       };
-      "getrandom 0.2.6" = rec {
+      "getrandom 0.2.7" = rec {
         crateName = "getrandom";
-        version = "0.2.6";
+        version = "0.2.7";
         edition = "2018";
-        sha256 = "1b8588g2z36s1082licl623lclbdz9jp03gnz39bi0qwjnc0rrwv";
+        sha256 = "1ilfnp4yfgb2vjfqwip8l6xfwlbs7dcmmhgnxn8rcqh1lmjaicaf";
         authors = [
           "The Rand Project Developers"
         ];
@@ -2038,7 +2038,7 @@ rec {
           }
           {
             name = "wasi";
-            packageId = "wasi 0.10.0+wasi-snapshot-preview1";
+            packageId = "wasi 0.11.0+wasi-snapshot-preview1";
             target = { target, features }: (target."os" == "wasi");
           }
         ];
@@ -2200,9 +2200,9 @@ rec {
       };
       "hashbrown" = rec {
         crateName = "hashbrown";
-        version = "0.11.2";
-        edition = "2018";
-        sha256 = "0vkjsf5nzs7qcia5ya79j9sq2p1caz4crrncr1675wwyj3ag0pmb";
+        version = "0.12.1";
+        edition = "2021";
+        sha256 = "1hycsz4nbnxcma1lngl66q7hlrwn1scdqdj4jqghiw5bk3w4q3fv";
         authors = [
           "Amanieu d'Antras <amanieu@gmail.com>"
         ];
@@ -2895,13 +2895,9 @@ rec {
       };
       "indexmap" = rec {
         crateName = "indexmap";
-        version = "1.8.2";
-        edition = "2018";
-        sha256 = "0nnaw0whv3xysrpjrz69bsibbscd81rwx63s6f4kbajv1ia2s0g6";
-        authors = [
-          "bluss"
-          "Josh Stone <cuviper@gmail.com>"
-        ];
+        version = "1.9.0";
+        edition = "2021";
+        sha256 = "1cxx6d5zsh3hhp2c3hyv2xyqvgg4zx68jh0ragi68ygxd9v94qvc";
         dependencies = [
           {
             name = "hashbrown";
@@ -3035,9 +3031,9 @@ rec {
       };
       "js-sys" = rec {
         crateName = "js-sys";
-        version = "0.3.57";
+        version = "0.3.58";
         edition = "2018";
-        sha256 = "15rksw2lq0lccb1cfc4zijwibzds0gfz2hq7fnic45yv43w2c6k7";
+        sha256 = "09yw3fn6vj3ilvykh0q7m9fq1k3wfazv24gl5nk3r9r3f5zw3yn3";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -4942,11 +4938,11 @@ rec {
         ];
 
       };
-      "reqwest 0.11.10" = rec {
+      "reqwest 0.11.11" = rec {
         crateName = "reqwest";
-        version = "0.11.10";
+        version = "0.11.11";
         edition = "2018";
-        sha256 = "1ss1ijakw48dgpxaj5a38pk0r3vmzhdgaj842ssfir9m9ymgg8a6";
+        sha256 = "14mz9w3jf2jq1kv3606an637lvrw4npz4fp3xmkcrfq67ydacnmp";
         authors = [
           "Sean McArthur <sean@seanmonstar.com>"
         ];
@@ -4954,7 +4950,6 @@ rec {
           {
             name = "base64";
             packageId = "base64 0.13.0";
-            target = { target, features }: (!(target."arch" == "wasm32"));
           }
           {
             name = "bytes";
@@ -5083,6 +5078,10 @@ rec {
             packageId = "tokio-rustls 0.23.4";
             optional = true;
             target = { target, features }: (!(target."arch" == "wasm32"));
+          }
+          {
+            name = "tower-service";
+            packageId = "tower-service";
           }
           {
             name = "url";
@@ -5505,7 +5504,7 @@ rec {
           }
           {
             name = "reqwest";
-            packageId = "reqwest 0.11.10";
+            packageId = "reqwest 0.11.11";
             optional = true;
             usesDefaultFeatures = false;
           }
@@ -5707,9 +5706,9 @@ rec {
       };
       "rustls-pemfile" = rec {
         crateName = "rustls-pemfile";
-        version = "0.3.0";
+        version = "1.0.0";
         edition = "2018";
-        sha256 = "0q3k136sna6yhq98js7n7lf341w47j6gxzin2lfncz1ajxinvs0y";
+        sha256 = "1afrjj5l8gw8qm7njwf55nrgb8whqyfq56pyb0a0dzw7wyfjqlp7";
         authors = [
           "Joseph Birr-Pixton <jpixton@gmail.com>"
         ];
@@ -7646,9 +7645,9 @@ rec {
       };
       "unicode-ident" = rec {
         crateName = "unicode-ident";
-        version = "1.0.0";
+        version = "1.0.1";
         edition = "2018";
-        sha256 = "1vlksh7rxnkakdc5qiwxix6fng9a5cw9v8dfnkf5xsx1zdlg0anj";
+        sha256 = "131niycgp77aiwvgjdyh47389xfnb7fmlc8ybrxys8v0a0kgxljv";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -7830,7 +7829,7 @@ rec {
         dependencies = [
           {
             name = "getrandom";
-            packageId = "getrandom 0.2.6";
+            packageId = "getrandom 0.2.7";
             optional = true;
           }
         ];
@@ -7878,7 +7877,7 @@ rec {
           }
           {
             name = "reqwest";
-            packageId = "reqwest 0.11.10";
+            packageId = "reqwest 0.11.11";
             usesDefaultFeatures = false;
             features = [ "rustls-tls" ];
           }
@@ -8135,9 +8134,9 @@ rec {
       };
       "wasm-bindgen" = rec {
         crateName = "wasm-bindgen";
-        version = "0.2.80";
+        version = "0.2.81";
         edition = "2018";
-        sha256 = "1b88vhwy2fdskh04wck82d2yczwk9vs2dglz38zmxi87r6bh2dr7";
+        sha256 = "1529jnygv32gwrg55ppm8n9wd8b2biz0la5yyh1a45rs851valvw";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -8165,9 +8164,9 @@ rec {
       };
       "wasm-bindgen-backend" = rec {
         crateName = "wasm-bindgen-backend";
-        version = "0.2.80";
+        version = "0.2.81";
         edition = "2018";
-        sha256 = "1x6kfhvvy74smy2qjd1zaw4q8f9kbq1gacm57lkpk9x3py2l3q2k";
+        sha256 = "02ilqzc1yan8slbdlyzyqklxphrhhr06gg96sysac3shnj5ad4al";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -8209,9 +8208,9 @@ rec {
       };
       "wasm-bindgen-futures" = rec {
         crateName = "wasm-bindgen-futures";
-        version = "0.4.30";
+        version = "0.4.31";
         edition = "2018";
-        sha256 = "1cpkkcjh2pkvsgf00kaxz8aa2fmp3rgzysl8vwslrqbm9gj1sx3g";
+        sha256 = "07zk2d6wx2ibnz2qfpmr540jrbnj2cjglmvycn68liik2zn9r6ny";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -8242,9 +8241,9 @@ rec {
       };
       "wasm-bindgen-macro" = rec {
         crateName = "wasm-bindgen-macro";
-        version = "0.2.80";
+        version = "0.2.81";
         edition = "2018";
-        sha256 = "1xaihb09jxnwld8bipj93c8k9w7ccvkwy4bnzsi86zjdg3zygjhp";
+        sha256 = "1al0bd83si5s84z57w62xdgqwdqnc95n48n028g8zi9bj9vy2hf4";
         procMacro = true;
         authors = [
           "The wasm-bindgen Developers"
@@ -8267,9 +8266,9 @@ rec {
       };
       "wasm-bindgen-macro-support" = rec {
         crateName = "wasm-bindgen-macro-support";
-        version = "0.2.80";
+        version = "0.2.81";
         edition = "2018";
-        sha256 = "02z2xjrwkq1ajmzv42irj79krlkqyprbkcda671gyvvmlk3hvv4r";
+        sha256 = "0j1hbj7snybp9iq262y1j221c3v66n6p8gpmbvsc227nzi2sr53x";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -8304,9 +8303,9 @@ rec {
       };
       "wasm-bindgen-shared" = rec {
         crateName = "wasm-bindgen-shared";
-        version = "0.2.80";
+        version = "0.2.81";
         edition = "2018";
-        sha256 = "0i37ljck1c6l4xypx042ybjcm2lb3xfdjs4lk96rdrfy63svfm6m";
+        sha256 = "1gk1abf8w1bjhhr1a7x1lbj0zadhjd6rrksaxickcpwyv4dr32ba";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -8314,9 +8313,9 @@ rec {
       };
       "web-sys" = rec {
         crateName = "web-sys";
-        version = "0.3.57";
+        version = "0.3.58";
         edition = "2018";
-        sha256 = "10y237lkvxg6w5p39y1bqck2qjiivqc5np5c4jywhw1ccr0yf5vv";
+        sha256 = "140vnw410dx4cbvcs113lzbr5pmwq9fv3wjigpfzinjpxsz99v9g";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -8427,7 +8426,9 @@ rec {
           "GamepadButtonEvent" = [ "Event" "GamepadEvent" ];
           "GamepadEvent" = [ "Event" ];
           "GpuDevice" = [ "EventTarget" ];
+          "GpuOutOfMemoryError" = [ "GpuError" ];
           "GpuUncapturedErrorEvent" = [ "Event" ];
+          "GpuValidationError" = [ "GpuError" ];
           "HashChangeEvent" = [ "Event" ];
           "Hid" = [ "EventTarget" ];
           "HidConnectionEvent" = [ "Event" ];
@@ -8541,6 +8542,7 @@ rec {
           "MediaStreamEvent" = [ "Event" ];
           "MediaStreamTrack" = [ "EventTarget" ];
           "MediaStreamTrackEvent" = [ "Event" ];
+          "MediaStreamTrackGenerator" = [ "EventTarget" "MediaStreamTrack" ];
           "MessageEvent" = [ "Event" ];
           "MessagePort" = [ "EventTarget" ];
           "MidiAccess" = [ "EventTarget" ];
@@ -8745,16 +8747,19 @@ rec {
           "XmlHttpRequest" = [ "EventTarget" "XmlHttpRequestEventTarget" ];
           "XmlHttpRequestEventTarget" = [ "EventTarget" ];
           "XmlHttpRequestUpload" = [ "EventTarget" "XmlHttpRequestEventTarget" ];
-          "Xr" = [ "EventTarget" ];
           "XrBoundedReferenceSpace" = [ "EventTarget" "XrReferenceSpace" "XrSpace" ];
           "XrInputSourceEvent" = [ "Event" ];
           "XrInputSourcesChangeEvent" = [ "Event" ];
+          "XrLayer" = [ "EventTarget" ];
+          "XrPermissionStatus" = [ "EventTarget" "PermissionStatus" ];
           "XrReferenceSpace" = [ "EventTarget" "XrSpace" ];
           "XrReferenceSpaceEvent" = [ "Event" ];
           "XrSession" = [ "EventTarget" ];
           "XrSessionEvent" = [ "Event" ];
           "XrSpace" = [ "EventTarget" ];
+          "XrSystem" = [ "EventTarget" ];
           "XrViewerPose" = [ "XrPose" ];
+          "XrWebGlLayer" = [ "EventTarget" "XrLayer" ];
         };
         resolvedDefaultFeatures = [ "Blob" "BlobPropertyBag" "Crypto" "Event" "EventTarget" "File" "FormData" "Headers" "MessageEvent" "Request" "RequestCredentials" "RequestInit" "RequestMode" "Response" "ServiceWorkerGlobalScope" "Window" "Worker" "WorkerGlobalScope" ];
       };
