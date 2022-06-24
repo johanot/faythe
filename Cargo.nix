@@ -227,9 +227,9 @@ rec {
       };
       "anyhow" = rec {
         crateName = "anyhow";
-        version = "1.0.57";
+        version = "1.0.58";
         edition = "2018";
-        sha256 = "1p4w5a6izznpv0kxwrs6r5kz9khf5dmyck3c3mx6idycim8biy88";
+        sha256 = "014pw61axl4idagjdh9x96b06cy12vqs5599mzi11gnd7h2x41xv";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -1357,9 +1357,9 @@ rec {
       };
       "erased-serde" = rec {
         crateName = "erased-serde";
-        version = "0.3.20";
+        version = "0.3.21";
         edition = "2018";
-        sha256 = "1zbzqr50vj05q0gphygrwls4pldaj4qwp1kxils4ddfhs3c2s4xd";
+        sha256 = "13p1c1risk3v9y3y6lnywm4584lmwrwy2afsmq6acx2mkm917l41";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -2895,9 +2895,9 @@ rec {
       };
       "indexmap" = rec {
         crateName = "indexmap";
-        version = "1.9.0";
+        version = "1.9.1";
         edition = "2021";
-        sha256 = "1cxx6d5zsh3hhp2c3hyv2xyqvgg4zx68jh0ragi68ygxd9v94qvc";
+        sha256 = "07nli1wcz7m81svvig8l5j6vjycjnv9va46lwblgy803ffbmm8qh";
         dependencies = [
           {
             name = "hashbrown";
@@ -3406,11 +3406,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "with-deprecated" ];
       };
-      "mio 0.8.3" = rec {
+      "mio 0.8.4" = rec {
         crateName = "mio";
-        version = "0.8.3";
+        version = "0.8.4";
         edition = "2018";
-        sha256 = "168pqd9v7llhhal1jy5l1k0k8qp0g8hsddv6w1s93n24kc6magbi";
+        sha256 = "1byahxxpnm42djgip44b545i2pr5d7fgyff3a290qfy6qwiirvjp";
         authors = [
           "Carl Lerche <me@carllerche.com>"
           "Thomas de Zeeuw <thomasdezeeuw@gmail.com>"
@@ -4241,9 +4241,9 @@ rec {
       };
       "proc-macro2" = rec {
         crateName = "proc-macro2";
-        version = "1.0.39";
+        version = "1.0.40";
         edition = "2018";
-        sha256 = "0vzm2m7rq6sym9w73ca3hpc5m9wkwm500hyya6bgrdr5j1b2ajy5";
+        sha256 = "1xyazdlnqmnkapjah7mjbanzb0zc4i4z5rgaz0vw75i5xpla35nx";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
           "Alex Crichton <alex@alexcrichton.com>"
@@ -4358,9 +4358,9 @@ rec {
       };
       "quote" = rec {
         crateName = "quote";
-        version = "1.0.18";
+        version = "1.0.20";
         edition = "2018";
-        sha256 = "1lca4xnwdc2sp76bf4n50kifmi5phhxr9520w623mfcksr7bbzm1";
+        sha256 = "015qrb5jf9q0pajx38mfn431gfqn0hv2kc1ssarbqvvpx49g5k9v";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -6265,9 +6265,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.96";
+        version = "1.0.98";
         edition = "2018";
-        sha256 = "1gqymymz4202nfj76dkhr177wmcidch580vzf6w3qi943qjxsj07";
+        sha256 = "1pbklw6fnwwgrkj8qz3wcjfggmn7vmyln44gg0yc5r2dj25fy2n5";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -6733,7 +6733,7 @@ rec {
           }
           {
             name = "mio";
-            packageId = "mio 0.8.3";
+            packageId = "mio 0.8.4";
             optional = true;
           }
           {
@@ -7267,9 +7267,9 @@ rec {
       };
       "tower-service" = rec {
         crateName = "tower-service";
-        version = "0.3.1";
+        version = "0.3.2";
         edition = "2018";
-        sha256 = "1iih764s3f6vlkspfmr72fkrs2lw1v3wiqmc6bd5zq1hdlfzs39n";
+        sha256 = "0lmfzmmvid2yp2l36mbavhmqgsvzqf7r2wiwz73ml4xmwaf1rg5n";
         authors = [
           "Tower Maintainers <team@tower-rs.com>"
         ];
@@ -7358,9 +7358,9 @@ rec {
       };
       "tracing-core" = rec {
         crateName = "tracing-core";
-        version = "0.1.27";
+        version = "0.1.28";
         edition = "2018";
-        sha256 = "08fr2y0nm0as3ar22xw3qspwjfbx1a4byzp8wmf9d93qi1dmj2bp";
+        sha256 = "1rsw94rhkqwsrd45n7pbx21g6myc39hyvanj4brp9wpj76z5hwvv";
         authors = [
           "Tokio Contributors <team@tokio.rs>"
         ];
