@@ -1247,9 +1247,9 @@ rec {
       };
       "either" = rec {
         crateName = "either";
-        version = "1.6.1";
-        edition = "2015";
-        sha256 = "0mwl9vngqf5jvrhmhn9x60kr5hivxyjxbmby2pybncxfqhf4z3g7";
+        version = "1.7.0";
+        edition = "2018";
+        sha256 = "1gl1cybx0rrcvny4rcfl2agqbj6n0vz5bb1ws57sdhmgns3pn41z";
         authors = [
           "bluss"
         ];
@@ -3099,20 +3099,18 @@ rec {
       };
       "linked-hash-map" = rec {
         crateName = "linked-hash-map";
-        version = "0.5.4";
+        version = "0.5.6";
         edition = "2015";
-        sha256 = "1ww8zsraqnvrsknd315481185igwkx5n14xnhq5i8216z65b7fbz";
+        sha256 = "03vpgw7x507g524nx5i1jf5dl8k3kv0fzg8v3ip6qqwbpkqww5q7";
         authors = [
           "Stepan Koltsov <stepan.koltsov@gmail.com>"
           "Andrew Paseltiner <apaseltiner@gmail.com>"
         ];
         features = {
-          "clippy" = [ "dep:clippy" ];
           "heapsize" = [ "dep:heapsize" ];
           "heapsize_impl" = [ "heapsize" ];
           "serde" = [ "dep:serde" ];
-          "serde_impl" = [ "serde" "serde_test" ];
-          "serde_test" = [ "dep:serde_test" ];
+          "serde_impl" = [ "serde" ];
         };
       };
       "lock_api 0.3.4" = rec {
@@ -4151,7 +4149,7 @@ rec {
           }
           {
             name = "smallvec";
-            packageId = "smallvec 1.8.0";
+            packageId = "smallvec 1.9.0";
           }
           {
             name = "windows-sys";
@@ -5995,9 +5993,9 @@ rec {
       };
       "serde_json" = rec {
         crateName = "serde_json";
-        version = "1.0.81";
+        version = "1.0.82";
         edition = "2018";
-        sha256 = "0p7100hlvw4azgcalzf1vgray5cg6b6saqfwb32h7v8s5ary4z4v";
+        sha256 = "19vz3xw0yfaz8al3fskwpngjxr15whv9lnrcanc10zc0rpyw3hl2";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -6141,11 +6139,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
-      "smallvec 1.8.0" = rec {
+      "smallvec 1.9.0" = rec {
         crateName = "smallvec";
-        version = "1.8.0";
+        version = "1.9.0";
         edition = "2018";
-        sha256 = "10zf4fn63p2d6sx8qap3jvyarcfw563308x3431hd4c34r35gpgj";
+        sha256 = "1lfss4vs5z5njm3ac9c499s5m1gphzm5a7gxcbw1zncpjmsdpl1g";
         authors = [
           "The Servo Project Developers"
         ];
@@ -7430,7 +7428,7 @@ rec {
           }
           {
             name = "smallvec";
-            packageId = "smallvec 1.8.0";
+            packageId = "smallvec 1.9.0";
           }
           {
             name = "thiserror";
@@ -7526,7 +7524,7 @@ rec {
           }
           {
             name = "smallvec";
-            packageId = "smallvec 1.8.0";
+            packageId = "smallvec 1.9.0";
           }
           {
             name = "thiserror";
@@ -7655,9 +7653,9 @@ rec {
       };
       "unicode-normalization" = rec {
         crateName = "unicode-normalization";
-        version = "0.1.19";
+        version = "0.1.20";
         edition = "2018";
-        sha256 = "1yabhmg8zlcksda3ajly9hpbzqgbhknxwch8dwkfkaa1569r0ifm";
+        sha256 = "1gbcgz5nqpcn4lq112ss0vf1r6m7yfx5h8f4vrlczf6ahn7ydpl1";
         authors = [
           "kwantam <kwantam@gmail.com>"
           "Manish Goregaokar <manishsmail@gmail.com>"
