@@ -322,9 +322,9 @@ rec {
       };
       "backtrace" = rec {
         crateName = "backtrace";
-        version = "0.3.65";
+        version = "0.3.66";
         edition = "2018";
-        sha256 = "0qggp0d8pbw5vfnpm0r7lrn6wmh5yjiz4yc4bzynb8l26i2pv88i";
+        sha256 = "19yrfx0gprqmzphmf6qv32g93w76ny5g751ks1abdkqnsqcl7f6a";
         authors = [
           "The Rust Project Developers"
         ];
@@ -1097,8 +1097,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "fc8fcd2d5bc7029108418579a2702ed28189c607";
-          sha256 = "1cc6hw021jam389j45fjxmi7hd0df0aq69f2a72v64wg1d0rwhh4";
+          rev = "cbd533fbdb47a2f78715c4292818224c35ca65b6";
+          sha256 = "12zpksqs1abcfwfmlj1ma626ahwjb4nxsf1395816gzjk0sn1lyx";
         };
         dependencies = [
           {
@@ -2556,11 +2556,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "__internal_flaky_tests" "default" "futures-cpupool" "net2" "runtime" "tokio" "tokio-executor" "tokio-reactor" "tokio-tcp" "tokio-threadpool" "tokio-timer" ];
       };
-      "hyper 0.14.19" = rec {
+      "hyper 0.14.20" = rec {
         crateName = "hyper";
-        version = "0.14.19";
+        version = "0.14.20";
         edition = "2018";
-        sha256 = "0kq0nswpxjxkznwsb6dqdy62s0fbn0igh1rdbwvqsa442l9krp22";
+        sha256 = "1b7vm9dzs3hg5a6dk401n4hhg1hqh5r94lj07jh3bqrrbkf2kj82";
         authors = [
           "Sean McArthur <sean@seanmonstar.com>"
         ];
@@ -2682,7 +2682,7 @@ rec {
           }
           {
             name = "hyper";
-            packageId = "hyper 0.14.19";
+            packageId = "hyper 0.14.20";
             usesDefaultFeatures = false;
             features = [ "client" "http1" ];
           }
@@ -2715,7 +2715,7 @@ rec {
         devDependencies = [
           {
             name = "hyper";
-            packageId = "hyper 0.14.19";
+            packageId = "hyper 0.14.20";
             features = [ "full" ];
           }
           {
@@ -2750,7 +2750,7 @@ rec {
           }
           {
             name = "hyper";
-            packageId = "hyper 0.14.19";
+            packageId = "hyper 0.14.20";
             usesDefaultFeatures = false;
             features = [ "client" ];
           }
@@ -2772,7 +2772,7 @@ rec {
         devDependencies = [
           {
             name = "hyper";
-            packageId = "hyper 0.14.19";
+            packageId = "hyper 0.14.20";
             features = [ "full" ];
           }
           {
@@ -3843,9 +3843,9 @@ rec {
       };
       "object" = rec {
         crateName = "object";
-        version = "0.28.4";
+        version = "0.29.0";
         edition = "2018";
-        sha256 = "0964501nlfh806mik3f9v6n05mx74qa0w7byvn0sqpwm5lprhb74";
+        sha256 = "0lzblxwxcih7j4z2cfx9094caax97hlfm9n0y5hlavda6cn8n591";
         dependencies = [
           {
             name = "memchr";
@@ -3879,9 +3879,9 @@ rec {
       };
       "once_cell" = rec {
         crateName = "once_cell";
-        version = "1.12.0";
+        version = "1.13.0";
         edition = "2018";
-        sha256 = "09a2gb4sls2d3762jsps81s5y270465s0ip7cvv5h7qc7zwcw2bp";
+        sha256 = "1qfqvgnwfzzwxd13ybvplzshaqwnjnna9ghcn0zgijaq0zixp9hq";
         authors = [
           "Aleksey Kladov <aleksey.kladov@gmail.com>"
         ];
@@ -4281,7 +4281,7 @@ rec {
           }
           {
             name = "hyper";
-            packageId = "hyper 0.14.19";
+            packageId = "hyper 0.14.20";
             optional = true;
             features = [ "server" ];
           }
@@ -4862,9 +4862,9 @@ rec {
       };
       "regex" = rec {
         crateName = "regex";
-        version = "1.5.6";
+        version = "1.6.0";
         edition = "2018";
-        sha256 = "1wczbykw6fas7359j9lhkkv13dplhiphzrf2ii6dmg5xjiyi4gyq";
+        sha256 = "12wqvyh4i75j7pc8sgvmqh4yy3qaj4inc4alyv1cdf3lf4kb6kjc";
         authors = [
           "The Rust Project Developers"
         ];
@@ -4906,9 +4906,9 @@ rec {
       };
       "regex-syntax" = rec {
         crateName = "regex-syntax";
-        version = "0.6.26";
+        version = "0.6.27";
         edition = "2018";
-        sha256 = "0r6vplrklxq7yx7x4zqf04apr699swbsn6ipv8bk82nwqngdxcs9";
+        sha256 = "0i32nnvyzzkvz1rqp2qyfxrp2170859z8ck37jd63c8irrrppy53";
         authors = [
           "The Rust Project Developers"
         ];
@@ -4986,7 +4986,7 @@ rec {
           }
           {
             name = "hyper";
-            packageId = "hyper 0.14.19";
+            packageId = "hyper 0.14.20";
             usesDefaultFeatures = false;
             target = { target, features }: (!(target."arch" == "wasm32"));
             features = [ "tcp" "http1" "http2" "client" "runtime" ];
@@ -5116,7 +5116,7 @@ rec {
         devDependencies = [
           {
             name = "hyper";
-            packageId = "hyper 0.14.19";
+            packageId = "hyper 0.14.20";
             usesDefaultFeatures = false;
             target = {target, features}: (!(target."arch" == "wasm32"));
             features = [ "tcp" "stream" "http1" "http2" "client" "server" "runtime" ];
@@ -5936,9 +5936,9 @@ rec {
       };
       "serde" = rec {
         crateName = "serde";
-        version = "1.0.137";
+        version = "1.0.138";
         edition = "2015";
-        sha256 = "1l8pynxnmld179a33l044yvkigq3fhiwgx0518a1b0vzqxa8vsk1";
+        sha256 = "0irai0sf2jrrrzyni7bclly5fmk8p77ylzj4qmld3fc6awjccy0m";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -5965,9 +5965,9 @@ rec {
       };
       "serde_derive" = rec {
         crateName = "serde_derive";
-        version = "1.0.137";
+        version = "1.0.138";
         edition = "2015";
-        sha256 = "1gkqhpw86zvppd0lwa8ljzpglwczxq3d7cnkfwirfn9r1jxgl9hz";
+        sha256 = "0z7jns3j63dvavizqap2yw781addf0c629cgp07s3y5fcwa9ngh2";
         procMacro = true;
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
@@ -7326,9 +7326,9 @@ rec {
       };
       "tracing-attributes" = rec {
         crateName = "tracing-attributes";
-        version = "0.1.21";
+        version = "0.1.22";
         edition = "2018";
-        sha256 = "0z2bjwkh0azvxw0fqcn36iy7r33wgaq559xp3n5gk6blav9qlsyc";
+        sha256 = "1qjf90dvc9jiw78bjzb3iqzrhaybypg8nm0n0zhwi6smmy9miiqi";
         procMacro = true;
         authors = [
           "Tokio Contributors <team@tokio.rs>"
@@ -7653,9 +7653,9 @@ rec {
       };
       "unicode-normalization" = rec {
         crateName = "unicode-normalization";
-        version = "0.1.20";
+        version = "0.1.21";
         edition = "2018";
-        sha256 = "1gbcgz5nqpcn4lq112ss0vf1r6m7yfx5h8f4vrlczf6ahn7ydpl1";
+        sha256 = "1rk0zci96pc26sk21nwk5cdkxb3p6bfani0dhaff2smwyz2bsk45";
         authors = [
           "kwantam <kwantam@gmail.com>"
           "Manish Goregaokar <manishsmail@gmail.com>"
