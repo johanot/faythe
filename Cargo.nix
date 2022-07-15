@@ -1540,7 +1540,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
             features = [ "full" ];
           }
           {
@@ -2173,7 +2173,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
             features = [ "io-util" ];
           }
           {
@@ -2191,7 +2191,7 @@ rec {
         devDependencies = [
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
             features = [ "rt-multi-thread" "macros" "sync" "net" ];
           }
         ];
@@ -2200,9 +2200,9 @@ rec {
       };
       "hashbrown" = rec {
         crateName = "hashbrown";
-        version = "0.12.1";
+        version = "0.12.2";
         edition = "2021";
-        sha256 = "1hycsz4nbnxcma1lngl66q7hlrwn1scdqdj4jqghiw5bk3w4q3fv";
+        sha256 = "08k02a6g0z9pb7r7ilq9zbcgxh4k553ds94l6cd2b1akfclqlz30";
         authors = [
           "Amanieu d'Antras <amanieu@gmail.com>"
         ];
@@ -2619,7 +2619,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
             features = [ "sync" ];
           }
           {
@@ -2646,7 +2646,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
             features = [ "fs" "macros" "io-std" "io-util" "rt" "rt-multi-thread" "sync" "time" "test-util" ];
           }
         ];
@@ -2701,7 +2701,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
           }
           {
             name = "tokio-rustls";
@@ -2720,7 +2720,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
             features = [ "io-std" "macros" "net" "rt-multi-thread" ];
           }
         ];
@@ -2761,7 +2761,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
           }
           {
             name = "tokio-rustls";
@@ -2783,7 +2783,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
             features = [ "io-std" "macros" "net" "rt-multi-thread" ];
           }
         ];
@@ -3897,9 +3897,9 @@ rec {
       };
       "openssl" = rec {
         crateName = "openssl";
-        version = "0.10.40";
+        version = "0.10.41";
         edition = "2018";
-        sha256 = "03pbv3ig4ai9whg0znnz9y5fmd7i58fqzb75byraq4f9191sd0gv";
+        sha256 = "1l2vpxq5ln326s64lbacqs4hq6k5yn2zhwqbyby0sj9nagvfp3v1";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
         ];
@@ -3974,9 +3974,9 @@ rec {
       };
       "openssl-sys" = rec {
         crateName = "openssl-sys";
-        version = "0.9.74";
+        version = "0.9.75";
         edition = "2015";
-        sha256 = "1cac9q0sh81grwwwb2758i0dbzqhn4jk6iav9hssiyzm5ls66lw3";
+        sha256 = "0bxlrsfkvryv179na416mvj0s90v9yngkmkkv8y1lm0h4w6bvyg5";
         build = "build/main.rs";
         authors = [
           "Alex Crichton <alex@alexcrichton.com>"
@@ -5066,7 +5066,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
             usesDefaultFeatures = false;
             target = { target, features }: (!(target."arch" == "wasm32"));
             features = [ "net" "time" ];
@@ -5129,7 +5129,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
             usesDefaultFeatures = false;
             target = {target, features}: (!(target."arch" == "wasm32"));
             features = [ "macros" "rt-multi-thread" ];
@@ -5936,9 +5936,9 @@ rec {
       };
       "serde" = rec {
         crateName = "serde";
-        version = "1.0.138";
+        version = "1.0.139";
         edition = "2015";
-        sha256 = "0irai0sf2jrrrzyni7bclly5fmk8p77ylzj4qmld3fc6awjccy0m";
+        sha256 = "1mna8q52l2qc2ipqw8jwbxplrs7d7sdqbq5f8j5scnp4i6wfnw81";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -5965,9 +5965,9 @@ rec {
       };
       "serde_derive" = rec {
         crateName = "serde_derive";
-        version = "1.0.138";
+        version = "1.0.139";
         edition = "2015";
-        sha256 = "0z7jns3j63dvavizqap2yw781addf0c629cgp07s3y5fcwa9ngh2";
+        sha256 = "1yrxaj1jviv99z14mn59sppmbgc4szhzp3xdb2pk4yfyq4q347fw";
         procMacro = true;
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
@@ -6704,11 +6704,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "io-driver" "iovec" "lazy_static" "mio" "rt-core" "slab" "tcp" "time" "udp" ];
       };
-      "tokio 1.19.2" = rec {
+      "tokio 1.20.0" = rec {
         crateName = "tokio";
-        version = "1.19.2";
+        version = "1.20.0";
         edition = "2018";
-        sha256 = "0f8lrcbd28czq4sycj3s1irnzd6zx6cr5f7r431n5pc6cvnm46n5";
+        sha256 = "0bm8dixschjm20b6500s8d5k1gm6514znvj4amrdp5n2lk7w7bjp";
         authors = [
           "Tokio Contributors <team@tokio.rs>"
         ];
@@ -6776,7 +6776,13 @@ rec {
             optional = true;
             usesDefaultFeatures = false;
             target = { target, features }: (target."windows" or false);
-            features = [ "std" "winsock2" "mswsock" "handleapi" "ws2ipdef" "ws2tcpip" ];
+            features = [ "std" ];
+          }
+        ];
+        buildDependencies = [
+          {
+            name = "autocfg";
+            packageId = "autocfg 1.1.0";
           }
         ];
         devDependencies = [
@@ -6799,14 +6805,14 @@ rec {
           "macros" = [ "tokio-macros" ];
           "memchr" = [ "dep:memchr" ];
           "mio" = [ "dep:mio" ];
-          "net" = [ "libc" "mio/os-poll" "mio/os-ext" "mio/net" "socket2" "winapi/namedpipeapi" ];
+          "net" = [ "libc" "mio/os-poll" "mio/os-ext" "mio/net" "socket2" "winapi/fileapi" "winapi/handleapi" "winapi/namedpipeapi" "winapi/winbase" "winapi/winnt" "winapi/minwindef" ];
           "num_cpus" = [ "dep:num_cpus" ];
           "once_cell" = [ "dep:once_cell" ];
           "parking_lot" = [ "dep:parking_lot" ];
-          "process" = [ "bytes" "once_cell" "libc" "mio/os-poll" "mio/os-ext" "mio/net" "signal-hook-registry" "winapi/threadpoollegacyapiset" ];
+          "process" = [ "bytes" "once_cell" "libc" "mio/os-poll" "mio/os-ext" "mio/net" "signal-hook-registry" "winapi/handleapi" "winapi/processthreadsapi" "winapi/threadpoollegacyapiset" "winapi/winbase" "winapi/winnt" "winapi/minwindef" ];
           "rt" = [ "once_cell" ];
           "rt-multi-thread" = [ "num_cpus" "rt" ];
-          "signal" = [ "once_cell" "libc" "mio/os-poll" "mio/net" "mio/os-ext" "signal-hook-registry" "winapi/consoleapi" ];
+          "signal" = [ "once_cell" "libc" "mio/os-poll" "mio/net" "mio/os-ext" "signal-hook-registry" "winapi/consoleapi" "winapi/wincon" "winapi/minwindef" ];
           "signal-hook-registry" = [ "dep:signal-hook-registry" ];
           "socket2" = [ "dep:socket2" ];
           "test-util" = [ "rt" "sync" "time" ];
@@ -7013,7 +7019,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
           }
           {
             name = "webpki";
@@ -7023,7 +7029,7 @@ rec {
         devDependencies = [
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
             features = [ "full" ];
           }
         ];
@@ -7047,7 +7053,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
           }
           {
             name = "webpki";
@@ -7057,7 +7063,7 @@ rec {
         devDependencies = [
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
             features = [ "full" ];
           }
         ];
@@ -7228,7 +7234,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
             features = [ "sync" ];
           }
           {
@@ -7242,7 +7248,7 @@ rec {
         devDependencies = [
           {
             name = "tokio";
-            packageId = "tokio 1.19.2";
+            packageId = "tokio 1.20.0";
             features = [ "full" ];
           }
         ];
@@ -8815,10 +8821,10 @@ rec {
       };
       "webpki-roots" = rec {
         crateName = "webpki-roots";
-        version = "0.22.3";
+        version = "0.22.4";
         edition = "2018";
         crateBin = [];
-        sha256 = "1gy1pd7v534skxvr0j4nmlgpgb7fdwy4ibbhsamwh8y82n2dxn24";
+        sha256 = "1bsdn08zs1k0hdgd350z5695s7v97vi1cy7d095c59k6sgq61izi";
         authors = [
           "Joseph Birr-Pixton <jpixton@gmail.com>"
         ];
@@ -8877,7 +8883,7 @@ rec {
         features = {
           "debug" = [ "impl-debug" ];
         };
-        resolvedDefaultFeatures = [ "consoleapi" "errhandlingapi" "fileapi" "handleapi" "impl-debug" "impl-default" "minwinbase" "minwindef" "mswsock" "namedpipeapi" "ntdef" "ntsecapi" "ntstatus" "processenv" "profileapi" "std" "sysinfoapi" "threadpoollegacyapiset" "timezoneapi" "winbase" "wincon" "winerror" "winnt" "winreg" "winsock2" "ws2def" "ws2ipdef" "ws2tcpip" "wtypesbase" ];
+        resolvedDefaultFeatures = [ "consoleapi" "errhandlingapi" "fileapi" "handleapi" "impl-debug" "impl-default" "minwinbase" "minwindef" "namedpipeapi" "ntdef" "ntsecapi" "ntstatus" "processenv" "processthreadsapi" "profileapi" "std" "sysinfoapi" "threadpoollegacyapiset" "timezoneapi" "winbase" "wincon" "winerror" "winnt" "winreg" "winsock2" "ws2def" "ws2ipdef" "ws2tcpip" "wtypesbase" ];
       };
       "winapi-build" = rec {
         crateName = "winapi-build";

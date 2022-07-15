@@ -12,11 +12,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1657104029,
-        "narHash": "sha256-balMz8fQzl9I4ASd6w9oRoUqjOEo3BiqKJ3vMemuqdk=",
+        "lastModified": 1657644233,
+        "narHash": "sha256-3/JKXqE+PsZ9lM95PvI//NrxRCFIQdjv+8ssQiWxxy8=",
         "ref": "master",
-        "rev": "d842f60e872c5e723222f63f2252d9bb6917c13e",
-        "revCount": 39,
+        "rev": "057eaafa6f2ebdcde15e7f52bf4237989282c0e1",
+        "revCount": 41,
         "type": "git",
         "url": "https://gitlab.dbc.dk/platform/bump-o-matic.git"
       },
@@ -77,11 +77,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1657123678,
-        "narHash": "sha256-cowVkScfUPlbBXUp08MeVk/wgm9E1zp1uC+9no2hZYw=",
+        "lastModified": 1657693803,
+        "narHash": "sha256-G++2CJ9u0E7NNTAi9n5G8TdDmGJXcIjkJ3NF8cetQB8=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "316b762afdb9e142a803f29c49a88b4a47db80ee",
+        "rev": "365e1b3a859281cf11b94f87231adeabbdd878a2",
         "type": "github"
       },
       "original": {
