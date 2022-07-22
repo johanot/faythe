@@ -508,11 +508,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
-      "bytes 1.1.0" = rec {
+      "bytes 1.2.0" = rec {
         crateName = "bytes";
-        version = "1.1.0";
+        version = "1.2.0";
         edition = "2018";
-        sha256 = "1y70b249m02lfp0j6565b29kviapj4xsl9whamcqwddnp9kjv1y4";
+        sha256 = "03hk3qsjkafww539rl01j0pxq7nrmcimfwd0crhf2rsy1i5dxczh";
         authors = [
           "Carl Lerche <me@carllerche.com>"
           "Sean McArthur <sean@seanmonstar.com>"
@@ -2053,9 +2053,9 @@ rec {
       };
       "gimli" = rec {
         crateName = "gimli";
-        version = "0.26.1";
+        version = "0.26.2";
         edition = "2018";
-        sha256 = "1m0vi36ypv4gx9gzcw6y456yqnlypizhwlcqrmg6vkwd0lnkgk3q";
+        sha256 = "0pafbk64rznibgnvfidhm1pqxd14a5s9m50yvsgnbv38b8n0w0r2";
         features = {
           "alloc" = [ "dep:alloc" ];
           "compiler_builtins" = [ "dep:compiler_builtins" ];
@@ -2137,7 +2137,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes 1.1.0";
+            packageId = "bytes 1.2.0";
           }
           {
             name = "fnv";
@@ -2200,9 +2200,9 @@ rec {
       };
       "hashbrown" = rec {
         crateName = "hashbrown";
-        version = "0.12.2";
+        version = "0.12.3";
         edition = "2021";
-        sha256 = "08k02a6g0z9pb7r7ilq9zbcgxh4k553ds94l6cd2b1akfclqlz30";
+        sha256 = "1268ka4750pyg2pbgsr43f0289l5zah4arir2k4igx5a8c6fg7la";
         authors = [
           "Amanieu d'Antras <amanieu@gmail.com>"
         ];
@@ -2325,7 +2325,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes 1.1.0";
+            packageId = "bytes 1.2.0";
           }
           {
             name = "fnv";
@@ -2380,7 +2380,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes 1.1.0";
+            packageId = "bytes 1.2.0";
           }
           {
             name = "http";
@@ -2567,7 +2567,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes 1.1.0";
+            packageId = "bytes 1.2.0";
           }
           {
             name = "futures-channel";
@@ -4951,7 +4951,7 @@ rec {
           }
           {
             name = "bytes";
-            packageId = "bytes 1.1.0";
+            packageId = "bytes 1.2.0";
           }
           {
             name = "encoding_rs";
@@ -5494,7 +5494,7 @@ rec {
           }
           {
             name = "bytes";
-            packageId = "bytes 1.1.0";
+            packageId = "bytes 1.2.0";
           }
           {
             name = "http";
@@ -5936,9 +5936,9 @@ rec {
       };
       "serde" = rec {
         crateName = "serde";
-        version = "1.0.139";
+        version = "1.0.140";
         edition = "2015";
-        sha256 = "1mna8q52l2qc2ipqw8jwbxplrs7d7sdqbq5f8j5scnp4i6wfnw81";
+        sha256 = "00rvf8c4wq1a3wac2z0cqa0ny7zgciqhz1mmkqv7qywnqx15m1gw";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -5965,9 +5965,9 @@ rec {
       };
       "serde_derive" = rec {
         crateName = "serde_derive";
-        version = "1.0.139";
+        version = "1.0.140";
         edition = "2015";
-        sha256 = "1yrxaj1jviv99z14mn59sppmbgc4szhzp3xdb2pk4yfyq4q347fw";
+        sha256 = "1nh59a45hcbidkal0nfln76l5xfkyby9jl5j3hgviqwzddij48bg";
         procMacro = true;
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
@@ -6106,11 +6106,17 @@ rec {
       };
       "slab" = rec {
         crateName = "slab";
-        version = "0.4.6";
+        version = "0.4.7";
         edition = "2018";
-        sha256 = "0cmvcy9ppsh3dz8mi6jljx7bxyknvgpas4aid2ayxk1vjpz3qw7b";
+        sha256 = "1vyw3rkdfdfkzfa1mh83s237sll8v5kazfwxma60bq4b59msf526";
         authors = [
           "Carl Lerche <me@carllerche.com>"
+        ];
+        buildDependencies = [
+          {
+            name = "autocfg";
+            packageId = "autocfg 1.1.0";
+          }
         ];
         features = {
           "default" = [ "std" ];
@@ -6715,7 +6721,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes 1.1.0";
+            packageId = "bytes 1.2.0";
             optional = true;
           }
           {
@@ -7218,7 +7224,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes 1.1.0";
+            packageId = "bytes 1.2.0";
           }
           {
             name = "futures-core";
@@ -7649,9 +7655,9 @@ rec {
       };
       "unicode-ident" = rec {
         crateName = "unicode-ident";
-        version = "1.0.1";
+        version = "1.0.2";
         edition = "2018";
-        sha256 = "131niycgp77aiwvgjdyh47389xfnb7fmlc8ybrxys8v0a0kgxljv";
+        sha256 = "19zf5lzhzix2s35lp5lckdy90sw0kfi5a0ii49d24dcj7yk1pihm";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -7869,7 +7875,7 @@ rec {
           }
           {
             name = "bytes";
-            packageId = "bytes 1.1.0";
+            packageId = "bytes 1.2.0";
           }
           {
             name = "derive_builder";
