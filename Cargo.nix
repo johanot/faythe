@@ -1097,8 +1097,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "cbd533fbdb47a2f78715c4292818224c35ca65b6";
-          sha256 = "12zpksqs1abcfwfmlj1ma626ahwjb4nxsf1395816gzjk0sn1lyx";
+          rev = "cb59726443f58ec5d34f69d382572472854d78ff";
+          sha256 = "0pbj14m0a9bf4sy6716p4lyvavsw45cas5n2zbggw5gd1av6dfg1";
         };
         dependencies = [
           {
@@ -1438,9 +1438,9 @@ rec {
       };
       "fastrand" = rec {
         crateName = "fastrand";
-        version = "1.7.0";
+        version = "1.8.0";
         edition = "2018";
-        sha256 = "1pvci54f2cm69ybc308z213xdybgqpvf2pcvq1kch69mwp7g1z63";
+        sha256 = "16b4z2rig7zmyxw1hsiydv89h9wcshilds13dfpc919kmb7hg957";
         authors = [
           "Stjepan Glavina <stjepang@gmail.com>"
         ];
@@ -1540,7 +1540,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
             features = [ "full" ];
           }
           {
@@ -2173,7 +2173,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
             features = [ "io-util" ];
           }
           {
@@ -2191,7 +2191,7 @@ rec {
         devDependencies = [
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
             features = [ "rt-multi-thread" "macros" "sync" "net" ];
           }
         ];
@@ -2619,7 +2619,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
             features = [ "sync" ];
           }
           {
@@ -2646,7 +2646,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
             features = [ "fs" "macros" "io-std" "io-util" "rt" "rt-multi-thread" "sync" "time" "test-util" ];
           }
         ];
@@ -2701,7 +2701,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
           }
           {
             name = "tokio-rustls";
@@ -2720,7 +2720,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
             features = [ "io-std" "macros" "net" "rt-multi-thread" ];
           }
         ];
@@ -2761,7 +2761,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
           }
           {
             name = "tokio-rustls";
@@ -2783,7 +2783,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
             features = [ "io-std" "macros" "net" "rt-multi-thread" ];
           }
         ];
@@ -3031,9 +3031,9 @@ rec {
       };
       "js-sys" = rec {
         crateName = "js-sys";
-        version = "0.3.58";
+        version = "0.3.59";
         edition = "2018";
-        sha256 = "09yw3fn6vj3ilvykh0q7m9fq1k3wfazv24gl5nk3r9r3f5zw3yn3";
+        sha256 = "1ciq26qw03j7b5ni78cj1igq0bn2famzvl8n6ksqlkxk22mm3115";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -4144,7 +4144,7 @@ rec {
           }
           {
             name = "redox_syscall";
-            packageId = "redox_syscall 0.2.13";
+            packageId = "redox_syscall 0.2.16";
             target = { target, features }: (target."os" == "redox");
           }
           {
@@ -4239,9 +4239,9 @@ rec {
       };
       "proc-macro2" = rec {
         crateName = "proc-macro2";
-        version = "1.0.40";
+        version = "1.0.42";
         edition = "2018";
-        sha256 = "1xyazdlnqmnkapjah7mjbanzb0zc4i4z5rgaz0vw75i5xpla35nx";
+        sha256 = "16y8maaixxaij77xk1krws51f4lpwz9y6vg9w3b35kyqy5jyjy62";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
           "Alex Crichton <alex@alexcrichton.com>"
@@ -4843,11 +4843,11 @@ rec {
         ];
 
       };
-      "redox_syscall 0.2.13" = rec {
+      "redox_syscall 0.2.16" = rec {
         crateName = "redox_syscall";
-        version = "0.2.13";
+        version = "0.2.16";
         edition = "2018";
-        sha256 = "0hpgwvgjlg1j9z7bjf5y18fkd8ag7y4znhqxg85hnpp5qz25pwk2";
+        sha256 = "16jicm96kjyzm802cxdd1k9jmcph0db1a4lhslcnhjsvhp0mhnpv";
         libName = "syscall";
         authors = [
           "Jeremy Soller <jackpot51@gmail.com>"
@@ -5066,7 +5066,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
             usesDefaultFeatures = false;
             target = { target, features }: (!(target."arch" == "wasm32"));
             features = [ "net" "time" ];
@@ -5129,7 +5129,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
             usesDefaultFeatures = false;
             target = {target, features}: (!(target."arch" == "wasm32"));
             features = [ "macros" "rt-multi-thread" ];
@@ -6364,7 +6364,7 @@ rec {
           }
           {
             name = "redox_syscall";
-            packageId = "redox_syscall 0.2.13";
+            packageId = "redox_syscall 0.2.16";
             target = { target, features }: (target."os" == "redox");
           }
           {
@@ -6710,11 +6710,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "io-driver" "iovec" "lazy_static" "mio" "rt-core" "slab" "tcp" "time" "udp" ];
       };
-      "tokio 1.20.0" = rec {
+      "tokio 1.20.1" = rec {
         crateName = "tokio";
-        version = "1.20.0";
+        version = "1.20.1";
         edition = "2018";
-        sha256 = "0bm8dixschjm20b6500s8d5k1gm6514znvj4amrdp5n2lk7w7bjp";
+        sha256 = "10d5n2r6dw0xcrg7jrzqs2xmq77d14j3ndhy0kfp8ivx7bv2b0vs";
         authors = [
           "Tokio Contributors <team@tokio.rs>"
         ];
@@ -7025,7 +7025,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
           }
           {
             name = "webpki";
@@ -7035,7 +7035,7 @@ rec {
         devDependencies = [
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
             features = [ "full" ];
           }
         ];
@@ -7059,7 +7059,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
           }
           {
             name = "webpki";
@@ -7069,7 +7069,7 @@ rec {
         devDependencies = [
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
             features = [ "full" ];
           }
         ];
@@ -7240,7 +7240,7 @@ rec {
           }
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
             features = [ "sync" ];
           }
           {
@@ -7254,7 +7254,7 @@ rec {
         devDependencies = [
           {
             name = "tokio";
-            packageId = "tokio 1.20.0";
+            packageId = "tokio 1.20.1";
             features = [ "full" ];
           }
         ];
@@ -8144,9 +8144,9 @@ rec {
       };
       "wasm-bindgen" = rec {
         crateName = "wasm-bindgen";
-        version = "0.2.81";
+        version = "0.2.82";
         edition = "2018";
-        sha256 = "1529jnygv32gwrg55ppm8n9wd8b2biz0la5yyh1a45rs851valvw";
+        sha256 = "0zaz3wfbzkycsmad2frcdqrvbffclk234j6mkj6nqw64yvim4xpw";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -8174,9 +8174,9 @@ rec {
       };
       "wasm-bindgen-backend" = rec {
         crateName = "wasm-bindgen-backend";
-        version = "0.2.81";
+        version = "0.2.82";
         edition = "2018";
-        sha256 = "02ilqzc1yan8slbdlyzyqklxphrhhr06gg96sysac3shnj5ad4al";
+        sha256 = "0gxcqr6k772m867lvvz42a8vvnswz0fnnn5rf4lxassq0m4d8b36";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -8186,12 +8186,12 @@ rec {
             packageId = "bumpalo";
           }
           {
-            name = "lazy_static";
-            packageId = "lazy_static";
-          }
-          {
             name = "log";
             packageId = "log";
+          }
+          {
+            name = "once_cell";
+            packageId = "once_cell";
           }
           {
             name = "proc-macro2";
@@ -8218,9 +8218,9 @@ rec {
       };
       "wasm-bindgen-futures" = rec {
         crateName = "wasm-bindgen-futures";
-        version = "0.4.31";
+        version = "0.4.32";
         edition = "2018";
-        sha256 = "07zk2d6wx2ibnz2qfpmr540jrbnj2cjglmvycn68liik2zn9r6ny";
+        sha256 = "1badc8xgs3spnh1sbiqscsnq0sb029cyib2lbggwv2hz38ignxps";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -8251,9 +8251,9 @@ rec {
       };
       "wasm-bindgen-macro" = rec {
         crateName = "wasm-bindgen-macro";
-        version = "0.2.81";
+        version = "0.2.82";
         edition = "2018";
-        sha256 = "1al0bd83si5s84z57w62xdgqwdqnc95n48n028g8zi9bj9vy2hf4";
+        sha256 = "00n6abwrvh0j63nqr95fff1h698r7c1rr10j2pxis1qj60yz2q5j";
         procMacro = true;
         authors = [
           "The wasm-bindgen Developers"
@@ -8276,9 +8276,9 @@ rec {
       };
       "wasm-bindgen-macro-support" = rec {
         crateName = "wasm-bindgen-macro-support";
-        version = "0.2.81";
+        version = "0.2.82";
         edition = "2018";
-        sha256 = "0j1hbj7snybp9iq262y1j221c3v66n6p8gpmbvsc227nzi2sr53x";
+        sha256 = "1nl0gcsm2zsfvj5z1ka8bkvgm0ma443vk6ljq8b95dyrpmafds2v";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -8313,9 +8313,9 @@ rec {
       };
       "wasm-bindgen-shared" = rec {
         crateName = "wasm-bindgen-shared";
-        version = "0.2.81";
+        version = "0.2.82";
         edition = "2018";
-        sha256 = "1gk1abf8w1bjhhr1a7x1lbj0zadhjd6rrksaxickcpwyv4dr32ba";
+        sha256 = "02hlb8hvfxzvgbqdhc2fh20xrb027sraacb5zyai1mf7sc5xv635";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -8323,9 +8323,9 @@ rec {
       };
       "web-sys" = rec {
         crateName = "web-sys";
-        version = "0.3.58";
+        version = "0.3.59";
         edition = "2018";
-        sha256 = "140vnw410dx4cbvcs113lzbr5pmwq9fv3wjigpfzinjpxsz99v9g";
+        sha256 = "189m6gbnxk1fmhn0ipq40pj3q6hbf8sj0sxqgqcj654lgyr5l1gd";
         authors = [
           "The wasm-bindgen Developers"
         ];
@@ -8629,6 +8629,7 @@ rec {
           "SpeechSynthesisUtterance" = [ "EventTarget" ];
           "StereoPannerNode" = [ "AudioNode" "EventTarget" ];
           "StorageEvent" = [ "Event" ];
+          "SubmitEvent" = [ "Event" ];
           "SvgAnimateElement" = [ "Element" "EventTarget" "Node" "SvgAnimationElement" "SvgElement" ];
           "SvgAnimateMotionElement" = [ "Element" "EventTarget" "Node" "SvgAnimationElement" "SvgElement" ];
           "SvgAnimateTransformElement" = [ "Element" "EventTarget" "Node" "SvgAnimationElement" "SvgElement" ];
