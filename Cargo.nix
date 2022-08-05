@@ -227,9 +227,9 @@ rec {
       };
       "anyhow" = rec {
         crateName = "anyhow";
-        version = "1.0.58";
+        version = "1.0.59";
         edition = "2018";
-        sha256 = "014pw61axl4idagjdh9x96b06cy12vqs5599mzi11gnd7h2x41xv";
+        sha256 = "1ydd2c8s471fk2sn474l9p823d4skwssifd2yf3bwdqicm31y7y9";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -241,9 +241,9 @@ rec {
       };
       "async-trait" = rec {
         crateName = "async-trait";
-        version = "0.1.56";
+        version = "0.1.57";
         edition = "2018";
-        sha256 = "05lpn4164icjwarh2ax8whj0fzkkxz8cahps5l5snbkxyqlqikwn";
+        sha256 = "0vw256zb104ni4lw0r5j3jdws54r9n01mvl8gs6pacmwp1348ikn";
         procMacro = true;
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
@@ -508,11 +508,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
-      "bytes 1.2.0" = rec {
+      "bytes 1.2.1" = rec {
         crateName = "bytes";
-        version = "1.2.0";
+        version = "1.2.1";
         edition = "2018";
-        sha256 = "03hk3qsjkafww539rl01j0pxq7nrmcimfwd0crhf2rsy1i5dxczh";
+        sha256 = "1nsni0jbx1048inbrarn3hz6zxd000pp0rac2mr07s7xf1m7p2pc";
         authors = [
           "Carl Lerche <me@carllerche.com>"
           "Sean McArthur <sean@seanmonstar.com>"
@@ -567,18 +567,14 @@ rec {
       };
       "chrono" = rec {
         crateName = "chrono";
-        version = "0.4.19";
-        edition = "2015";
-        sha256 = "0wyfl6c00vhfl562spnfcna3zkw8jqvcp652m9iskhl8j26dc2k7";
-        authors = [
-          "Kang Seonghoon <public+rust@mearie.org>"
-          "Brandon W Maister <quodlibetor@gmail.com>"
-        ];
+        version = "0.4.20";
+        edition = "2018";
+        sha256 = "1w3sy61i0vn0k2rsgy0m48djr3x7yq796v1g6sda1axr0j1289v1";
         dependencies = [
           {
-            name = "libc";
-            packageId = "libc";
-            optional = true;
+            name = "js-sys";
+            packageId = "js-sys";
+            target = { target, features }: ((target."arch" == "wasm32") && (!((target."os" == "emscripten") || (target."os" == "wasi"))));
           }
           {
             name = "num-integer";
@@ -596,6 +592,11 @@ rec {
             optional = true;
           }
           {
+            name = "wasm-bindgen";
+            packageId = "wasm-bindgen";
+            target = { target, features }: ((target."arch" == "wasm32") && (!((target."os" == "emscripten") || (target."os" == "wasi"))));
+          }
+          {
             name = "winapi";
             packageId = "winapi 0.3.9";
             optional = true;
@@ -604,21 +605,20 @@ rec {
           }
         ];
         features = {
-          "clock" = [ "libc" "std" "winapi" ];
+          "__internal_bench" = [ "criterion" ];
+          "clock" = [ "std" "winapi" ];
+          "criterion" = [ "dep:criterion" ];
           "default" = [ "clock" "std" "oldtime" ];
-          "js-sys" = [ "dep:js-sys" ];
-          "libc" = [ "dep:libc" ];
           "oldtime" = [ "time" ];
           "pure-rust-locales" = [ "dep:pure-rust-locales" ];
+          "rkyv" = [ "dep:rkyv" ];
           "rustc-serialize" = [ "dep:rustc-serialize" ];
           "serde" = [ "dep:serde" ];
           "time" = [ "dep:time" ];
           "unstable-locales" = [ "pure-rust-locales" "alloc" ];
-          "wasm-bindgen" = [ "dep:wasm-bindgen" ];
-          "wasmbind" = [ "wasm-bindgen" "js-sys" ];
           "winapi" = [ "dep:winapi" ];
         };
-        resolvedDefaultFeatures = [ "clock" "default" "libc" "oldtime" "std" "time" "winapi" ];
+        resolvedDefaultFeatures = [ "clock" "default" "oldtime" "std" "time" "winapi" ];
       };
       "clap" = rec {
         crateName = "clap";
@@ -1097,8 +1097,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "cb59726443f58ec5d34f69d382572472854d78ff";
-          sha256 = "0pbj14m0a9bf4sy6716p4lyvavsw45cas5n2zbggw5gd1av6dfg1";
+          rev = "817c939979d70d9aad3a69c0256c364a83755fc0";
+          sha256 = "183wrwnmvp37mxkknrwxcpam4dvb2fizg2mkprr1rsghk866vdyq";
         };
         dependencies = [
           {
@@ -1357,9 +1357,9 @@ rec {
       };
       "erased-serde" = rec {
         crateName = "erased-serde";
-        version = "0.3.21";
+        version = "0.3.22";
         edition = "2018";
-        sha256 = "13p1c1risk3v9y3y6lnywm4584lmwrwy2afsmq6acx2mkm917l41";
+        sha256 = "087hysr6h1h529ynj0a1al39w1lh326yzlnlgf2ra3xd2bkh0c00";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -2137,7 +2137,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes 1.2.0";
+            packageId = "bytes 1.2.1";
           }
           {
             name = "fnv";
@@ -2325,7 +2325,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes 1.2.0";
+            packageId = "bytes 1.2.1";
           }
           {
             name = "fnv";
@@ -2333,7 +2333,7 @@ rec {
           }
           {
             name = "itoa";
-            packageId = "itoa 1.0.2";
+            packageId = "itoa 1.0.3";
           }
         ];
 
@@ -2380,7 +2380,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes 1.2.0";
+            packageId = "bytes 1.2.1";
           }
           {
             name = "http";
@@ -2567,7 +2567,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes 1.2.0";
+            packageId = "bytes 1.2.1";
           }
           {
             name = "futures-channel";
@@ -2606,7 +2606,7 @@ rec {
           }
           {
             name = "itoa";
-            packageId = "itoa 1.0.2";
+            packageId = "itoa 1.0.3";
           }
           {
             name = "pin-project-lite";
@@ -3019,11 +3019,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
-      "itoa 1.0.2" = rec {
+      "itoa 1.0.3" = rec {
         crateName = "itoa";
-        version = "1.0.2";
+        version = "1.0.3";
         edition = "2018";
-        sha256 = "13ap85z7slvma9c36bzi7h5j66dm5sxm4a2g7wiwxbsh826nfb0i";
+        sha256 = "0m7773c6lb61c20gp81a0pac8sh8w473m4rck0x247zyfi3gi2kc";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -3083,9 +3083,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.126";
+        version = "0.2.127";
         edition = "2015";
-        sha256 = "0diqlpap4pq81284368vffjwvp9jg9hp2x03s7hlk2yj3icmm79l";
+        sha256 = "16q0bfrr5xkm0hck20g43s1d0ds0bnwm2pxmn7lr393gf2j72pjh";
         authors = [
           "The Rust Project Developers"
         ];
@@ -4239,9 +4239,9 @@ rec {
       };
       "proc-macro2" = rec {
         crateName = "proc-macro2";
-        version = "1.0.42";
+        version = "1.0.43";
         edition = "2018";
-        sha256 = "16y8maaixxaij77xk1krws51f4lpwz9y6vg9w3b35kyqy5jyjy62";
+        sha256 = "1avvpf4qki8mg2na60yr3afbsfl5p6vllac6516xgwy93g3a4b0a";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
           "Alex Crichton <alex@alexcrichton.com>"
@@ -4356,9 +4356,9 @@ rec {
       };
       "quote" = rec {
         crateName = "quote";
-        version = "1.0.20";
+        version = "1.0.21";
         edition = "2018";
-        sha256 = "015qrb5jf9q0pajx38mfn431gfqn0hv2kc1ssarbqvvpx49g5k9v";
+        sha256 = "0yai5cyd9h95n7hkwjcx8ig3yv0hindmz5gm60g9dmm7fzrlir5v";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -4951,7 +4951,7 @@ rec {
           }
           {
             name = "bytes";
-            packageId = "bytes 1.2.0";
+            packageId = "bytes 1.2.1";
           }
           {
             name = "encoding_rs";
@@ -5494,7 +5494,7 @@ rec {
           }
           {
             name = "bytes";
-            packageId = "bytes 1.2.0";
+            packageId = "bytes 1.2.1";
           }
           {
             name = "http";
@@ -5704,12 +5704,9 @@ rec {
       };
       "rustls-pemfile" = rec {
         crateName = "rustls-pemfile";
-        version = "1.0.0";
+        version = "1.0.1";
         edition = "2018";
-        sha256 = "1afrjj5l8gw8qm7njwf55nrgb8whqyfq56pyb0a0dzw7wyfjqlp7";
-        authors = [
-          "Joseph Birr-Pixton <jpixton@gmail.com>"
-        ];
+        sha256 = "0mdxhxp73vxh5pqk5nx2xdxg1z1xkn1yzrc6inh5mh7qagzswr08";
         dependencies = [
           {
             name = "base64";
@@ -5720,9 +5717,9 @@ rec {
       };
       "ryu" = rec {
         crateName = "ryu";
-        version = "1.0.10";
+        version = "1.0.11";
         edition = "2018";
-        sha256 = "15960rzj6jkjhxrjfr3kid2hbnia84s6h8l1ga7vkla9rwmgkxpk";
+        sha256 = "02czvxrxhi2gmamw25drdvkfkkk9xd9758bpnk0s30mfyggsn0a5";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -5936,9 +5933,9 @@ rec {
       };
       "serde" = rec {
         crateName = "serde";
-        version = "1.0.140";
+        version = "1.0.142";
         edition = "2015";
-        sha256 = "00rvf8c4wq1a3wac2z0cqa0ny7zgciqhz1mmkqv7qywnqx15m1gw";
+        sha256 = "1qpyympfvmkmqi0jbsd71kbwqgsg57izc3fhw4hv5dkgj4vw9475";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -5965,9 +5962,9 @@ rec {
       };
       "serde_derive" = rec {
         crateName = "serde_derive";
-        version = "1.0.140";
+        version = "1.0.142";
         edition = "2015";
-        sha256 = "1nh59a45hcbidkal0nfln76l5xfkyby9jl5j3hgviqwzddij48bg";
+        sha256 = "0bnciicgb929l10s19p5q020il8y5ipyrky273sh5gms17cbid9l";
         procMacro = true;
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
@@ -5993,9 +5990,9 @@ rec {
       };
       "serde_json" = rec {
         crateName = "serde_json";
-        version = "1.0.82";
+        version = "1.0.83";
         edition = "2018";
-        sha256 = "19vz3xw0yfaz8al3fskwpngjxr15whv9lnrcanc10zc0rpyw3hl2";
+        sha256 = "19ymnc0rvm7pacy22dq99ngxhnpyxg7bv7gj3srpb7i7r3ih9p9q";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -6003,7 +6000,7 @@ rec {
         dependencies = [
           {
             name = "itoa";
-            packageId = "itoa 1.0.2";
+            packageId = "itoa 1.0.3";
           }
           {
             name = "ryu";
@@ -6074,7 +6071,7 @@ rec {
           }
           {
             name = "itoa";
-            packageId = "itoa 1.0.2";
+            packageId = "itoa 1.0.3";
           }
           {
             name = "ryu";
@@ -6269,9 +6266,9 @@ rec {
       };
       "syn" = rec {
         crateName = "syn";
-        version = "1.0.98";
+        version = "1.0.99";
         edition = "2018";
-        sha256 = "1pbklw6fnwwgrkj8qz3wcjfggmn7vmyln44gg0yc5r2dj25fy2n5";
+        sha256 = "04xba78p559nl737llv7nqcwm723dp6ah5bbp0h5w1amqrpfznsq";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -6419,9 +6416,9 @@ rec {
       };
       "thiserror" = rec {
         crateName = "thiserror";
-        version = "1.0.31";
+        version = "1.0.32";
         edition = "2018";
-        sha256 = "16h6d602kmjilbfw28zma22wnh03klqba82n4rv7zlkk4girz0mx";
+        sha256 = "154ry4l3h9nv3ikb6l9y5yxndrr0p7krpizl641dqjkngxmmixpm";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -6435,9 +6432,9 @@ rec {
       };
       "thiserror-impl" = rec {
         crateName = "thiserror-impl";
-        version = "1.0.31";
+        version = "1.0.32";
         edition = "2018";
-        sha256 = "16npm1s1cv9kxkk7is7blnayfnf41hny46gqprc4c916ws4vr5h3";
+        sha256 = "08bc1x36izsg7ps5s9yrpj80mf0av2jlbcgirm4h2zjhaidzrfhj";
         procMacro = true;
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
@@ -6721,7 +6718,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes 1.2.0";
+            packageId = "bytes 1.2.1";
             optional = true;
           }
           {
@@ -7224,7 +7221,7 @@ rec {
         dependencies = [
           {
             name = "bytes";
-            packageId = "bytes 1.2.0";
+            packageId = "bytes 1.2.1";
           }
           {
             name = "futures-core";
@@ -7287,9 +7284,9 @@ rec {
       };
       "tracing" = rec {
         crateName = "tracing";
-        version = "0.1.35";
+        version = "0.1.36";
         edition = "2018";
-        sha256 = "0q01jipgap393wr0s7ijm01nnmhqbcxk9q4f5ajl978blqdf6054";
+        sha256 = "01s3qsm1jfz4h4l401lhy8j2yfds45kpb234l447v9k0pmkrbkig";
         authors = [
           "Eliza Weisman <eliza@buoyant.io>"
           "Tokio Contributors <team@tokio.rs>"
@@ -7368,9 +7365,9 @@ rec {
       };
       "tracing-core" = rec {
         crateName = "tracing-core";
-        version = "0.1.28";
+        version = "0.1.29";
         edition = "2018";
-        sha256 = "1rsw94rhkqwsrd45n7pbx21g6myc39hyvanj4brp9wpj76z5hwvv";
+        sha256 = "1xr2dqar64fj4y43vy0xvaxs6n3xssd3z0jbf408lmbn60qa9vjs";
         authors = [
           "Tokio Contributors <team@tokio.rs>"
         ];
@@ -7655,9 +7652,9 @@ rec {
       };
       "unicode-ident" = rec {
         crateName = "unicode-ident";
-        version = "1.0.2";
+        version = "1.0.3";
         edition = "2018";
-        sha256 = "19zf5lzhzix2s35lp5lckdy90sw0kfi5a0ii49d24dcj7yk1pihm";
+        sha256 = "1bqswc96ws8l6k7xx56dg521a3l5imi3mhlcz7rsi6a92mxb7xf4";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -7875,7 +7872,7 @@ rec {
           }
           {
             name = "bytes";
-            packageId = "bytes 1.2.0";
+            packageId = "bytes 1.2.1";
           }
           {
             name = "derive_builder";
