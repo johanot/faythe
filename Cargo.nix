@@ -202,6 +202,22 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "std" ];
       };
+      "android_system_properties" = rec {
+        crateName = "android_system_properties";
+        version = "0.1.4";
+        edition = "2018";
+        sha256 = "17mahdmxq7gq6qyibpjhprcdl8mgh815884lwyiiq4jycghp5vfp";
+        authors = [
+          "Nicolas Silva <nical@fastmail.com>"
+        ];
+        dependencies = [
+          {
+            name = "libc";
+            packageId = "libc";
+          }
+        ];
+
+      };
       "ansi_term" = rec {
         crateName = "ansi_term";
         version = "0.12.1";
@@ -227,9 +243,9 @@ rec {
       };
       "anyhow" = rec {
         crateName = "anyhow";
-        version = "1.0.59";
+        version = "1.0.61";
         edition = "2018";
-        sha256 = "1ydd2c8s471fk2sn474l9p823d4skwssifd2yf3bwdqicm31y7y9";
+        sha256 = "1a7r79x2gsjr97a1q278i253xl6cdsrzdnpna71alrn0nlmkb2sh";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -567,10 +583,16 @@ rec {
       };
       "chrono" = rec {
         crateName = "chrono";
-        version = "0.4.20";
+        version = "0.4.21";
         edition = "2018";
-        sha256 = "1w3sy61i0vn0k2rsgy0m48djr3x7yq796v1g6sda1axr0j1289v1";
+        sha256 = "1sy879843w9hxkzv78yf78q878fcy0hxqdmp7b5y6m1q1hs5ywiz";
         dependencies = [
+          {
+            name = "iana-time-zone";
+            packageId = "iana-time-zone";
+            optional = true;
+            target = { target, features }: (!((target."os" == "emscripten") || (target."os" == "wasi") || (target."os" == "solaris")));
+          }
           {
             name = "js-sys";
             packageId = "js-sys";
@@ -606,9 +628,10 @@ rec {
         ];
         features = {
           "__internal_bench" = [ "criterion" ];
-          "clock" = [ "std" "winapi" ];
+          "clock" = [ "std" "winapi" "iana-time-zone" ];
           "criterion" = [ "dep:criterion" ];
           "default" = [ "clock" "std" "oldtime" ];
+          "iana-time-zone" = [ "dep:iana-time-zone" ];
           "oldtime" = [ "time" ];
           "pure-rust-locales" = [ "dep:pure-rust-locales" ];
           "rkyv" = [ "dep:rkyv" ];
@@ -618,7 +641,7 @@ rec {
           "unstable-locales" = [ "pure-rust-locales" "alloc" ];
           "winapi" = [ "dep:winapi" ];
         };
-        resolvedDefaultFeatures = [ "clock" "default" "oldtime" "std" "time" "winapi" ];
+        resolvedDefaultFeatures = [ "clock" "default" "iana-time-zone" "oldtime" "std" "time" "winapi" ];
       };
       "clap" = rec {
         crateName = "clap";
@@ -1097,8 +1120,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "817c939979d70d9aad3a69c0256c364a83755fc0";
-          sha256 = "183wrwnmvp37mxkknrwxcpam4dvb2fizg2mkprr1rsghk866vdyq";
+          rev = "5e66e1b4ea2a713bc73d632bd121f362e8341316";
+          sha256 = "068jsc0p0cr6wqgndq7hwjxabssc6jlxpcf18qsmgra57kgnpp1d";
         };
         dependencies = [
           {
@@ -2835,6 +2858,45 @@ rec {
           "vendored" = [ "native-tls/vendored" ];
         };
       };
+      "iana-time-zone" = rec {
+        crateName = "iana-time-zone";
+        version = "0.1.44";
+        edition = "2018";
+        sha256 = "0jxd7nk9f7q6lwvi811jl0p3z6vnvzmpavp6bgf2m8plgkbgg340";
+        authors = [
+          "Andrew Straw <strawman@astraw.com>"
+        ];
+        dependencies = [
+          {
+            name = "android_system_properties";
+            packageId = "android_system_properties";
+            target = { target, features }: (target."os" == "android");
+          }
+          {
+            name = "core-foundation-sys";
+            packageId = "core-foundation-sys";
+            target = { target, features }: ((target."os" == "macos") || (target."os" == "ios"));
+          }
+          {
+            name = "js-sys";
+            packageId = "js-sys";
+            target = { target, features }: (target."arch" == "wasm32");
+          }
+          {
+            name = "wasm-bindgen";
+            packageId = "wasm-bindgen";
+            target = { target, features }: (target."arch" == "wasm32");
+          }
+          {
+            name = "winapi";
+            packageId = "winapi 0.3.9";
+            target = { target, features }: (target."os" == "windows");
+            features = [ "activation" "combaseapi" "objbase" "roapi" "winerror" "winstring" ];
+          }
+        ];
+        features = {
+        };
+      };
       "ident_case" = rec {
         crateName = "ident_case";
         version = "1.0.1";
@@ -3083,9 +3145,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.127";
+        version = "0.2.131";
         edition = "2015";
-        sha256 = "16q0bfrr5xkm0hck20g43s1d0ds0bnwm2pxmn7lr393gf2j72pjh";
+        sha256 = "0h3a0yxfdn6xny5z981z6anjxcj18i9x20zw0afa7gyf5j1b9hq4";
         authors = [
           "The Rust Project Developers"
         ];
@@ -5933,9 +5995,9 @@ rec {
       };
       "serde" = rec {
         crateName = "serde";
-        version = "1.0.142";
+        version = "1.0.143";
         edition = "2015";
-        sha256 = "1qpyympfvmkmqi0jbsd71kbwqgsg57izc3fhw4hv5dkgj4vw9475";
+        sha256 = "0ls54n526mbqw324h3y62whl54fdbad4vmn6ym7zf909nzaybs2k";
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
           "David Tolnay <dtolnay@gmail.com>"
@@ -5962,9 +6024,9 @@ rec {
       };
       "serde_derive" = rec {
         crateName = "serde_derive";
-        version = "1.0.142";
+        version = "1.0.143";
         edition = "2015";
-        sha256 = "0bnciicgb929l10s19p5q020il8y5ipyrky273sh5gms17cbid9l";
+        sha256 = "14c3p1d87mswxfnz6ly7ah20sscvwpslgfc5dg167vksapgfin6k";
         procMacro = true;
         authors = [
           "Erick Tryzelaar <erick.tryzelaar@gmail.com>"
@@ -8887,7 +8949,7 @@ rec {
         features = {
           "debug" = [ "impl-debug" ];
         };
-        resolvedDefaultFeatures = [ "consoleapi" "errhandlingapi" "fileapi" "handleapi" "impl-debug" "impl-default" "minwinbase" "minwindef" "namedpipeapi" "ntdef" "ntsecapi" "ntstatus" "processenv" "processthreadsapi" "profileapi" "std" "sysinfoapi" "threadpoollegacyapiset" "timezoneapi" "winbase" "wincon" "winerror" "winnt" "winreg" "winsock2" "ws2def" "ws2ipdef" "ws2tcpip" "wtypesbase" ];
+        resolvedDefaultFeatures = [ "activation" "combaseapi" "consoleapi" "errhandlingapi" "fileapi" "handleapi" "impl-debug" "impl-default" "minwinbase" "minwindef" "namedpipeapi" "ntdef" "ntsecapi" "ntstatus" "objbase" "processenv" "processthreadsapi" "profileapi" "roapi" "std" "sysinfoapi" "threadpoollegacyapiset" "timezoneapi" "winbase" "wincon" "winerror" "winnt" "winreg" "winsock2" "winstring" "ws2def" "ws2ipdef" "ws2tcpip" "wtypesbase" ];
       };
       "winapi-build" = rec {
         crateName = "winapi-build";
