@@ -1,4 +1,4 @@
 {
   "acme-lib 0.8.1 (git+https://github.com/DBCDK/acme-lib?branch=v0.8.1-reqwest#84a3b8ccf58660d33984fe0e8ff04c9b46de9ad8)": "0jkavyqcpnm6dx6scx366ha1pigffzm3k48dzqifc22g86mpgw5i",
-  "dbc-rust-modules 0.1.0 (git+https://github.com/dbcdk/rust-modules?branch=main#817c939979d70d9aad3a69c0256c364a83755fc0)": "183wrwnmvp37mxkknrwxcpam4dvb2fizg2mkprr1rsghk866vdyq"
+  "dbc-rust-modules 0.1.0 (git+https://github.com/dbcdk/rust-modules?branch=main#5e66e1b4ea2a713bc73d632bd121f362e8341316)": "068jsc0p0cr6wqgndq7hwjxabssc6jlxpcf18qsmgra57kgnpp1d"
 }
