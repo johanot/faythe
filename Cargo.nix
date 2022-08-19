@@ -243,9 +243,9 @@ rec {
       };
       "anyhow" = rec {
         crateName = "anyhow";
-        version = "1.0.61";
+        version = "1.0.62";
         edition = "2018";
-        sha256 = "1a7r79x2gsjr97a1q278i253xl6cdsrzdnpna71alrn0nlmkb2sh";
+        sha256 = "01fk28gm3yyhzmp7rn69hx1r19gsjrf02rrpxq0v5rs5rk9d918l";
         authors = [
           "David Tolnay <dtolnay@gmail.com>"
         ];
@@ -455,9 +455,9 @@ rec {
       };
       "bumpalo" = rec {
         crateName = "bumpalo";
-        version = "3.10.0";
-        edition = "2018";
-        sha256 = "1qrx6sg13yxljk1yr705j5wg34iiy3531by1hqrpiihl8qhvvk1p";
+        version = "3.11.0";
+        edition = "2021";
+        sha256 = "0pcfy89hpmixns4qqd4swbhsnvn3mkah0w229wijq3fj30hq5bf1";
         authors = [
           "Nick Fitzgerald <fitzgen@gmail.com>"
         ];
@@ -583,19 +583,20 @@ rec {
       };
       "chrono" = rec {
         crateName = "chrono";
-        version = "0.4.21";
+        version = "0.4.22";
         edition = "2018";
-        sha256 = "1sy879843w9hxkzv78yf78q878fcy0hxqdmp7b5y6m1q1hs5ywiz";
+        sha256 = "1w8ykn9gay819zdwrsz353px580x279xxnrlg6fsi8xa3yrx3m5z";
         dependencies = [
           {
             name = "iana-time-zone";
             packageId = "iana-time-zone";
             optional = true;
-            target = { target, features }: (!((target."os" == "emscripten") || (target."os" == "wasi") || (target."os" == "solaris")));
+            features = [ "fallback" ];
           }
           {
             name = "js-sys";
             packageId = "js-sys";
+            optional = true;
             target = { target, features }: ((target."arch" == "wasm32") && (!((target."os" == "emscripten") || (target."os" == "wasi"))));
           }
           {
@@ -616,6 +617,7 @@ rec {
           {
             name = "wasm-bindgen";
             packageId = "wasm-bindgen";
+            optional = true;
             target = { target, features }: ((target."arch" == "wasm32") && (!((target."os" == "emscripten") || (target."os" == "wasi"))));
           }
           {
@@ -630,8 +632,9 @@ rec {
           "__internal_bench" = [ "criterion" ];
           "clock" = [ "std" "winapi" "iana-time-zone" ];
           "criterion" = [ "dep:criterion" ];
-          "default" = [ "clock" "std" "oldtime" ];
+          "default" = [ "clock" "std" "oldtime" "wasmbind" ];
           "iana-time-zone" = [ "dep:iana-time-zone" ];
+          "js-sys" = [ "dep:js-sys" ];
           "oldtime" = [ "time" ];
           "pure-rust-locales" = [ "dep:pure-rust-locales" ];
           "rkyv" = [ "dep:rkyv" ];
@@ -639,9 +642,11 @@ rec {
           "serde" = [ "dep:serde" ];
           "time" = [ "dep:time" ];
           "unstable-locales" = [ "pure-rust-locales" "alloc" ];
+          "wasm-bindgen" = [ "dep:wasm-bindgen" ];
+          "wasmbind" = [ "wasm-bindgen" "js-sys" ];
           "winapi" = [ "dep:winapi" ];
         };
-        resolvedDefaultFeatures = [ "clock" "default" "iana-time-zone" "oldtime" "std" "time" "winapi" ];
+        resolvedDefaultFeatures = [ "clock" "default" "iana-time-zone" "js-sys" "oldtime" "std" "time" "wasm-bindgen" "wasmbind" "winapi" ];
       };
       "clap" = rec {
         crateName = "clap";
@@ -1120,8 +1125,8 @@ rec {
         workspace_member = null;
         src = pkgs.fetchgit {
           url = "https://github.com/dbcdk/rust-modules";
-          rev = "5e66e1b4ea2a713bc73d632bd121f362e8341316";
-          sha256 = "068jsc0p0cr6wqgndq7hwjxabssc6jlxpcf18qsmgra57kgnpp1d";
+          rev = "cfb4c299acb7de7aacc67332fa956d053c7f3b75";
+          sha256 = "0n0lmdfhi2g51rhl3wis31zvi33fl7cnvf633516whjdzzn7lk0z";
         };
         dependencies = [
           {
@@ -1270,9 +1275,9 @@ rec {
       };
       "either" = rec {
         crateName = "either";
-        version = "1.7.0";
+        version = "1.8.0";
         edition = "2018";
-        sha256 = "1gl1cybx0rrcvny4rcfl2agqbj6n0vz5bb1ws57sdhmgns3pn41z";
+        sha256 = "15z70yaivlkpx27vzv99ibf8d2x5jp24yn69y0xi20w86v4c3rch";
         authors = [
           "bluss"
         ];
@@ -1744,11 +1749,11 @@ rec {
         };
         resolvedDefaultFeatures = [ "default" "use_std" "with-deprecated" ];
       };
-      "futures 0.3.21" = rec {
+      "futures 0.3.23" = rec {
         crateName = "futures";
-        version = "0.3.21";
+        version = "0.3.23";
         edition = "2018";
-        sha256 = "17id2zvn2acny759indn6yj2acfa6lhkwzaidxr2pqfiaigycgzp";
+        sha256 = "1yl1yjjy4ad7ckhb27j2yy2vdj06pg1253ymz8sydkxanrxfjc5b";
         dependencies = [
           {
             name = "futures-channel";
@@ -1801,9 +1806,9 @@ rec {
       };
       "futures-channel" = rec {
         crateName = "futures-channel";
-        version = "0.3.21";
+        version = "0.3.23";
         edition = "2018";
-        sha256 = "0420lz2fmxa356ax1rp2sqi7b27ykfhvq4w9f1sla4hlp7j3q263";
+        sha256 = "18fakviglagvqn8myi3vqrv3vn0bpf988cs02yzlbmygvp5m5z1b";
         dependencies = [
           {
             name = "futures-core";
@@ -1828,9 +1833,9 @@ rec {
       };
       "futures-core" = rec {
         crateName = "futures-core";
-        version = "0.3.21";
+        version = "0.3.23";
         edition = "2018";
-        sha256 = "1lqhc6mqklh5bmkpr77p42lqwjj8gaskk5ba2p3kl1z4nw2gs28c";
+        sha256 = "058ii8sbxmf20cy5wvqkd0mppvgw21mlf8irdj9kb0nki2pfvb6j";
         features = {
           "default" = [ "std" ];
           "std" = [ "alloc" ];
@@ -1865,9 +1870,9 @@ rec {
       };
       "futures-io" = rec {
         crateName = "futures-io";
-        version = "0.3.21";
+        version = "0.3.23";
         edition = "2018";
-        sha256 = "0swn29fysas36ikk5aw55104fi98117amvgxw9g96pjs5ab4ah7w";
+        sha256 = "1r9829x3y4a98ksvw4jm9jp67njylfyd59jmw8x6m8ims336z9lk";
         features = {
           "default" = [ "std" ];
         };
@@ -1875,9 +1880,9 @@ rec {
       };
       "futures-macro" = rec {
         crateName = "futures-macro";
-        version = "0.3.21";
+        version = "0.3.23";
         edition = "2018";
-        sha256 = "04pmj5xfk5rdhlj69wc7w3zvdg3xardg8srig96lszrk00wf3h9k";
+        sha256 = "0p84r80c3ys94l6f0iflysf6pd8ly53b4sknyb6f5smh6bjwrf8d";
         procMacro = true;
         dependencies = [
           {
@@ -1898,9 +1903,9 @@ rec {
       };
       "futures-sink" = rec {
         crateName = "futures-sink";
-        version = "0.3.21";
+        version = "0.3.23";
         edition = "2018";
-        sha256 = "0s58gx5yw1a21xviw2qgc0wzk225vgn4kbzddrp141m3kw9kw5i1";
+        sha256 = "0rb79vnbgbz0pmf78kbiphvppyb3mrsccr00kgyzfb3mx4gsw2ya";
         features = {
           "default" = [ "std" ];
           "std" = [ "alloc" ];
@@ -1909,9 +1914,9 @@ rec {
       };
       "futures-task" = rec {
         crateName = "futures-task";
-        version = "0.3.21";
+        version = "0.3.23";
         edition = "2018";
-        sha256 = "0skpiz2ljisywajv79p70yapfwhkqhb39wxy3f09v47mdfbnmijp";
+        sha256 = "01jkvifc3l2accz0cvl1c7i4q4vj2bxi7pjr9ni5ch0zjcxwcbw4";
         features = {
           "default" = [ "std" ];
           "std" = [ "alloc" ];
@@ -1920,9 +1925,9 @@ rec {
       };
       "futures-util" = rec {
         crateName = "futures-util";
-        version = "0.3.21";
+        version = "0.3.23";
         edition = "2018";
-        sha256 = "0sh3wqi8p36csjffy0irq8nlx9shqxp7z4dsih6bknarsvaspdyq";
+        sha256 = "0xwmb945qb8wbxza325pik2y6z4k2w0ahz6726f24h73f5a8m0ph";
         dependencies = [
           {
             name = "futures-channel";
@@ -2148,11 +2153,11 @@ rec {
         features = {
         };
       };
-      "h2 0.3.13" = rec {
+      "h2 0.3.14" = rec {
         crateName = "h2";
-        version = "0.3.13";
+        version = "0.3.14";
         edition = "2018";
-        sha256 = "0msasdyv0n7avs5i1csjrs0rvdsp4k5z3fwl8rd53jbzcdnjra1p";
+        sha256 = "1gihmz4bwrh9xmr6222dqhi90gcvdizxhp42n757rb11ry92b8sw";
         authors = [
           "Carl Lerche <me@carllerche.com>"
           "Sean McArthur <sean@seanmonstar.com>"
@@ -2608,7 +2613,7 @@ rec {
           }
           {
             name = "h2";
-            packageId = "h2 0.3.13";
+            packageId = "h2 0.3.14";
             optional = true;
           }
           {
@@ -2860,9 +2865,9 @@ rec {
       };
       "iana-time-zone" = rec {
         crateName = "iana-time-zone";
-        version = "0.1.44";
+        version = "0.1.46";
         edition = "2018";
-        sha256 = "0jxd7nk9f7q6lwvi811jl0p3z6vnvzmpavp6bgf2m8plgkbgg340";
+        sha256 = "0085cn8kqndxlds6lzx8lqfa9dp0fb6y0gzfsca2cs4rh0rzsaxd";
         authors = [
           "Andrew Straw <strawman@astraw.com>"
         ];
@@ -2896,6 +2901,7 @@ rec {
         ];
         features = {
         };
+        resolvedDefaultFeatures = [ "fallback" ];
       };
       "ident_case" = rec {
         crateName = "ident_case";
@@ -3145,9 +3151,9 @@ rec {
       };
       "libc" = rec {
         crateName = "libc";
-        version = "0.2.131";
+        version = "0.2.132";
         edition = "2015";
-        sha256 = "0h3a0yxfdn6xny5z981z6anjxcj18i9x20zw0afa7gyf5j1b9hq4";
+        sha256 = "199vm5mz5gmd73lx07g06g2d9kl1qrd4dcky2bdrcfhw6kjy8wc3";
         authors = [
           "The Rust Project Developers"
         ];
@@ -3941,9 +3947,9 @@ rec {
       };
       "once_cell" = rec {
         crateName = "once_cell";
-        version = "1.13.0";
+        version = "1.13.1";
         edition = "2018";
-        sha256 = "1qfqvgnwfzzwxd13ybvplzshaqwnjnna9ghcn0zgijaq0zixp9hq";
+        sha256 = "0kjyjf8yhm1rv5af0f0g7y66mzdy1l1865mr9sw76jbb43d68j07";
         authors = [
           "Aleksey Kladov <aleksey.kladov@gmail.com>"
         ];
@@ -5034,7 +5040,7 @@ rec {
           }
           {
             name = "h2";
-            packageId = "h2 0.3.13";
+            packageId = "h2 0.3.14";
             target = { target, features }: (!(target."arch" == "wasm32"));
           }
           {
@@ -5889,9 +5895,9 @@ rec {
       };
       "security-framework" = rec {
         crateName = "security-framework";
-        version = "2.6.1";
-        edition = "2018";
-        sha256 = "1p0hgqba3h2glm7mgp5d45l2gpmh28kn5vddlfa032mg5wblzh9d";
+        version = "2.7.0";
+        edition = "2021";
+        sha256 = "0v1m0vchbibfr1l0pqiyscp0y7h7f7vkjmy52cc67xjah2bvph9b";
         authors = [
           "Steven Fackler <sfackler@gmail.com>"
           "Kornel <kornel@geekhood.net>"
@@ -7477,7 +7483,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.3.21";
+            packageId = "futures 0.3.23";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -7518,7 +7524,7 @@ rec {
         devDependencies = [
           {
             name = "futures";
-            packageId = "futures 0.3.21";
+            packageId = "futures 0.3.23";
             usesDefaultFeatures = false;
             features = [ "std" "executor" ];
           }
@@ -7565,7 +7571,7 @@ rec {
           }
           {
             name = "futures";
-            packageId = "futures 0.3.21";
+            packageId = "futures 0.3.23";
             usesDefaultFeatures = false;
             features = [ "std" ];
           }
@@ -7615,7 +7621,7 @@ rec {
         devDependencies = [
           {
             name = "futures";
-            packageId = "futures 0.3.21";
+            packageId = "futures 0.3.23";
             usesDefaultFeatures = false;
             features = [ "std" "executor" ];
           }
