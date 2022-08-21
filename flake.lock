@@ -3,6 +3,7 @@
     "ci": {
       "inputs": {
         "gomod2nix": "gomod2nix",
+        "mavenix": "mavenix",
         "nixpkgs": [
           "nixpkgs"
         ],
@@ -11,11 +12,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1641896535,
-        "narHash": "sha256-gNbNjc7TOu47gdFPFiauKbJhwDN4clpCfPRorPRuJIg=",
+        "lastModified": 1657644233,
+        "narHash": "sha256-3/JKXqE+PsZ9lM95PvI//NrxRCFIQdjv+8ssQiWxxy8=",
         "ref": "master",
-        "rev": "4af469b063108020481fe3d83844c42580aba855",
-        "revCount": 28,
+        "rev": "057eaafa6f2ebdcde15e7f52bf4237989282c0e1",
+        "revCount": 41,
         "type": "git",
         "url": "https://gitlab.dbc.dk/platform/bump-o-matic.git"
       },
@@ -26,51 +27,66 @@
     },
     "gomod2nix": {
       "inputs": {
-        "nixpkgs": "nixpkgs",
-        "utils": "utils"
+        "nixpkgs": [
+          "ci",
+          "nixpkgs"
+        ],
+        "utils": [
+          "ci",
+          "utils"
+        ]
       },
       "locked": {
-        "lastModified": 1617032337,
-        "narHash": "sha256-BTmMxdIJyjOvOpNOaExcyvmJKI9OuhpWyXfOK164Epc=",
+        "lastModified": 1654019497,
+        "narHash": "sha256-yj53tEaOAJoZ1iEBbZ4TArpgAsLZnmivfr4eD0xF52c=",
         "owner": "tweag",
         "repo": "gomod2nix",
-        "rev": "c78d7b9f15a24eba95fbc228509f513c83709d8b",
+        "rev": "71c797eb0d83f33de7e0247b3ffe7120d98c6b49",
         "type": "github"
       },
       "original": {
         "owner": "tweag",
         "repo": "gomod2nix",
+        "type": "github"
+      }
+    },
+    "mavenix": {
+      "inputs": {
+        "nixpkgs": [
+          "ci",
+          "nixpkgs"
+        ],
+        "utils": [
+          "ci",
+          "utils"
+        ]
+      },
+      "locked": {
+        "lastModified": 1643802645,
+        "narHash": "sha256-BynM25iwp/l3FyrcHqiNJdDxvN6IxSM3/zkFR6PD3B0=",
+        "owner": "nix-community",
+        "repo": "mavenix",
+        "rev": "ce9ddfd7f361190e8e8dcfaf6b8282eebbb3c7cb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "mavenix",
         "type": "github"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1643805626,
-        "narHash": "sha256-AXLDVMG+UaAGsGSpOtQHPIKB+IZ0KSd9WS77aanGzgc=",
+        "lastModified": 1660749083,
+        "narHash": "sha256-GHLFMGH+r3OmI4tV0x/RtxN7DkHcH2ZOhK8uzQeSLiY=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "554d2d8aa25b6e583575459c297ec23750adb6cb",
+        "rev": "a55a7db823959cf509d55325201f1864af4574b9",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1643788601,
-        "narHash": "sha256-6l5Ax44pC/Oo/Muj5Y/NA27Pd38Wty/7GtGSSmYNug4=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "f6ddd55d5f9d5eca08df138c248008c1ba73ecec",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-21.11",
+        "ref": "nixos-22.05",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -78,32 +94,17 @@
     "root": {
       "inputs": {
         "ci": "ci",
-        "nixpkgs": "nixpkgs_2",
-        "utils": "utils_2"
+        "nixpkgs": "nixpkgs",
+        "utils": "utils"
       }
     },
     "utils": {
       "locked": {
-        "lastModified": 1642700792,
-        "narHash": "sha256-XqHrk7hFb+zBvRg6Ghl+AZDq03ov6OshJLiSWOoX5es=",
+        "lastModified": 1659877975,
+        "narHash": "sha256-zllb8aq3YO3h8B/U0/J1WBgAL8EX5yWf5pMj3G0NAmc=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "846b2ae0fc4cc943637d3d1def4454213e203cba",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "utils_2": {
-      "locked": {
-        "lastModified": 1642700792,
-        "narHash": "sha256-XqHrk7hFb+zBvRg6Ghl+AZDq03ov6OshJLiSWOoX5es=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "846b2ae0fc4cc943637d3d1def4454213e203cba",
+        "rev": "c0e246b9b83f637f4681389ecabcb2681b4f3af0",
         "type": "github"
       },
       "original": {

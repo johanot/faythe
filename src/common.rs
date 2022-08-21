@@ -1,22 +1,25 @@
-extern crate regex;
 extern crate openssl;
+extern crate regex;
 
-use acme_lib::persist::Persist;
+use self::openssl::asn1::Asn1TimeRef;
+use self::openssl::nid::Nid;
+use self::openssl::x509::{X509NameEntryRef, X509};
+
+use crate::config::VaultPersistSpec;
+use crate::config::{ConfigContainer, FaytheConfig, Zone};
+use crate::file::FileError;
+use crate::kube::KubeError;
+use crate::vault;
+use crate::vault::VaultError;
+use crate::{file, kube, log};
 use acme_lib::order::NewOrder;
+use acme_lib::persist::Persist;
 use acme_lib::{Account, Certificate};
 use regex::Regex;
-use crate::config::{FaytheConfig, ConfigContainer, Zone};
-use crate::{file, kube, log};
-use std::fmt::Formatter;
-use crate::kube::KubeError;
-use std::convert::TryFrom;
-use crate::file::FileError;
-use std::path::PathBuf;
-use self::openssl::x509::{X509, X509NameEntryRef};
-use self::openssl::nid::Nid;
-use self::openssl::asn1::Asn1TimeRef;
 use std::collections::HashSet;
-
+use std::convert::TryFrom;
+use std::fmt::Formatter;
+use std::path::PathBuf;
 pub type CertName = String;
 
 #[derive(Debug, Clone, Serialize)]
@@ -173,6 +176,7 @@ pub struct FilePersistSpec {
 pub enum PersistSpec {
     KUBERNETES(KubernetesPersistSpec),
     FILE(FilePersistSpec),
+    VAULT(VaultPersistSpec),
     #[allow(dead_code)]
     DONTPERSIST
 }
@@ -180,12 +184,9 @@ pub enum PersistSpec {
 impl Persistable for CertSpec {
     fn persist(&self, cert: Certificate) -> Result<(), PersistError> {
         match &self.persist_spec {
-            PersistSpec::KUBERNETES(spec) => {
-                Ok(kube::persist(&spec, &cert)?)
-            }
-            PersistSpec::FILE(spec) => {
-                Ok(file::persist(&spec, &cert)?)
-            }
+            PersistSpec::KUBERNETES(spec) => Ok(kube::persist(&spec, &cert)?),
+            PersistSpec::FILE(spec) => Ok(file::persist(&spec, &cert)?),
+            PersistSpec::VAULT(spec) => Ok(vault::persist(&spec, cert)?),
             //PersistSpec::FILE(_spec) => { unimplemented!() },
             PersistSpec::DONTPERSIST => { Ok(()) }
         }
@@ -287,11 +288,10 @@ impl Cert {
     }
 }
 
-
-
 pub enum PersistError {
     Kube(KubeError),
-    File(FileError)
+    File(FileError),
+    Vault(VaultError),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize)]
@@ -399,6 +399,7 @@ pub mod tests {
             metrics_port: 9105,
             kube_monitor_configs: vec!(),
             file_monitor_configs: vec![file_monitor_configs.clone()],
+            vault_monitor_configs: vec![],
             lets_encrypt_url: String::new(),
             lets_encrypt_proxy: None,
             lets_encrypt_email: String::new(),
@@ -455,7 +456,8 @@ pub mod tests {
         let faythe_config = FaytheConfig{
             metrics_port: 9105,
             kube_monitor_configs: vec![kube_monitor_config.clone()],
-            file_monitor_configs: vec!(),
+            file_monitor_configs: vec![],
+            vault_monitor_configs: vec![],
             lets_encrypt_url: String::new(),
             lets_encrypt_proxy: None,
             lets_encrypt_email: String::new(),
