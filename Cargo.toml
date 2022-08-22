@@ -19,7 +19,7 @@ walkdir = "2.3"
 trust-dns-resolver = "0.19"
 env_logger = "0.7.1"
 prometheus_exporter_base = { version = "1.0", features = ["hyper_server"] }
-tokio = { version = "0.2", features = [ "macros" ] }
+tokio = { version = "1", features = [ "full" ] }
 dbc-rust-modules = { git = "https://github.com/dbcdk/rust-modules", branch = "main" }
 reqwest = { version = "0.11", features = [ "blocking" ] }
 vaultrs = "0.6"
