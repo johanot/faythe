@@ -17,6 +17,8 @@ use std::fs;
 use self::walkdir::WalkDir;
 use std::process::Command;
 
+use async_trait::async_trait;
+
 pub fn read_certs(config: &FileMonitorConfig) -> Result<HashMap<CertName, FileCert>, FileError> {
     let mut certs = HashMap::new();
     let mut wanted_files = HashSet::new();
@@ -136,6 +138,7 @@ impl IssueSource for FileSpec {
     }
 }
 
+#[async_trait]
 impl CertSpecable for FileSpec {
     fn to_cert_spec(&self, config: &ConfigContainer) -> Result<CertSpec, SpecError> {
         let cn = self.get_computed_cn(&config.faythe_config)?;
@@ -152,7 +155,7 @@ impl CertSpecable for FileSpec {
         })
     }
 
-    fn touch(&self, config: &ConfigContainer) -> Result<(), TouchError> {
+    async fn touch(&self, config: &ConfigContainer) -> Result<(), TouchError> {
         let monitor_config = config.get_file_monitor_config()?;
         let names = default_file_names(&self);
         let sub_dir = absolute_dir_path(&monitor_config, names.sub_directory.as_ref());

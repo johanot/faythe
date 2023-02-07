@@ -5,7 +5,7 @@ extern crate lazy_static;
 
 extern crate clap;
 
-use std::{process, thread};
+use std::process;
 
 use std::sync::mpsc;
 use std::sync::mpsc::{Receiver, Sender};
@@ -14,6 +14,8 @@ use crate::common::CertSpec;
 use crate::config::{ConfigContainer, FaytheConfig, MonitorConfig};
 
 use dbc_rust_modules::{exec, log};
+
+use tokio::task::JoinSet;
 
 mod common;
 mod config;
@@ -40,7 +42,8 @@ macro_rules! set {
 
 const APP_NAME: &str = env!("CARGO_PKG_NAME");
 
-fn main() {
+#[tokio::main]
+async fn main() {
     env_logger::init();
     log::init(APP_NAME.to_string()).unwrap();
 
@@ -61,22 +64,22 @@ fn main() {
     let config_file = m.value_of("config").unwrap().to_owned();
     let config = config::parse_config_file(&config_file);
     match config {
-        Ok(c) => if !config_check { run(&c); },
+        Ok(c) => if !config_check { run(&c).await; },
         Err(e) => { eprintln!("config-file parse error: {}", &e); process::exit(1); }
     }
 }
 
-fn run(config: &FaytheConfig) {
+async fn run(config: &FaytheConfig) {
     let (tx, rx): (Sender<CertSpec>, Receiver<CertSpec>) = mpsc::channel();
 
-    let mut threads = Vec::new();
+    let mut threads = JoinSet::new();
     for c in &config.kube_monitor_configs {
         let container = ConfigContainer{
             faythe_config: config.clone(),
             monitor_config: MonitorConfig::Kube(c.to_owned())
         };
         let tx_ = tx.clone();
-        threads.push(thread::spawn(move || { monitor::monitor_k8s(container,tx_) }));
+        threads.spawn(monitor::monitor_k8s(container,tx_));
     }
     for c in &config.file_monitor_configs {
         let container = ConfigContainer {
@@ -84,9 +87,7 @@ fn run(config: &FaytheConfig) {
             monitor_config: MonitorConfig::File(c.to_owned()),
         };
         let tx_ = tx.clone();
-        threads.push(thread::spawn(move || {
-            monitor::monitor_files(container, tx_)
-        }));
+        threads.spawn(monitor::monitor_files(container, tx_));
     }
     for c in &config.vault_monitor_configs {
         let container = ConfigContainer {
@@ -94,12 +95,10 @@ fn run(config: &FaytheConfig) {
             monitor_config: MonitorConfig::Vault(c.to_owned()),
         };
         let tx_ = tx.clone();
-        threads.push(thread::spawn(move || {
-            monitor::monitor_vault(container, tx_)
-        }));
+        threads.spawn(monitor::monitor_vault(container, tx_));
     }
     let config_ = config.clone();
-    threads.push(thread::spawn(move || { issuer::process(config_, rx) }));
+    threads.spawn(issuer::process(config_, rx));
 
     if threads.len() < 2 {
         panic!("No monitors started! Did you forget to add monitor configuration to the config file?")
@@ -107,7 +106,7 @@ fn run(config: &FaytheConfig) {
 
     let metrics_port = config.metrics_port;
     metrics::serve(metrics_port);
-    for t in threads {
-        t.join().unwrap();
+    while let Some(res) = threads.join_next().await {
+        res.unwrap();
     }
 }

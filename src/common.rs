@@ -22,6 +22,8 @@ use std::fmt::Formatter;
 use std::path::PathBuf;
 pub type CertName = String;
 
+use async_trait::async_trait;
+
 #[derive(Debug, Clone, Serialize)]
 pub struct CertSpec {
     pub name: CertName,
@@ -311,10 +313,11 @@ pub trait ValidityVerifier {
     fn is_valid(&self, config: &FaytheConfig, spec: &CertSpec) -> bool;
 }
 
+#[async_trait]
 pub trait CertSpecable: IssueSource {
     fn to_cert_spec(&self, config: &ConfigContainer) -> Result<CertSpec, SpecError>;
-    fn touch(&self, config: &ConfigContainer) -> Result<(), TouchError>;
-    fn should_retry(&self, config: &ConfigContainer) -> bool;
+    async fn touch(&self, config: &ConfigContainer) -> Result<(), TouchError>;
+    async fn should_retry(&self, config: &ConfigContainer) -> bool;
 }
 
 pub trait IssueSource {

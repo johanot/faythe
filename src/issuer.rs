@@ -25,7 +25,7 @@ use crate::dns::DNSError;
 use crate::metrics;
 use crate::metrics::MetricsType;
 
-pub fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
+pub async fn process(faythe_config: FaytheConfig, rx: Receiver<CertSpec>) {
 
     let mut queue: VecDeque<IssueOrder> = VecDeque::new();
     RESOLVERS.with(|r| r.write().unwrap().inner = init_resolvers(&faythe_config));

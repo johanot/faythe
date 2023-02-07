@@ -24,7 +24,7 @@ use std::prelude::v1::Vec;
 use crate::metrics;
 use crate::metrics::MetricsType;
 
-pub fn monitor_k8s(config: ConfigContainer, tx: Sender<CertSpec>) {
+pub async fn monitor_k8s(config: ConfigContainer, tx: Sender<CertSpec>) {
     log::info("k8s monitoring-started");
     let monitor_config = config.get_kube_monitor_config().unwrap();
     loop {
@@ -38,7 +38,7 @@ pub fn monitor_k8s(config: ConfigContainer, tx: Sender<CertSpec>) {
     }
 }
 
-pub fn monitor_files(config: ConfigContainer, tx: Sender<CertSpec>) {
+pub async fn monitor_files(config: ConfigContainer, tx: Sender<CertSpec>) {
     log::info("file monitoring-started");
     let monitor_config = config.get_file_monitor_config().unwrap();
     loop {
@@ -51,28 +51,23 @@ pub fn monitor_files(config: ConfigContainer, tx: Sender<CertSpec>) {
     }
 }
 
-pub fn monitor_vault(config: ConfigContainer, tx: Sender<CertSpec>) {
+pub async fn monitor_vault(config: ConfigContainer, tx: Sender<CertSpec>) {
     log::info("vault monitoring-started");
     // just crash if we cant authenticate vault client on startup
     let monitor_config = config.get_vault_monitor_config().unwrap();
-    let rt = tokio::runtime::Runtime::new().unwrap();
-    let _ = rt
-        .block_on(async {
-            crate::vault::authenticate(
-                &monitor_config.role_id_path,
-                &monitor_config.secret_id_path,
-                &monitor_config.vault_addr,
-            )
-            .await
-        })
-        .map_err(|_| std::process::exit(1));
+    crate::vault::authenticate(
+        &monitor_config.role_id_path,
+        &monitor_config.secret_id_path,
+        &monitor_config.vault_addr,
+    )
+    .await
+    .unwrap();
     // enter monitor loop
     loop {
-        let _ = || -> Result<(), VaultError> {
-            let certs: HashMap<CertName, VaultCert> = crate::vault::list(&monitor_config)?;
-            inspect(&config, &tx, &monitor_config.specs, certs);
-            Ok(())
-        }();
+        let certs: HashMap<CertName, VaultCert> = crate::vault::list(&monitor_config).await
+            .map_err(|e| { log::error("vault list secrets failed", &e); HashMap::new() }).unwrap();
+        inspect(&config, &tx, &monitor_config.specs, certs);
+
         thread::sleep(Duration::from_millis(config.faythe_config.monitor_interval));
     }
 }

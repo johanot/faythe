@@ -20,6 +20,8 @@ use vaultrs::kv2;
 use vaultrs_login::engines::approle::AppRoleLogin;
 use vaultrs_login::LoginClient;
 
+use async_trait::async_trait;
+
 #[derive(Debug, Deserialize, Serialize)]
 struct VaultAppRoleSecretID {
     secret_id: String,
@@ -101,9 +103,7 @@ impl std::convert::From<ClientError> for VaultError {
 }
 
 // Returns a hashmap that associates a certificate with it's path name in vault
-pub fn list(config: &VaultMonitorConfig) -> Result<HashMap<CertName, VaultCert>, VaultError> {
-    let rt = tokio::runtime::Runtime::new()?;
-    let certs: Result<HashMap<CertName, VaultCert>, VaultError> = rt.block_on(async {
+pub async fn list(config: &VaultMonitorConfig) -> Result<HashMap<CertName, VaultCert>, VaultError> {
         let client = authenticate(
             &config.role_id_path,
             &config.secret_id_path,
@@ -142,9 +142,6 @@ pub fn list(config: &VaultMonitorConfig) -> Result<HashMap<CertName, VaultCert>,
                 ),
             }
         }
-        Ok(certs)
-    });
-
     Ok(certs?)
 }
 
@@ -256,9 +253,7 @@ struct Secret {
     value: String,
 }
 // This trait implementation used by the issuer to persist certificates
-pub fn persist(persist_spec: &VaultPersistSpec, cert: Certificate) -> Result<(), PersistError> {
-    let rt = tokio::runtime::Runtime::new()?;
-    let vault_write: Result<(), VaultError> = rt.block_on(async {
+pub async fn persist(persist_spec: &VaultPersistSpec, cert: Certificate) -> Result<(), PersistError> {
         let client = authenticate(
             &persist_spec.role_id_path,
             &persist_spec.secret_id_path,
@@ -281,9 +276,7 @@ pub fn persist(persist_spec: &VaultPersistSpec, cert: Certificate) -> Result<(),
             &kv_data(std::str::from_utf8(&cert.private_key().as_bytes())?.to_string()),
         )
         .await?;
-        Ok(())
-    });
-    Ok(vault_write?)
+    Ok(())
 }
 
 impl IssueSource for VaultSpec {
@@ -364,6 +357,7 @@ impl VaultData {
     }
 }
 
+#[async_trait]
 impl CertSpecable for VaultSpec {
     fn to_cert_spec(&self, config: &ConfigContainer) -> Result<CertSpec, SpecError> {
         let cn = self.get_computed_cn(&config.faythe_config)?;
@@ -376,11 +370,10 @@ impl CertSpecable for VaultSpec {
         })
     }
     // Write meta file, meta file just contains a rfc3339 timestamp
-    fn touch(&self, config: &ConfigContainer) -> Result<(), TouchError> {
+    async fn touch(&self, config: &ConfigContainer) -> Result<(), TouchError> {
         let monitor_config = config.get_vault_monitor_config()?;
         let persist_spec = monitor_config.to_persist_spec(&self);
-        let rt = tokio::runtime::Runtime::new()?;
-        let write_meta_file: Result<(), VaultError> = rt.block_on(async {
+        let write_meta_file: Result<(), VaultError> = {
             let client = authenticate(
                 &persist_spec.role_id_path,
                 &persist_spec.secret_id_path,
@@ -397,7 +390,7 @@ impl CertSpecable for VaultSpec {
             .await?;
 
             Ok(())
-        });
+        };
         write_meta_file.map_err(|e| {
             log::error("failed to write meta file", &e);
             TouchError::Failed
@@ -405,13 +398,11 @@ impl CertSpecable for VaultSpec {
     }
     // Check if meta file is too old, and a new certicate
     // must be issued.
-    fn should_retry(&self, config: &ConfigContainer) -> bool {
-        match || -> Result<(), VaultError> {
+    async fn should_retry(&self, config: &ConfigContainer) -> bool {
+        let evaluation = {
             let monitor_config = config.get_vault_monitor_config()?;
             let persist_spec = monitor_config.to_persist_spec(&self);
-            let rt = tokio::runtime::Runtime::new()?;
 
-            let write_meta_file: Result<(), VaultError> = rt.block_on(async {
                 let client = authenticate(
                     &persist_spec.role_id_path,
                     &persist_spec.secret_id_path,
@@ -436,10 +427,11 @@ impl CertSpecable for VaultSpec {
                     }
                     Err(_err @ ClientError::APIError { code: 404, .. }) => Ok(()), // if the key doesn't exist, just create it
                     Err(err) => Err(err.into()), // unexpected Vault-error
-                }
-            });
-            Ok(write_meta_file?)
-        }() {
+                }?;
+            Ok(())
+        }; 
+        
+        match evaluation {
             Ok(()) => true,
             Err(VaultError::RecentlyTouched) => false, // who cares, don't log this
             Err(err) => {
